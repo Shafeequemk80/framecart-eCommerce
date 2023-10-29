@@ -182,12 +182,10 @@ const verifylogin = async (req, res) => {
     if (userData) {
       const passwordMatch = await bctypt.compare(password, userData.password);
       if (passwordMatch) {
-        if (userData.is_Verified === 0) {
-          res.render("login", { message: "please vefify your mail" });
-        } else {
+      
           req.session.user_id = userData._id;
           res.redirect("/home");
-        }
+        
       } else {
         res.render("login", { message: "your mail or password incorrect" });
       }
@@ -202,8 +200,7 @@ const verifylogin = async (req, res) => {
 const loadHome=async (req,res)=>{
 
   try {
-const userData=await User.findById({ _id:req.session.user_id});
-    res.render("home",{user:userData})
+    res.render("home")
 
   } catch (error) {
     console.log(error.message);

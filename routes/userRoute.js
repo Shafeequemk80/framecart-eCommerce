@@ -26,6 +26,7 @@ user_route.get("/verify",userController.loadverifyotp)
 user_route.post("/verify",userController.checkotp)
 user_route.get("/email-verified",userController.confimverify)
 user_route.get("/login", userController.loadlogin),
+user_route.get("/", userController.loadlogin),
 user_route.post("/login", userController.verifylogin),
 user_route.get("/home", userController.loadHome),
 
