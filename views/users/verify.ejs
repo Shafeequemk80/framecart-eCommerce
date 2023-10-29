@@ -1,0 +1,45 @@
+<%- include("../layouts/header.ejs")%>
+<style>
+    
+</style>
+<div
+  class="container height-100 d-flex justify-content-center align-items-center"
+>
+<form action="/verify" method="post">
+  <div class="position-relative">
+    <div class="card p-2 text-center">
+      <h6 class="text-dark">
+        Please enter the one time password <br />
+        to verify your account
+      </h6>
+      <div><span>A code has been sent to</span> <small></small></div>
+      <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+       
+        <input
+          class="m-2 text-center form-control rounded"
+          type="text"
+          id="first"
+          maxlength="6"
+          name="otp"
+        />
+        
+   
+      </div>
+      <div class="mt-4">
+        <button value="submit" class="btn btn-danger px-4 validate">Validate</button>
+      </div>
+      <% if (typeof message !== "undefined") { %>
+               
+        <div class="alert alert-bg-danger" role="alert">
+          <!-- Replace the message with your dynamic message -->
+          <%= message %>
+       
+      </div>
+    <% } %>
+    </div>
+  </div>
+</form>
+
+</div>
+    
+<%- include("../layouts/footer.ejs")%>
