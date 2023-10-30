@@ -16365,3 +16365,50 @@ button:focus {
     border: 1px solid #010045;
     width: 140px
 }
+  /* Additional CSS for styling */
+  body {
+    background-color: #f7f7f7;
+}
+.wrap {
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.login-wrap {
+    padding: 20px;
+}
+.form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.form-control-placeholder {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    font-size: 16px;
+    color: #888;
+    pointer-events: none;
+    transition: top 0.2s, font-size 0.2s;
+}
+.form-control:focus + .form-control-placeholder,
+.form-control:valid + .form-control-placeholder {
+    top: -6px;
+    font-size: 12px;
+    color: #007bff;
+}
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+.alert {
+    background-color: #f8f9fa;
+    color: #a31904;
+    border: 1px solid #e0e0e0;
+}

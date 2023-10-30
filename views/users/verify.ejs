@@ -1,45 +1,94 @@
-<%- include("../layouts/header.ejs")%>
+<%- include("../layouts/header.ejs") %>
 <style>
-    
+    /* Add your custom styles here */
 </style>
-<div
-  class="container height-100 d-flex justify-content-center align-items-center"
->
-<form action="/verify" method="post">
-  <div class="position-relative">
-    <div class="card p-2 text-center">
-      <h6 class="text-dark">
-        Please enter the one time password <br />
-        to verify your account
-      </h6>
-      <div><span>A code has been sent to</span> <small></small></div>
-      <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
-       
-        <input
-          class="m-2 text-center form-control rounded"
-          type="text"
-          id="first"
-          maxlength="6"
-          name="otp"
-        />
-        
-   
-      </div>
-      <div class="mt-4">
-        <button value="submit" class="btn btn-danger px-4 validate">Validate</button>
-      </div>
-      <% if (typeof message !== "undefined") { %>
+<div class="container height-100 d-flex justify-content-center align-items-center">
+    <form action="/verify" method="post">
+        <div class="position-relative">
+            <div class="card p-2 text-center">
+                <h6 class="text-dark">
+                 
+                </h6>
+                <div class="d-flex flex-row">
+                    <span>A code has been sent to</span>
+                </div>
                
-        <div class="alert alert-bg-danger" role="alert">
-          <!-- Replace the message with your dynamic message -->
-          <%= message %>
-       
-      </div>
-    <% } %>
-    </div>
-  </div>
-</form>
+                <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                    <input
+                        class="m-2 text-center form-control rounded"
+                        type="text"
+                        id="first"
+                        maxlength="6"
+                        name="otp"
+                    />
+                </div>
+                <div class="timeforotp d-flex justify-content-center">
+                  <p class="small">OTP time ends in <span id="countdown">45</span>s</p>
+                </div>
+                <div>
+                  <a href="javascript:void(0);" id="resend-otp" class="disabled" onclick="resendOTP()">Resend OTP</a>
 
+                </div>
+                <% if (typeof message !== "undefined") { %>
+                  <div class="alert" role="alert">
+                      <!-- Replace the message with your dynamic message -->
+                      <%= message %>
+                  </div>
+              <% } %>
+                <div>
+                    <button type="submit" class="btn btn-danger px-4 validate">Validate</button>
+                  </div>
+                 
+              </div>
+        </div>
+    </form>
 </div>
-    
-<%- include("../layouts/footer.ejs")%>
+<%- include("../layouts/footer.ejs") %>
+<script>
+  // JavaScript to implement the countdown and button behavior
+  let countdown = 45;
+  const countdownElement = document.getElementById("countdown");
+  const resendButton = document.getElementById("resend-otp");
+
+  function updateCountdown() {
+    countdownElement.textContent = countdown;
+    if (countdown === 0) {
+      // Enable the "Resend OTP" button when countdown reaches 0
+      resendButton.classList.remove("disabled");
+      resendButton.href = "/resend-otp"; // Add the actual link for resending OTP
+    }
+    if (countdown > 0) {
+      countdown--;
+      setTimeout(updateCountdown, 1000);
+    }
+  }
+
+  // Start the countdown
+  updateCountdown();
+
+  function resendOTP() {
+      if (resendButton.classList.contains("disabled")) {
+          // You can add code here to make sure the user cannot repeatedly request OTP
+
+          // Make the fetch request to your server's OTP resending endpoint
+          fetch("/resend-otp", {
+              method: "POST",
+              // You can include any necessary headers or data here
+          })
+              .then((response) => {
+                  if (response.status === 200) {
+                      // Handle a successful resending of OTP
+                      resendButton.classList.add("disabled");
+                      countdown = 45; // Reset the countdown
+                      updateCountdown();
+                  } else {
+                      // Handle an unsuccessful resending of OTP
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error:", error);
+                  // Handle any fetch request errors here
+              });
+      }
+  }
+</script>

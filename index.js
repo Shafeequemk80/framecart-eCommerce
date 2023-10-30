@@ -13,9 +13,9 @@ app.use(bodyparser.json());
 
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views/users"));
+app.set("views","./views/users");
 
-app.use("/static", express.static(path.join(__dirname, "./public")));
+app.use("/static", express.static("./public"));
 
 app.use("/", user_route);
 
@@ -23,5 +23,6 @@ app.use("/admin", admin_route);
 const PORT =  3000;
 
 app.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}/login`);
+  console.log(`http://localhost:${PORT}/`);
+  console.log(`http://localhost:${PORT}/admin`);
 });

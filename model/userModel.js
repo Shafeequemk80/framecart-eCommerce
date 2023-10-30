@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  fullname: {
+    type: String,
+    required: true,
+  },
   is_Admin: {
     type: Number,
     default: 0,
@@ -39,5 +43,6 @@ const userSchema = new mongoose.Schema({
     default: "",
   },
 });
+
 
 module.exports = mongoose.model("user", userSchema);

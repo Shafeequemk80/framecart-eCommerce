@@ -1,12 +1,33 @@
 const bctypt = require("bcrypt");
-const User = require("../model/model");
+const User = require("../model/userModel");
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
-
+const randomstring = require("randomstring");
 const otpGenerator = require("otp-generator");
 const Mail = require("nodemailer/lib/mailer");
 const user_route = require("../routes/userRoute");
+const { token } = require("morgan");
+const e = require("express");
 
+function generateAndStoreOTP(req) {
+  const otp = otpGenerator.generate(6, {
+    digits: true,
+    alphabets: false,
+    specialChars: false,
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
+  });
+
+  const otpGenTime = Date.now() / 1000;
+  const otpExrTime = otpGenTime + 45;
+
+  req.session.otp = {
+    code: otp,
+    expiry: otpExrTime,
+  };
+
+  return otp; // Return the generated OTP if needed
+}
 const securePassword = async (password) => {
   try {
     const passwordHash = await bctypt.hash(password, 10);
@@ -16,18 +37,7 @@ const securePassword = async (password) => {
   }
 };
 
-const otp = otpGenerator.generate(6, {
-  digits: true,
-  alphabets: false,
-  specialChars: false,
-  upperCaseAlphabets: false,
-  lowerCaseAlphabets: false,
-});
-const otpGenTime = Date().now / 1000;
-const otpExrTime = otpGenTime + 45;
-
-console.log(otp);
-const sendVerifyMail = async (email, name) => {
+const sendVerifyMail = async (email, name, otp) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -65,9 +75,46 @@ const sendVerifyMail = async (email, name) => {
   }
 };
 
+const sendResetVerifyMail = async (fullname, email, token) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: config.emailUser,
+        pass: config.passwordUser,
+      },
+    });
+
+    const mailOption = {
+      from: "shafeequemk80@gmail.com",
+      to: email,
+      subject: "One-Time Password for restting your Your password",
+      html:
+        "<p>Hai " +
+        fullname +
+        ', Please Click here to <a href="http://localhost:3000/resetpassword?token=' +
+        token +
+        '"> reset </a> Your password</p>',
+    };
+
+    transporter.sendMail(mailOption, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("you mail has been send", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const loadregister = async (req, res) => {
   try {
-    res.render("login");
+    res.render("signup");
   } catch (error) {
     console.log(error.message);
   }
@@ -75,20 +122,11 @@ const loadregister = async (req, res) => {
 
 const insestUser = async (req, res) => {
   try {
+    
     const existingUser = await User.findOne({ email: req.body.email });
-
-    // const user = new User({
-    //   req.ses: req.body.username,
-    //   firstname: req.body.firstname,
-    //   lastname: req.body.lastname,
-    //   email: req.body.email,
-    //   password: spassword,
-    //   mobile: req.body.mobile,
-    //   is_Admin: 0,
-    // });
-
+    
     if (existingUser) {
-      res.render("login", { message: "this mail already send" });
+      res.render("signup", { message: "this mail already send" });
     } else {
       req.session.username = req.body.username;
       req.session.firstname = req.body.firstname;
@@ -96,25 +134,22 @@ const insestUser = async (req, res) => {
       req.session.email = req.body.email;
       req.session.mobile = req.body.mobile;
       req.session.password = req.body.password;
+      req.session.fullname=`${req.body.firstname} ${req.body.lastname}`
+      if (req.body.password === req.body.password_2) {
+        const generatedOTP = generateAndStoreOTP(req);
 
+        sendVerifyMail(req.session.email, req.session.firstname, generatedOTP);
 
-      if(req.body.password===req.body.password_2){
-      const fullname = `${req.session.firstname} ${req.session.lastname}`;
-
-
-      
-
-
-      sendVerifyMail(req.session.email, fullname);
-
-      res.render("verify");
+        res.render("verify", {
+          name: "Please enter the one-time password to verify your account",
+          mail: req.session.email,
+        });
+      } else {
+        res.render("login", { message: "Enter same password" });
+      }
     }
-    else{
-      res.render("login",{message:"Enter same password"})
-    }
-  }
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 };
 
@@ -130,34 +165,50 @@ const checkotp = async (req, res) => {
   try {
     const verifyotp = req.body.otp;
 
-    if (otp == verifyotp) 
-    
-    {
-     
-      res.redirect("email-verified");
-      const spassword = await securePassword(req.session.password);
-  const user = new User({
-      username: req.session.username,
-      firstname: req.session.firstname,
-      lastname: req.session.lastname,
-      email: req.session.email,
-      password: spassword,
-      mobile: req.session.mobile,
-     
-    });
-  const userData= await user.save();
-  if(userData){
-    req.session.user_id= userData._id
-  }
-}
-     else {
-      res.render("verify", { message: "OTP is ivalid" });
+    const currTime = Math.floor(Date.now()) / 1000;
+
+    if (currTime <= req.session.otp.expiry) {
+      if (req.session.otp.code == verifyotp) {
+        res.redirect("email-verified");
+        const spassword = await securePassword(req.session.password);
+        const user = new User({
+          username: req.session.username,
+          firstname: req.session.firstname,
+          lastname: req.session.lastname,
+          email: req.session.email,
+          password: spassword,
+          mobile: req.session.mobile,
+          fullname: req.session.fullname,
+        });
+      
+        const userData = await user.save();
+        console.log(userData);
+        if (userData) {
+          req.session.user_id = userData._id;
+        }
+      } else {
+        res.render("verify", { message: "OTP is ivalid" });
+      }
+    } else {
+      res.render("verify", { message: "OTP is exprired Resend Otp" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
+const resend = async (req, res) => {
+  try {
+    const generatedOTP = generateAndStoreOTP(req);
+    console.log(generatedOTP);
+    const fullname = req.session.fullname;
+    sendVerifyMail(req.session.email, fullname, generatedOTP);
+
+    res.render("verify");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 const confimverify = async (req, res) => {
   try {
     res.render("email-verified");
@@ -182,10 +233,8 @@ const verifylogin = async (req, res) => {
     if (userData) {
       const passwordMatch = await bctypt.compare(password, userData.password);
       if (passwordMatch) {
-      
-          req.session.user_id = userData._id;
-          res.redirect("/home");
-        
+        req.session.user_id = userData._id;
+        res.redirect("/home");
       } else {
         res.render("login", { message: "your mail or password incorrect" });
       }
@@ -197,15 +246,71 @@ const verifylogin = async (req, res) => {
   }
 };
 
-const loadHome=async (req,res)=>{
-
+const loadHome = async (req, res) => {
   try {
-    res.render("home")
-
+    res.render("home");
   } catch (error) {
     console.log(error.message);
   }
-}
+};
+
+const loadforget = async (req, res) => {
+  try {
+    res.render("forgetpassword");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const verifyforget = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const userData = await User.findOne({ email: email });
+    if (userData) {
+      const randomString = randomstring.generate();
+      const addtoken = await User.updateOne(
+        { email: email },
+        { $set: { token: randomString } }
+      );
+
+      sendResetVerifyMail(userData.fullname, userData.email, randomString);
+      res.render("forgetpassword", { message: "please check your mail" });
+    } else {
+      res.render("forgetpassword", { message: "user mail is incorect" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const loadreset = async (req, res) => {
+  try {
+    const token = req.query.token;
+    const tokenData = await User.findOne({ token: token });
+    if (tokenData) {
+      res.render("resetpassword", { user_id: tokenData._id });
+    } else {
+      res.render(404);
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const resetpassword = async (req, res) => {
+
+  console.log(req.body.user_id);
+  const password = req.body.password;
+  const user_id = req.body.user_id
+  
+  const spassword = await securePassword(password);
+
+  const updateData = await User.updateOne(
+    { _id: user_id },
+    { $set: { password: spassword, token: "" } }
+  );
+
+  res.redirect("/");
+};
+
 module.exports = {
   loadregister,
   insestUser,
@@ -215,5 +320,10 @@ module.exports = {
   confimverify,
   loadlogin,
   verifylogin,
-  loadHome
+  loadHome,
+  loadforget,
+  verifyforget,
+  resend,
+  loadreset,
+  resetpassword,
 };
