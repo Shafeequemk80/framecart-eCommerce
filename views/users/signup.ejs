@@ -1,4 +1,7 @@
-<%- include("../layouts/header.ejs")%>
+<%- include("../layouts/header.ejs")%> <%-
+include("../layouts/userNavbar.ejs")%>
+
+<!-- End .header -->
 
 <main class="main">
   <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
@@ -6,7 +9,7 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/home">Home</a></li>
         <li class="breadcrumb-item"><a href="#">Pages</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Login</li>
+        <li class="breadcrumb-item active" aria-current="page">sign Up</li>
       </ol>
     </div>
     <!-- End .container -->
@@ -139,4 +142,5 @@
 <!-- End .main -->
 
 <!-- Plugins JS File -->
-<%- include("../layouts/footer.ejs")%>
+<%- include("../layouts/userFooter.ejs")%> <%-
+include("../layouts/footer.ejs")%>

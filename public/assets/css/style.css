@@ -4909,6 +4909,7 @@ p {
   background-color: #333333;
 }
 .footer-dark .footer-middle {
+
   border-top-width: 0;
 }
 .footer-dark .widget-title {
@@ -4936,10 +4937,11 @@ p {
 .footer-2 .footer-middle {
   padding-top: 4.5rem;
   padding-bottom: 0.4rem;
+  background-color: #010045;
 }
 .footer-2 .footer-bottom .container {
   padding-top: 2.2rem;
-  padding-bottom: 2.2rem;
+  padding-bottom: 2.2rem; 
   flex-direction: column-reverse;
 }
 .col-md-6 .widget-about p,

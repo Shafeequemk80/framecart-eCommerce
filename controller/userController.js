@@ -179,6 +179,7 @@ const checkotp = async (req, res) => {
           password: spassword,
           mobile: req.session.mobile,
           fullname: req.session.fullname,
+          is_Verified:1
         });
       
         const userData = await user.save();
@@ -229,12 +230,17 @@ const verifylogin = async (req, res) => {
     const password = req.body.password;
 
     const userData = await User.findOne({ email: email });
-
+console.log(userData);
     if (userData) {
       const passwordMatch = await bctypt.compare(password, userData.password);
       if (passwordMatch) {
-        req.session.user_id = userData._id;
+        if (userData.is_Verified==0) {
+          res.render("login",{message:"your account is suspentend"})
+        } else {
+          req.session.user_id = userData._id;
         res.redirect("/home");
+        }
+        
       } else {
         res.render("login", { message: "your mail or password incorrect" });
       }
@@ -310,6 +316,16 @@ const resetpassword = async (req, res) => {
 
   res.redirect("/");
 };
+const logout=async(req,res)=>{
+  try {
+    
+req.session.destroy();
+res.redirect("/")
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 module.exports = {
   loadregister,
@@ -326,4 +342,5 @@ module.exports = {
   resend,
   loadreset,
   resetpassword,
+  logout,
 };

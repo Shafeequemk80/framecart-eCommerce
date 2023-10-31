@@ -72,7 +72,7 @@ const verifylogin = async (req, res) => {
           res.render("login", { message: "No account found" });
         } else {
           req.session.user_id = adminData._id;
-          res.render("home");
+          res.redirect("admin/dashboard");
         }
       } else {
         res.render("login", {
@@ -87,9 +87,9 @@ const verifylogin = async (req, res) => {
   }
 };
 
-const loadHome = async (req, res) => {
+const loaddashboard = async (req, res) => {
   try {
-    res.render("home");
+    res.render("dashboard");
   } catch (error) {
     console.log(error.message);
   }
@@ -171,13 +171,24 @@ try {
   console.log(error.message);
 }
 }
+const logout=async(req,res)=>{
+  try {
+    
+req.session.destroy();
+res.redirect("/admin")
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 module.exports = {
   loadLogin,
   verifylogin,
-  loadHome,
+  loaddashboard,
   loadforget,
   verifyforget,
   loadreset,
   verifyreset,
-  customerload
+  customerload,
+  logout,
 };
