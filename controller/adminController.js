@@ -71,8 +71,9 @@ const verifylogin = async (req, res) => {
         if (adminData.is_Admin == 0) {
           res.render("login", { message: "No account found" });
         } else {
-          req.session.user_id = adminData._id;
-          res.redirect("admin/dashboard");
+         req.session.user_id = adminData._id;
+        const userData =  await User.findById(req.session.user_id)
+          res.redirect("/admin/dashboard");
         }
       } else {
         res.render("login", {
@@ -89,6 +90,7 @@ const verifylogin = async (req, res) => {
 
 const loaddashboard = async (req, res) => {
   try {
+
     res.render("dashboard");
   } catch (error) {
     console.log(error.message);
@@ -166,7 +168,9 @@ const verifyreset=async (req,res)=>{
 
 const customerload=async(req,res)=>{
 try {
-  res.render("customers")
+ 
+  const userData =  await User.find()
+  res.render("customers",{users:userData})
 } catch (error) {
   console.log(error.message);
 }
@@ -181,6 +185,28 @@ res.redirect("/admin")
     console.log(error.message);
   }
 }
+
+
+const loadproducts =async (req,res)=>
+res.render("products")
+
+try {
+  
+} catch (error) {
+  console.log(error.message);
+}
+
+
+const loadorders =async (req,res)=>{
+
+  try {
+    res.render("orders")
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   loadLogin,
   verifylogin,
@@ -191,4 +217,7 @@ module.exports = {
   verifyreset,
   customerload,
   logout,
+  loadproducts,
+  loadorders,
+
 };

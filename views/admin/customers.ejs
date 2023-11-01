@@ -1,4 +1,5 @@
 <%- include("../layouts/adminHeader.ejs")%>
+<%- include("../layouts/adminHeader.ejs")%>
 <%- include("../layouts/adminSideBar.ejs")%>
 
 
@@ -95,7 +96,7 @@
                             ></label>
                           </div>
                         </div>
-                        <div class="nk-tb-col">
+                        <div class="nk-tb-col"> 
                           <span class="sub-text">User</span>
                         </div>
                         <div class="nk-tb-col tb-col-mb">
@@ -132,7 +133,7 @@
                                       >
                                     </li>
                                     <li>
-                                      <a href="#"
+                                      <a href="/admin/suspend"
                                         ><em class="icon ni ni-na"></em
                                         ><span>Suspend Selected</span></a
                                       >
@@ -156,7 +157,10 @@
                           </ul>
                         </div>
                       </div>
-                      <div class="nk-tb-item">
+                      
+
+                      <%if(users.length>0){ for (let i=0 ; i < users.length;i++){%>
+                        <div class="nk-tb-item">
                         <div class="nk-tb-col nk-tb-col-check">
                           <div
                             class="custom-control custom-control-sm custom-checkbox notext"
@@ -175,15 +179,15 @@
                           <a href="customer-details.html"
                             ><div class="user-card">
                               <div class="user-avatar bg-primary">
-                                <span>AB</span>
+                                <span><%=users[i].firstname.charAt(0).toUpperCase() + users[i].lastname.charAt(0).toUpperCase()%></span>
                               </div>
                               <div class="user-info">
                                 <span class="tb-lead"
-                                  >Abu Bin Ishtiyak
+                                  > <%=users[i].fullname%>
                                   <span
                                     class="dot dot-success d-md-none ms-1"
                                   ></span></span
-                                ><span>info@softnio.com</span>
+                                ><span><%=users[i].email%></span>
                               </div>
                             </div></a
                           >
@@ -194,7 +198,7 @@
                           >
                         </div>
                         <div class="nk-tb-col tb-col-md">
-                          <span>+811 847-4958</span>
+                          <span><%=users[i].mobile%></span>
                         </div>
                         <div class="nk-tb-col tb-col-lg">
                           <span>United State</span>
@@ -203,7 +207,7 @@
                           <span>10 Feb 2020</span>
                         </div>
                         <div class="nk-tb-col tb-col-md">
-                          <span class="tb-status text-success">Active</span>
+                          <span class="tb-status text-success">  <% if (users[i].is_Verified == 1) { %><p class="text-success">active</p><% } else { %><p class="text-danger">Blocked</p><% } %></span>
                         </div>
                         <div class="nk-tb-col nk-tb-col-tools">
                           <ul class="nk-tb-actions gx-1">
@@ -219,7 +223,7 @@
                             </li>
                             <li class="nk-tb-action-hidden">
                               <a
-                                href="#"
+                                href=""
                                 class="btn btn-trigger btn-icon"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
@@ -264,12 +268,19 @@
                                         ><span>Reset Pass</span></a
                                       >
                                     </li>
-                                    <li>
-                                      <a href="#"
+                                    <% if (users[i].is_Verified == 0) { %><li>
+                                      <a href="/admin/active?id=<%=users[i]._id %>"
+                                        ><em class="icon ni ni-eye-alt-fill"></em>
+                                         
+                                        <span>active</span></a
+                                      >
+                                    </li><% } else { %><li>
+                                      <a href="/admin/suspend?id=<%=users[i]._id %>"
                                         ><em class="icon ni ni-na"></em
                                         ><span>Suspend</span></a
                                       >
-                                    </li>
+                                    </li><% } %>
+                                    
                                   </ul>
                                 </div>
                               </div>
@@ -277,7 +288,11 @@
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    
+                        
+                        <%}}%>
+                      </div>
+
                     <div class="card">
                       <div class="card-inner">
                         <div class="nk-block-between-md g-3">
@@ -357,7 +372,7 @@
               </div>
             </div>
           </div>
-          
+        </div>
         </div>
       </div>
     </div>

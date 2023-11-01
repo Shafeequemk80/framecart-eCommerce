@@ -1,11 +1,28 @@
 const express = require("express");
 const admin_route = express();
 const adminController = require("../controller/adminController");
+const customersCrontroller = require("../controller/customersController");
+const productsCrontroller = require("../controller/productsController");
+
 const session = require("express-session");
 const user = require("../model/userModel");
 const path = require("path");
-const auth=require("../middleware/adminAuth")
+const auth = require("../middleware/adminAuth");
 const config = require("../config/config");
+
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, path.join(__dirname, "../public/produtsImages"));
+  },
+  filename: function (req, file, callback) {
+    const name = Date.now() + "-" + file.originalname;
+    callback(null, name)
+  },
+});
+
+const upload = multer({ storage: storage });
 
 admin_route.use(
   session({
@@ -18,15 +35,20 @@ admin_route.set("view engine", "ejs");
 admin_route.set("views", "./views/admin");
 admin_route.use(express.static(path.join(__dirname, "public")));
 
-admin_route.get("/",auth.isLogout, adminController.loadLogin);
-admin_route.post("/",adminController.verifylogin);
-admin_route.get("/dashboard",auth.islogin, adminController.loaddashboard);
+admin_route.get("/", auth.isLogout, adminController.loadLogin);
+admin_route.post("/", adminController.verifylogin);
+admin_route.get("/dashboard", auth.islogin, adminController.loaddashboard);
 admin_route.get("/forgetpassword", adminController.loadforget);
-admin_route.post("/forgetpassword" , adminController.verifyforget);
-admin_route.get("/resetpassword",adminController.loadreset,)
-admin_route.post("/resetpassword",adminController.verifyreset)
-admin_route.get("/customers",adminController.customerload);
-admin_route.get("/logout", adminController.logout)
+admin_route.post("/forgetpassword", adminController.verifyforget);
+admin_route.get("/resetpassword", adminController.loadreset);
+admin_route.post("/resetpassword", adminController.verifyreset);
+admin_route.get("/customers", adminController.customerload);
+admin_route.get("/logout", adminController.logout);
 
+admin_route.get("/orders", adminController.loadorders);
+admin_route.get("/suspend", customersCrontroller.suspend);
+admin_route.get("/active", customersCrontroller.active);
+admin_route.get("/products", adminController.loadproducts);
+admin_route.post("/addproducts",upload.array("images"),productsCrontroller.addproduct);
 
 module.exports = admin_route;
