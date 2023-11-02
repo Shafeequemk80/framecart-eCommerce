@@ -4,67 +4,86 @@ include("../layouts/userNavbar.ejs")%>
 <!-- End .header -->
 
 <main class="main">
-    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-        <div class="container">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Login</li>
-            </ol>
-        </div>
-        <!-- End .container -->
-    </nav>
-    <!-- End .breadcrumb-nav -->
-
-    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17"
-        style="background-image: url('/static/assets/images/backgrounds/login-bg.jpg');">
-        <div class="container">
-            <div class="form-box">
-                <div class="form-tab text-center">
-                    <h3 class="mb-3">Sign In</h3>
-                </div>
-
-                <form action="/login" method="post">
-                    <div class="form-group">
-                        <label for="singin-email-2" class="mb-2">Username or email address *</label>
-                        <input type="text" class="form-control" id="singin-email-2" name="email" required />
-                    </div>
-                    <!-- End .form-group -->
-
-                    <div class="form-group">
-                        <label for="singin-password-2" class="mb-2">Password *</label>
-                        <input type="password" class="form-control" id="singin-password-2" name="password" required />
-                    </div>
-                    <!-- End .form-group -->
-
-                    <div class="form-footer">
-                        <button type="submit" class="btn btn-primary btn-block">
-                            <span>LOG IN</span>
-                        </button>
-
-                        <div class="text-center mt-3">
-                            <a href="/forgetpassword" class="forgot-link">Forgot Your Password?</a>
-                        </div>
-                        <div class="text-center ml-5 mt-3">
-                            <p class="text-center">Not a member?  <a  href="/signup">Sign Up</a></p>
-                        </div>
-                    </div>
-                   
-                </form>
-
-                <% if (typeof message !== "undefined") { %>
-                    <div class="alert alert-info mt-3" role="alert">
-                       
-                        <%= message %>
-                    </div>
-                <% } %>
-              
-            </div>
-          
-        </div>
-       
+  <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Login</li>
+      </ol>
     </div>
-   
+    <!-- End .container -->
+  </nav>
+  <!-- End .breadcrumb-nav -->
+
+  <div
+    class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17"
+    style="
+      background-image: url('/static/assets/images/backgrounds/login-bg.jpg');
+    "
+  >
+    <div class="container">
+      <div class="form-box">
+        <div class="form-tab text-center">
+          <h3 class="mb-3">Sign In</h3>
+        </div>
+
+        <form action="/login" method="post" id="loginForm">
+          <div class="form-group">
+            <label for="singin-email-2" class="mb-2"
+              >Username or email address *</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+          <!-- End .form-group -->
+
+          <div class="form-group">
+            <label for="singin-password-2" class="mb-2">Password *</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <!-- End .form-group -->
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-block">
+              <span>LOG IN</span>
+            </button>
+
+            <div class="text-center mt-3">
+              <a href="/forgetpassword" class="forgot-link"
+                >Forgot Your Password?</a
+              >
+            </div>
+            <div class="text-center ml-5 mt-3">
+              <p class="text-center">
+                Not a member? <a href="/signup">Sign Up</a>
+              </p>
+            </div>
+          </div>
+        </form>
+
+        <% if (typeof message !== "undefined") { %>
+        <div
+          class="alert alert-info mt-3"
+          id="messagePlaceholder"
+          role="alert"
+        ></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
 </main>
+
 <%- include("../layouts/userFooter.ejs")%> <%-
 include("../layouts/footer.ejs")%>

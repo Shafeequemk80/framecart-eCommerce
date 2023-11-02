@@ -49,6 +49,9 @@ admin_route.get("/orders", adminController.loadorders);
 admin_route.get("/suspend", customersCrontroller.suspend);
 admin_route.get("/active", customersCrontroller.active);
 admin_route.get("/products", adminController.loadproducts);
-admin_route.post("/addproducts",upload.array("images"),productsCrontroller.addproduct);
+admin_route.get("/addproducts",productsCrontroller.addproduct);
+admin_route.post("/addproducts",upload.array("images"),productsCrontroller.saveproduct);
+admin_route.get("/editproducts",productsCrontroller.editproducts);
+
 
 module.exports = admin_route;

@@ -145,7 +145,7 @@ const insestUser = async (req, res) => {
           mail: req.session.email,
         });
       } else {
-        res.render("login", { message: "Enter same password" });
+        res.render("signup", { message: "Enter same password" });
       }
     }
   } catch (error) {
@@ -235,24 +235,24 @@ console.log(userData);
       const passwordMatch = await bctypt.compare(password, userData.password);
       if (passwordMatch) {
         if (userData.is_Verified==0) {
-          res.render("login",{message:"your account is suspentend"})
+          res.render({ message: "Your account is suspended" });
         } else {
           req.session.user_id = userData._id;
-        res.redirect("/home");
+          res.redirect("/home")
         }
         
       } else {
-        res.render("login", { message: "your mail or password incorrect" });
+        res.render({ message: "Your email or password is incorrect" });
       }
     } else {
-      res.render("login", { message: "your mail or password incorrect" });
+      res.render({ message: "Your email or password is incorrect" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const loadHome = async (req, res) => {
+const loadHome = async (req, res) => {   
   try {
     res.render("home");
   } catch (error) {

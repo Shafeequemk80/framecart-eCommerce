@@ -1,7 +1,8 @@
+const { Admin } = require("mongodb");
 const Products = require("../model/productsModel");
 
 
-const addproduct=async (req,res)=>{
+const saveproduct=async (req,res)=>{
 try {
    
    
@@ -12,21 +13,43 @@ try {
     stock:req.body.stock,
     price:req.body.price,
     description:req.body.description,
-    images:req.file.filename,
+    images:req.files.map(file => file.filename),
     brand:req.body.brand
    })
 
 const productadded= await product.save();
 
-console.log(productadded);
-res.redirect("/admin/dashboard");
+res.redirect("products");
 } catch (error) {
     console.log(error.message);
 }
 
 
 }
+const addproduct=async (req,res)=>{
+    try {
+        res.render("addproducts")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const editproducts=async(req,res)=>{
+    try {
+            const id=req.query.id
+            console.log(id);
+        const productData=await Products.findOne({_id:id})
+        console.log(productData);
+        res.render('editproducts',{products:productData})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports={
-    addproduct
+    addproduct,
+    saveproduct,
+editproducts,
+    
 }

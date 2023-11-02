@@ -1,0 +1,221 @@
+<%- include("../layouts/adminHeader.ejs")%> <%-
+include("../layouts/adminSideBar.ejs")%>
+<div class="nk-content">
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">
+                Products <span class="text-grey">/ add Product</span>
+              </h3>
+
+              <div class="container-fluid mt-3">
+                <div class="row">
+                  <div class="col-md-12 mx-auto">
+                    <div class="card">
+                      <div class="card-body">
+                        <form
+                          action="/admin/addproducts"
+                          method="post"
+                          enctype="multipart/form-data"
+                        >
+                          <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                              <div class="">
+                                <label for="product-title" class="form-label"
+                                  >Product Name</label
+                                >
+                                <input
+                                  type="text"
+                                  name="productname"
+                                  id="product-title"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div>
+                                <label for="frameshape" class="form-label"
+                                  >Frame Shape</label
+                                >
+                                <input
+                                  type="text"
+                                  name="frameshape"
+                                  id="frameshape"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div>
+                                <label for="category" class="form-label">
+                                  Category
+                                </label>
+                                <input
+                                  type="text"
+                                  name="category"
+                                  id="category"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div>
+                                <label for="brand" class="form-label"
+                                  >Brand</label
+                                >
+                                <input
+                                  type="text"
+                                  name="brand"
+                                  id="brand"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div>
+                                <label for="stock" class="form-label"
+                                  >Stock</label
+                                >
+                                <input
+                                  type="number"
+                                  name="stock"
+                                  id="stock"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div>
+                                <label for="price" class="form-label"
+                                  >Price</label
+                                >
+                                <input
+                                  type="number"
+                                  name="price"
+                                  id="price"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <div>
+                                <label for="description" class="form-label"
+                                  >Description</label
+                                >
+                                <textarea
+                                  name="description"
+                                  id="description"
+                                  class="form-control"
+                                  required
+                                ></textarea>
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <div class="form-group">
+                                <div class="mt-3">
+                                  <div class="row">
+                                    <div class="col-6 col-md-3 mb-3">
+                                      <div class="image-upload-slot">
+                                        <label class="form-label">Image Slot 1
+                                          <div class="image-preview" id="image-preview-1">
+                                            <img
+                                              src="/static/admin/assets/images/dummy/dummyimage.jpg"
+                                              alt="Image 1"
+                                              name="images"
+                                              onclick="changeImage(1)"
+                                            />
+                                            <input type="file" hidden id="input-file-1" onchange="updateImage(1, this)">
+                                          </div>
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-3">
+                                      <div class="image-upload-slot">
+                                        <label class="form-label">Image Slot 2
+                                          <div class="image-preview" id="image-preview-2">
+                                            <img
+                                              src="/static/admin/assets/images/dummy/dummyimage.jpg"
+                                              alt="Image 2"
+                                              name="images"
+                                              onclick="changeImage(2)"
+                                            />
+                                            <input type="file" hidden id="input-file-2" onchange="updateImage(2, this)">
+                                          </div>
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <!-- Repeat the structure for the remaining slots -->
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+
+
+                            
+                            <div class="col-12">
+                              <button type="submit" class="btn btn-primary">
+                                <em class="icon ni ni-plus"></em>
+                                <span>Add New</span>
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function changeImage(slot) {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+
+      fileInput.onchange = function () {
+        const imagePreview = document.getElementById("image-preview-" + slot);
+        const file = fileInput.files[0];
+        console.log(file)
+        if (file) {
+          const reader = new FileReader();
+          
+          reader.onload = function () {
+            imagePreview.innerHTML = ""; // Clear the existing content
+            const newImage = document.createElement("img");
+            newImage.src = reader.result;
+            newImage.alt = "Image " + slot;
+          
+            newImage.onclick = function () {
+              changeImage(slot); // Clicking the new image allows changing it
+            };
+            imagePreview.appendChild(newImage);
+          };
+
+          reader.readAsDataURL(file);
+        }
+      };
+
+      fileInput.click(); // Trigger the file input dialog
+    }
+  </script>
+  <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+  <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
+  <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>
+  <!-- Mirrored from dashlite.net/demo2/ecommerce/products.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2023 14:33:03 GMT -->
+</div>
