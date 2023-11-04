@@ -10,10 +10,7 @@ const productsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  category: {
-    type: String,
-    required: true,
-  },
+
   description: {
     type: String,
     required: true,
@@ -34,9 +31,17 @@ const productsSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  is_active: {
+  active: {
     type: Number,
     default: 0,
+  },
+  createdAt: {
+    type: Number,
+    default: 0,
+  },
+  updatedAt: {
+    type: Number,
+    required: false,
   }
 });
 

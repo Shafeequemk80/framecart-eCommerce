@@ -17,12 +17,12 @@ include("../layouts/adminSideBar.ejs")%>
                     <div class="card">
                       <div class="card-body">
                         <form
-                          action="/admin/addproducts"
+                          action="addproducts"
                           method="post"
                           enctype="multipart/form-data"
                         >
                           <div class="row g-3 mt-2">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                               <div class="">
                                 <label for="product-title" class="form-label"
                                   >Product Name</label
@@ -38,32 +38,18 @@ include("../layouts/adminSideBar.ejs")%>
                             </div>
                             <div class="col-md-6">
                               <div>
-                                <label for="frameshape" class="form-label"
-                                  >Frame Shape</label
-                                >
-                                <input
-                                  type="text"
-                                  name="frameshape"
-                                  id="frameshape"
-                                  class="form-control"
-                                  required
-                                />
+                                <label for="frameshape" class="form-label">Frame Shape</label>
+                                <select name="frameshape" id="frameshape" class="form-control" required>
+
+                                  <%category.forEach((value)=>{%>
+                                  <option value="<%=value.categoryname%>"><%=value.categoryname%></option>
+                                  <%})%>
+                                  <!-- Add more options as needed -->
+                                </select>
                               </div>
                             </div>
-                            <div class="col-md-6">
-                              <div>
-                                <label for="category" class="form-label">
-                                  Category
-                                </label>
-                                <input
-                                  type="text"
-                                  name="category"
-                                  id="category"
-                                  class="form-control"
-                                  required
-                                />
-                              </div>
-                            </div>
+                            
+                          
                             <div class="col-md-6">
                               <div>
                                 <label for="brand" class="form-label"
@@ -119,49 +105,45 @@ include("../layouts/adminSideBar.ejs")%>
                                 ></textarea>
                               </div>
                             </div>
-                            <div class="col-12">
-                              <div class="form-group">
-                                <div class="mt-3">
-                                  <div class="row">
-                                    <div class="col-6 col-md-3 mb-3">
-                                      <div class="image-upload-slot">
-                                        <label class="form-label">Image Slot 1
-                                          <div class="image-preview" id="image-preview-1">
-                                            <img
-                                              src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                              alt="Image 1"
-                                              name="images"
-                                              onclick="changeImage(1)"
-                                            />
-                                            <input type="file" hidden id="input-file-1" onchange="updateImage(1, this)">
-                                          </div>
-                                        </label>
-                                      </div>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3">
-                                      <div class="image-upload-slot">
-                                        <label class="form-label">Image Slot 2
-                                          <div class="image-preview" id="image-preview-2">
-                                            <img
-                                              src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                              alt="Image 2"
-                                              name="images"
-                                              onclick="changeImage(2)"
-                                            />
-                                            <input type="file" hidden id="input-file-2" onchange="updateImage(2, this)">
-                                          </div>
-                                        </label>
-                                      </div>
-                                    </div>
-                                    <!-- Repeat the structure for the remaining slots -->
-                                  </div>
+                            <div class="col-12 row mt-4">
+
+                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
+                                <label class="image-label" for="imageInput1">Image Slot 1
+                                <div class=" rounded-image-preview">
+                                  <img   id="imagePreview1" src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images" />
                                 </div>
+                                <input type="file" name="images" class="imageInput" id="imageInput1" accept="image/*" />
+                              </label>
+                              </div>
+
+                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
+                                <label class="image-label" for="imageInput2">Image Slot 1
+                                <div class=" rounded-image-preview">
+                                  <img  id="imagePreview2"  src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images" />
+                                </div>
+                                <input type="file" name="images" class="imageInput" id="imageInput2" accept="image/*" />
+                              </label>
+                              </div>
+
+                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
+                                <label class="image-label" for="imageInput3">Image Slot 1
+                                <div class=" rounded-image-preview">
+                                  <img id="imagePreview3" src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images" id="imagePreview" />
+                                </div>
+                                <input type="file" name="images" class="imageInput" id="imageInput3" accept="image/*" />
+                              </label>
+                              </div>
+
+                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
+                                <label class="image-label" for="imageInput4">Image Slot 1
+                                <div class=" rounded-image-preview">
+                                  <img id="imagePreview4" src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images"  />
+                                </div>
+                                <input type="file" name="images" class="imageInput" id="imageInput4" accept="image/*" />
+                              </label>
                               </div>
                             </div>
-                            
 
-
-                            
                             <div class="col-12">
                               <button type="submit" class="btn btn-primary">
                                 <em class="icon ni ni-plus"></em>
@@ -181,38 +163,24 @@ include("../layouts/adminSideBar.ejs")%>
       </div>
     </div>
   </div>
+  
 
   <script>
-    function changeImage(slot) {
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = "image/*";
+  $(document).ready(function() {
+    $(".imageInput").change(function() {
+      var input = this;
+      var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
 
-      fileInput.onchange = function () {
-        const imagePreview = document.getElementById("image-preview-" + slot);
-        const file = fileInput.files[0];
-        console.log(file)
-        if (file) {
-          const reader = new FileReader();
-          
-          reader.onload = function () {
-            imagePreview.innerHTML = ""; // Clear the existing content
-            const newImage = document.createElement("img");
-            newImage.src = reader.result;
-            newImage.alt = "Image " + slot;
-          
-            newImage.onclick = function () {
-              changeImage(slot); // Clicking the new image allows changing it
-            };
-            imagePreview.appendChild(newImage);
-          };
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
 
-          reader.readAsDataURL(file);
-        }
-      };
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          $(imagePreview).show();
+        };
 
-      fileInput.click(); // Trigger the file input dialog
-    }
+        reader.readAsDataURL(input.files[0]);
+}});});
   </script>
   <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>

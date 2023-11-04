@@ -3,7 +3,7 @@ const admin_route = express();
 const adminController = require("../controller/adminController");
 const customersCrontroller = require("../controller/customersController");
 const productsCrontroller = require("../controller/productsController");
-
+const categoryCrontroller = require("../controller/categoryController");
 const session = require("express-session");
 const user = require("../model/userModel");
 const path = require("path");
@@ -14,7 +14,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, path.join(__dirname, "../public/produtsImages"));
+    callback(null, path.join(__dirname,"../public/produtsImages"));
   },
   filename: function (req, file, callback) {
     const name = Date.now() + "-" + file.originalname;
@@ -46,12 +46,18 @@ admin_route.get("/customers", adminController.customerload);
 admin_route.get("/logout", adminController.logout);
 
 admin_route.get("/orders", adminController.loadorders);
-admin_route.get("/suspend", customersCrontroller.suspend);
-admin_route.get("/active", customersCrontroller.active);
+admin_route.get("/suspenduser", customersCrontroller.suspenduser);
+admin_route.get("/activeuser", customersCrontroller.activeuser);
 admin_route.get("/products", adminController.loadproducts);
 admin_route.get("/addproducts",productsCrontroller.addproduct);
-admin_route.post("/addproducts",upload.array("images"),productsCrontroller.saveproduct);
+admin_route.post("/addproducts",upload.array("images",),productsCrontroller.saveproduct);
 admin_route.get("/editproducts",productsCrontroller.editproducts);
+admin_route.post("/editproducts",upload.array("images"),productsCrontroller.saveditproducts);
+admin_route.get("/suspendproduct", productsCrontroller.suspendproduct);
+admin_route.get("/activeproduct", productsCrontroller.activeproduct);
 
+admin_route.get("/category",categoryCrontroller.loadcategorypage)
+admin_route.get("/addcategory",categoryCrontroller.loadcatergory)
+admin_route.post("/addcategory",upload.single("image",),categoryCrontroller.savecategory)
 
 module.exports = admin_route;

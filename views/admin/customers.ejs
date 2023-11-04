@@ -183,6 +183,7 @@
                               </div>
                               <div class="user-info">
                                 <span class="tb-lead"
+                                
                                   > <%=users[i].fullname%>
                                   <span
                                     class="dot dot-success d-md-none ms-1"
@@ -269,13 +270,13 @@
                                       >
                                     </li>
                                     <% if (users[i].is_Verified == 0) { %><li>
-                                      <a href="/admin/active?id=<%=users[i]._id %>"
+                                      <a href="/admin/activeuser?id=<%=users[i]._id %>"
                                         ><em class="icon ni ni-eye-alt-fill"></em>
                                          
                                         <span>active</span></a
                                       >
                                     </li><% } else { %><li>
-                                      <a href="/admin/suspend?id=<%=users[i]._id %>"
+                                      <a href="/admin/suspenduser?id=<%=users[i]._id %>"
                                         ><em class="icon ni ni-na"></em
                                         ><span>Suspend</span></a
                                       >

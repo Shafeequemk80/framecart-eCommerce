@@ -1,5 +1,7 @@
 const bctypt = require("bcrypt");
 const User = require("../model/userModel");
+const Product = require("../model/productsModel")
+const Category = require("../model/category")
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
 const randomstring = require("randomstring");
@@ -254,7 +256,10 @@ console.log(userData);
 
 const loadHome = async (req, res) => {   
   try {
-    res.render("home");
+  
+    const categorydata=await Category.find().sort({ createdAt: -1 });
+const prodactdata=await Product.find({active:1}).sort({ createdAt: -1 });
+    res.render("home",{product:prodactdata,category:categorydata});
   } catch (error) {
     console.log(error.message);
   }

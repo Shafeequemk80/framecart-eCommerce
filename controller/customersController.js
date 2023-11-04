@@ -1,6 +1,6 @@
 const User = require("../model/userModel");
 
-const suspend = async (req, res) => {
+const suspenduser = async (req, res) => {
   try {
     const id = req.query.id;
     console.log(id);
@@ -17,7 +17,7 @@ const suspend = async (req, res) => {
   }
 };
 
-const active = async (req, res) => {
+const activeuser = async (req, res) => {
     try {
       const id = req.query.id;
       console.log(id);
@@ -36,6 +36,6 @@ const active = async (req, res) => {
   
 
 module.exports = {
-  suspend,
-  active
+  suspenduser,
+  activeuser,
 };

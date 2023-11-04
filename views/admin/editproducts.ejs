@@ -1,6 +1,5 @@
 <%- include("../layouts/adminHeader.ejs")%> <%-
 include("../layouts/adminSideBar.ejs")%>
-
 <div class="nk-content">
   <div class="container-fluid">
     <div class="nk-content-inner">
@@ -9,35 +8,30 @@ include("../layouts/adminSideBar.ejs")%>
           <div class="nk-block-between">
             <div class="nk-block-head-content">
               <h3 class="nk-block-title page-title">
-                Products <span class="text-grey">/ add Product</span>
+                Products <span class="text-grey">/ edit Product</span>
               </h3>
-              
+              <input type="hidden" name="user_id" value="<%=products._id %>">
               <div class="container-fluid mt-3">
                 <div class="row">
                   <div class="col-md-12 mx-auto">
                     <div class="card">
                       <div class="card-body">
-
-                       
-
                         <form
-
-                 
-
-                          action="/admin/addproducts"
+                          action=""
                           method="post"
-                          enctype="multipart/form-data" >
-                       
+                          enctype="multipart/form-data"
+                        >
                           <div class="row g-3 mt-2">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                               <div class="">
+                                
                                 <label for="product-title" class="form-label"
                                   >Product Name</label
                                 >
                                 <input
-                                  type="text"
+                                  type="text" 
+                                  value="<%=products.productname%>"
                                   name="productname"
-                                  value=" <%=products.productname%> " 
                                   id="product-title"
                                   class="form-control"
                                   required
@@ -46,32 +40,14 @@ include("../layouts/adminSideBar.ejs")%>
                             </div>
                             <div class="col-md-6">
                               <div>
-                                <label for="frameshape" class="form-label"
-                                  >Frame Shape</label
-                                >
-                                <input
-                                  type="text"
-                                  name="frameshape"
-                                  id="frameshape"
-                                  value=" <%=products.frameshape%> "
-                                  class="form-control"
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div>
-                                <label for="category" class="form-label">
-                                  Category
-                                </label>
-                                <input
-                                  type="text"
-                                  name="category"
-                                  id="category"
-                                  value=" <%=products.category%> "
-                                  class="form-control"
-                                  required
-                                />
+                                <label for="frameshape" class="form-label">Frame Shape</label>
+                                <select name="frameshape" id="frameshape" class="form-control" required>
+
+                                  <%category.forEach((value)=>{%>
+                                  <option value="<%=value.categoryname%>"><%=value.categoryname%></option>
+                                  <%})%>
+                                  <!-- Add more options as needed -->
+                                </select>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -82,8 +58,8 @@ include("../layouts/adminSideBar.ejs")%>
                                 <input
                                   type="text"
                                   name="brand"
+                                  value="<%=products.brand%>"
                                   id="brand"
-                                  value=" <%=products.brand%> "
                                   class="form-control"
                                   required
                                 />
@@ -130,148 +106,63 @@ include("../layouts/adminSideBar.ejs")%>
                                   
                                   class="form-control"
                                   required
-                                ><%=products.description%>"</textarea>
+                                >"<%=products.description%>"</textarea>
                               </div>
                             </div>
-                            <div class="col-12">
-                              <div class="form-group">
-                                <div class="mt-3">
-                                  <div class="row">
-                                    <div class="col-6 col-md-3 mb-3">
-                                      <div class="image-upload-slot">
-                                        <label class="form-label"
-                                          >Image Slot 1</label
-                                        >
-                                        <div
-                                          class="image-preview"
-                                          id="image-preview-1"
-                                        >
-                                          <img
-                                            src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                            alt="Image 1"
-                                            name="images"
 
-                                            onclick="changeImage(1)"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3">
-                                      <div class="image-upload-slot">
-                                        <label class="form-label"
-                                          >Image Slot 2</label
-                                        >
-                                        <div
-                                          class="image-preview"
-                                          id="image-preview-2"
-                                        >
-                                          <img
-                                            src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                            alt="Image 2"
-                                            name="images"
-
-                                            onclick="changeImage(2)"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3">
-                                      <div class="image-upload-slot">
-                                        <label class="form-label"
-                                          >Image Slot 4</label
-                                        >
-                                        <div
-                                          class="image-preview"
-                                          id="image-preview-3"
-                                        >
-                                          <img
-                                            src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                            alt="Image 3"
-                                            name="images"
-
-                                            onclick="changeImage(3)"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3">
-                                      <div class="image-upload-slot">
-                                        <label class="form-label"
-                                          >Image Slot 4</label
-                                        >
-                                        <div
-                                          class="image-preview"
-                                          id="image-preview-4"
-                                        >
-                                          <img
-                                            src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                            alt="Image 4"
-                                            name="images"
-                                            onclick="changeImage(4)"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- Repeat the structure for the remaining slots -->
+                            
+                            <div class="col-12 row mt-4">
+                              <%for(let i=0;i < 4;i++){%>  
+                                <div class="col-6 col-md-3 mb-3 rounded-image-preview">
+                                  <label class="image-label"  for="imageInput<%= i + 1 %>">Image Slot <%= i + 1 %>
+                                  <div class=" rounded-image-preview">
+                                    <img   id="imagePreview<%= i + 1 %>" src="<%= products.images[i] ? '/static/produtsImages/' + products.images[i] : '/static/admin/assets/images/dummy/dummyimage.jpg' %>" alt="Preview" name="images" />
                                   </div>
+                                  <input type="file"  value="/static/produtsImages/<%=products.images[i]%>"  name="images" class="imageInput" id="imageInput<%= i + 1 %>" accept="image/*"  />
+                                </label>
                                 </div>
-                              </div>
-                            </div>
-
+  
+                             
+                    <%}%>
+  
+                              
                             <div class="col-12">
                               <button type="submit" class="btn btn-primary">
                                 <em class="icon ni ni-plus"></em>
-                                <span>Add New</span>
+                                <span>Update</span>
                               </button>
                             </div>
                           </div>
-                      
                         </form>
-                       
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
- 
+  
+
   <script>
-    function changeImage(slot) {
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = "image/*";
+  $(document).ready(function() {
+    $(".imageInput").change(function() {
+      var input = this;
+      var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
 
-      fileInput.onchange = function () {
-        const imagePreview = document.getElementById("image-preview-" + slot);
-        const file = fileInput.files[0];
-        console.log(file)
-        if (file) {
-          const reader = new FileReader();
-          
-          reader.onload = function () {
-            imagePreview.innerHTML = ""; // Clear the existing content
-            const newImage = document.createElement("img");
-            newImage.src = reader.result;
-            newImage.alt = "Image " + slot;
-          
-            newImage.onclick = function () {
-              changeImage(slot); // Clicking the new image allows changing it
-            };
-            imagePreview.appendChild(newImage);
-          };
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
 
-          reader.readAsDataURL(file);
-        }
-      };
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          $(imagePreview).show();
+        };
 
-      fileInput.click(); // Trigger the file input dialog
-    }
+        reader.readAsDataURL(input.files[0]);
+}});});
   </script>
   <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>

@@ -1,5 +1,6 @@
 const bctypt = require("bcrypt");
 const User = require("../model/userModel");
+const Category = require("../model/category");
 const Products = require("../model/productsModel");
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
@@ -191,7 +192,7 @@ res.redirect("/admin")
 const loadproducts =async (req,res)=>{
   
   const productData= await Products.find()
-res.render("products",{products:productData})
+res.render("products",{products:productData,})
 
 try {
   

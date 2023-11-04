@@ -56,6 +56,12 @@ include("../layouts/adminSideBar.ejs")%>
                       </div>
                     </li>
                     <li class="nk-block-tools-opt">
+                      <a href="addcategory" class="btn btn-primary">
+                        <em class="icon ni ni-plus"></em>
+                        <span>Add category</span>
+                      </a>
+                    </li>
+                    <li class="nk-block-tools-opt">
                       <a href="addproducts" class="btn btn-primary">
                         <em class="icon ni ni-plus"></em>
                         <span>Add Product</span>
@@ -83,7 +89,7 @@ include("../layouts/adminSideBar.ejs")%>
                 </div>
               </div>
               <div class="nk-tb-col tb-col-sm"><span>Name</span></div>
-              <div class="nk-tb-col"><span>SKU</span></div>
+              <div class="nk-tb-col"><span>Status</span></div>
               <div class="nk-tb-col"><span>Price</span></div>
               <div class="nk-tb-col"><span>Stock</span></div>
               <div class="nk-tb-col tb-col-md">
@@ -163,7 +169,7 @@ include("../layouts/adminSideBar.ejs")%>
                 >
               </div>
               <div class="nk-tb-col">
-                <span class="tb-sub">UY3757</span>
+                <span class="tb-sub"> <% if (value.active == 1) { %><p class="text-success">active</p><% } else { %><p class="text-danger">Blocked</p><% } %></span>
               </div>
               <div class="nk-tb-col">
                 <span class="tb-lead"> <%=value.price%></span>
@@ -172,7 +178,7 @@ include("../layouts/adminSideBar.ejs")%>
                 <span class="tb-sub"><%=value.stock%></span>
               </div>
               <div class="nk-tb-col tb-col-md">
-                <span class="tb-sub">Men, Holder</span>
+                <span class="tb-sub"><%=value.frameshape%></span>
               </div>
               <div class="nk-tb-col tb-col-md">
                 <div class="asterisk tb-asterisk">
@@ -212,12 +218,24 @@ include("../layouts/adminSideBar.ejs")%>
                               ><span>Product Orders</span></a
                             >
                           </li>
-                          <li>
-                            <a href="#"
-                              ><em class="icon ni ni-trash"></em
-                              ><span>Remove Product</span></a
+                          <% if (value.active== 0) { %>
+                            <li>
+                            <a href="/admin/activeproduct?id=<%=value._id %>"
+                              ><em class="icon ni ni-eye-alt-fill"></em>
+                               
+                              <span>active</span></a
                             >
                           </li>
+                          <% } else { %>
+                            <li>
+                            <a href="/admin/suspendproduct?id=<%=value._id %>"
+                              ><em class="icon ni ni-na"></em
+                              ><span>Suspend</span></a
+                            >
+                          </li>
+                          <% } %>
+                          
+                        
                         </ul>
                       </div>
                     </div>
