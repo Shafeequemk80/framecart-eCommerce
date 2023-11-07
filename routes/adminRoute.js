@@ -9,20 +9,9 @@ const user = require("../model/userModel");
 const path = require("path");
 const auth = require("../middleware/adminAuth");
 const config = require("../config/config");
+const multer=require("../controller/multerController")
 
-const multer = require("multer");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, path.join(__dirname,"../public/produtsImages"));
-  },
-  filename: function (req, file, callback) {
-    const name = Date.now() + "-" + file.originalname;
-    callback(null, name)
-  },
-});
-
-const upload = multer({ storage: storage });
 
 admin_route.use(
   session({
@@ -33,6 +22,9 @@ admin_route.use(
 );
 admin_route.set("view engine", "ejs");
 admin_route.set("views", "./views/admin");
+
+
+
 admin_route.use(express.static(path.join(__dirname, "public")));
 
 admin_route.get("/", auth.isLogout, adminController.loadLogin);
@@ -50,14 +42,16 @@ admin_route.get("/suspenduser", customersCrontroller.suspenduser);
 admin_route.get("/activeuser", customersCrontroller.activeuser);
 admin_route.get("/products", adminController.loadproducts);
 admin_route.get("/addproducts",productsCrontroller.addproduct);
-admin_route.post("/addproducts",upload.array("images",),productsCrontroller.saveproduct);
+admin_route.post("/addproducts",multer.productimagesUpload.array("images",),productsCrontroller.saveproduct);
 admin_route.get("/editproducts",productsCrontroller.editproducts);
-admin_route.post("/editproducts",upload.array("images"),productsCrontroller.saveditproducts);
+admin_route.post("/editproducts",multer.productimagesUpload.array("images"),productsCrontroller.saveditproducts);
 admin_route.get("/suspendproduct", productsCrontroller.suspendproduct);
 admin_route.get("/activeproduct", productsCrontroller.activeproduct);
 
 admin_route.get("/category",categoryCrontroller.loadcategorypage)
 admin_route.get("/addcategory",categoryCrontroller.loadcatergory)
-admin_route.post("/addcategory",upload.single("image",),categoryCrontroller.savecategory)
+admin_route.post("/addcategory",multer.categoryimageupload.single("image",),categoryCrontroller.savecategory)
 
+admin_route.get("/suspendcategory",categoryCrontroller.suspendcategory)
+admin_route.get("/activecategory",categoryCrontroller.activecategory)
 module.exports = admin_route;

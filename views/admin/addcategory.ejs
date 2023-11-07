@@ -28,7 +28,7 @@ include("../layouts/adminSideBar.ejs")%>
                           <div class="col-4 col-md-3 mb-3 rounded-image-preview">
                             <label class="image-label" for="imageInput1">add icon
                               <div class="rounded-image-preview">
-                                <img
+                                <img class="image-container"
                                   id="imagePreview1"
                                   src="/static/admin/assets/images/dummy/dummyimage.jpg"
                                   alt="Preview"
@@ -78,6 +78,16 @@ include("../layouts/adminSideBar.ejs")%>
               </div>
             </div>
           </div>
+          <% if (typeof message !== "undefined") { %>
+            <div class="example-alert">
+                <div class="alert alert-danger alert-icon">
+                    <em class="icon ni ni-cross-circle"></em>
+                    <%= message %>
+                </div>
+            </div>
+        
+        <% } %>
+        
         </div>
       </div>
     </div>
@@ -106,6 +116,17 @@ include("../layouts/adminSideBar.ejs")%>
       }
     });
   });
+  
+</script>
+
+<script>
+  // Set a timeout to remove the message after a specified delay (e.g., 5 seconds)
+  const timeoutId = setTimeout(function () {
+      const alertElement = document.querySelector(".example-alert");
+      if (alertElement) {
+          alertElement.remove();
+      }
+  },3000)
 </script>
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>

@@ -42665,3 +42665,7 @@ div.dataTables_wrapper
 .imageInput {
   display: none;
 }
+.image-container {
+ 
+  overflow: hidden;
+}

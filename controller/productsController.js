@@ -81,7 +81,7 @@ const activeproduct=async(req,res)=>{
   
     const active = await Products.updateOne(
       { _id: id },
-      { $set: { active: 1 } }
+      { $set: { active: 0 } }
     );
     
 
@@ -97,7 +97,7 @@ const suspendproduct=async(req,res)=>{
     console.log(id);
     const suspend = await Products.updateOne(
       { _id: id },
-      { $set: { active: 0 } }
+      { $set: { active: 1 } }
     );
     
     console.log(suspend);

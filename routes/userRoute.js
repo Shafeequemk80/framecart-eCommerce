@@ -1,6 +1,7 @@
 const express = require("express");
 const user_route = express();
 const userController = require("../controller/userController");
+const cartController = require("../controller/cartController");
 const session = require("express-session");
 const user = require("../model/userModel");
 const path = require("path");
@@ -30,13 +31,18 @@ user_route.post("/verify", userController.checkotp);
 user_route.get("/email-verified", userController.confimverify);
 
 user_route.get("/home", userController.loadHome),
-  user_route.get("/forgetpassword", auth.isLogout, userController.loadforget);
+
+user_route.get("/forgetpassword", auth.isLogout, userController.loadforget);
 user_route.post("/forgetpassword", auth.isLogout, userController.verifyforget);
 
 user_route.get("/resend-otp", auth.isLogout, userController.resend);
 
 user_route.get("/resetpassword", userController.loadreset);
 user_route.post("/resetpassword", userController.resetpassword);
-user_route.get("/logout",auth.islogin, userController.logout);
+user_route.get("/logout", auth.islogin, userController.logout);
 
+user_route.get("/allproducts", userController.getallproducts);
+user_route.get("/product", userController.getoneproduct);
+user_route.get("/cart", auth.islogin, userController.loadcart);
+user_route.get("/addtocart", auth.islogin, cartController.addtocart);
 module.exports = user_route;

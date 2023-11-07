@@ -2,7 +2,8 @@
 include("../layouts/header.ejs")%>
 
 <!-- End .header -->
-
+<%-
+include("../layouts/userNavbar.ejs")%>
 <main class="main">
   <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
     <div class="container">
@@ -74,12 +75,11 @@ include("../layouts/header.ejs")%>
         </form>
 
         <% if (typeof message !== "undefined") { %>
-        <div
-          class="alert alert-info mt-3"
-          id="messagePlaceholder"
-          role="alert"
-        ></div>
-        <% } %>
+          <div class="alert alert-primary mt-3" role="alert">
+              <!-- Replace the message with your dynamic message -->
+              <%= message %>
+          </div>
+          <% } %>
       </div>
     </div>
   </div>

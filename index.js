@@ -25,5 +25,6 @@ const PORT =  3000;
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}/`);
+  console.log(`http://localhost:${PORT}/home`);
   console.log(`http://localhost:${PORT}/admin`);
 });

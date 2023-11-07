@@ -243,7 +243,7 @@ $(document).ready(function () {
                 buttonsWidth: '26px'
             });
         }
-    }
+    } b 
 
     // Sticky Content - Sidebar - Social Icons etc..
     // Wrap elements with <div class="sticky-content"></div> if you want to make it sticky

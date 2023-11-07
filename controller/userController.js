@@ -1,7 +1,8 @@
 const bctypt = require("bcrypt");
 const User = require("../model/userModel");
-const Product = require("../model/productsModel")
-const Category = require("../model/category")
+const Cart = require("../model/cartModel");
+const Product = require("../model/productsModel");
+const Category = require("../model/category");
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
 const randomstring = require("randomstring");
@@ -10,6 +11,7 @@ const Mail = require("nodemailer/lib/mailer");
 const user_route = require("../routes/userRoute");
 const { token } = require("morgan");
 const e = require("express");
+const { Long } = require("mongodb");
 
 function generateAndStoreOTP(req) {
   const otp = otpGenerator.generate(6, {
@@ -124,11 +126,10 @@ const loadregister = async (req, res) => {
 
 const insestUser = async (req, res) => {
   try {
-    
     const existingUser = await User.findOne({ email: req.body.email });
-    
+
     if (existingUser) {
-      res.render("signup", { message: "this mail already send" });
+      res.render("signup", { message: "this mail already exising" });
     } else {
       req.session.username = req.body.username;
       req.session.firstname = req.body.firstname;
@@ -136,7 +137,7 @@ const insestUser = async (req, res) => {
       req.session.email = req.body.email;
       req.session.mobile = req.body.mobile;
       req.session.password = req.body.password;
-      req.session.fullname=`${req.body.firstname} ${req.body.lastname}`
+      req.session.fullname = `${req.body.firstname} ${req.body.lastname}`;
       if (req.body.password === req.body.password_2) {
         const generatedOTP = generateAndStoreOTP(req);
 
@@ -157,7 +158,7 @@ const insestUser = async (req, res) => {
 
 const loadverifyotp = async (req, res) => {
   try {
-    res.render("verify");
+    res.redirect("/verify");
   } catch (error) {
     console.log(error.message);
   }
@@ -171,7 +172,7 @@ const checkotp = async (req, res) => {
 
     if (currTime <= req.session.otp.expiry) {
       if (req.session.otp.code == verifyotp) {
-        res.redirect("email-verified");
+      
         const spassword = await securePassword(req.session.password);
         const user = new User({
           username: req.session.username,
@@ -181,11 +182,12 @@ const checkotp = async (req, res) => {
           password: spassword,
           mobile: req.session.mobile,
           fullname: req.session.fullname,
-          is_Verified:1
+          is_Verified: 1,
         });
-      
+
         const userData = await user.save();
         console.log(userData);
+        res.redirect("email-verified");
         if (userData) {
           req.session.user_id = userData._id;
         }
@@ -232,34 +234,47 @@ const verifylogin = async (req, res) => {
     const password = req.body.password;
 
     const userData = await User.findOne({ email: email });
-console.log(userData);
+    console.log(userData);
     if (userData) {
       const passwordMatch = await bctypt.compare(password, userData.password);
       if (passwordMatch) {
-        if (userData.is_Verified==0) {
-          res.render({ message: "Your account is suspended" });
+        if (userData.is_Verified == 0) {
+          res.render("login",{ message: "Your account is suspended" });
         } else {
           req.session.user_id = userData._id;
-          res.redirect("/home")
+          res.redirect("/home");
         }
-        
       } else {
-        res.render({ message: "Your email or password is incorrect" });
+        res.render("login",{ message: "Your email or password is incorrect" });
       }
     } else {
-      res.render({ message: "Your email or password is incorrect" });
+      res.render("login",{ message: "Your email or password is incorrect" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const loadHome = async (req, res) => {   
+const loadHome = async (req, res) => {
   try {
-  
-    const categorydata=await Category.find().sort({ createdAt: -1 });
-const prodactdata=await Product.find({active:1}).sort({ createdAt: -1 });
-    res.render("home",{product:prodactdata,category:categorydata});
+    const id = req.session.user_id;
+    console.log(id)
+    
+    const userData = await User.findById(id);
+    console.log(userData);
+    const categorydata = await Category.find({ active: 0 }).sort({
+      createdAt: -1,
+    });
+
+    const prodactdata = await Product.find({ active: 0 }).sort({ createdAt: -1 }).populate('frameshape'); 
+
+   console.log(prodactdata);
+    res.render("home", {
+     
+      product: prodactdata,
+      category: categorydata,
+      user: userData,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -307,11 +322,10 @@ const loadreset = async (req, res) => {
   }
 };
 const resetpassword = async (req, res) => {
-
   console.log(req.body.user_id);
   const password = req.body.password;
-  const user_id = req.body.user_id
-  
+  const user_id = req.body.user_id;
+
   const spassword = await securePassword(password);
 
   const updateData = await User.updateOne(
@@ -321,16 +335,50 @@ const resetpassword = async (req, res) => {
 
   res.redirect("/");
 };
-const logout=async(req,res)=>{
+const logout = async (req, res) => {
   try {
-    
-req.session.destroy();
-res.redirect("/")
+    req.session.destroy();
+    res.redirect("/");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const getallproducts = async (req, res) => {
+  try {
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
+
+    const productData = await Product.find({});
+    res.render("allproducts", { product: productData, user: userData, });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const getoneproduct = async (req, res) => {
+  try {
+   const id= req.query.id;
+
+       const productData = await Product.findById(id);
+    res.render("product", { product: productData });
 
   } catch (error) {
     console.log(error.message);
   }
-}
+};
+const loadcart = async (req, res) => {
+  try {
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
+
+    const cartData = await Cart.findOne({ user: id }).populate('products.product');
+console.log(cartData.products);
+    res.render("cart", { user: userData, cartData: cartData});
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 
 module.exports = {
   loadregister,
@@ -342,10 +390,13 @@ module.exports = {
   loadlogin,
   verifylogin,
   loadHome,
+  getoneproduct,
   loadforget,
   verifyforget,
   resend,
   loadreset,
   resetpassword,
   logout,
+  getallproducts,
+  loadcart,
 };
