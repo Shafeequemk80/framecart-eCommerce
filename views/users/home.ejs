@@ -228,7 +228,8 @@
                             <img src="/static/produtsImages/<%=value.images[0]%>" alt="Product image" class="product-image">
                             <img src="/static/produtsImages/<%=value.images[1]%>" alt="Product image" class="product-image-hover">
                         </a>
-                        <input type="hidden" name="product_id"  value="<%=value._id%>">
+                        
+                        <input type="hidden" name="productprice"  value="<%=value.price%>">
                         
                         <div class="product-action-vertical">
                             <a href="#" class="btn-product-icon btn-wishlist"><span>add to wishlist</span></a>
@@ -236,7 +237,7 @@
                     </figure><!-- End .product-media -->
 
                     <div class="product-body">
-                        <h3 class="product-title"><a href="/addtocart?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
+                        <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
                         <div class="product-price">
                             $<%=value.price%>
                         </div><!-- End .product-price -->
@@ -281,7 +282,7 @@
                 <% product.filter(p => p.frameshape === value.frameshape).forEach((product, j) => {  if( j < 10){%>
                     <div class="product product-11 text-center">
                         <figure class="product-media">
-                            <a href="product.html">
+                            <a href="/product?id=<%=value._id%>">
                                 <img src="/static/produtsImages/<%=product.images[0]%>" alt="Product image" class="product-image">
                                 <img src="/static/produtsImages/<%=product.images[1]%>" alt="Product image" class="product-image-hover">
                             </a>
@@ -292,13 +293,13 @@
                         </figure><!-- End .product-media -->
     
                         <div class="product-body">
-                            <h3 class="product-title"><a href="/addtocart?id=<%=value._id%>"><%=product.productname%></a></h3><!-- End .product-title -->
+                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.productname%></a></h3><!-- End .product-title -->
                             <div class="product-price">
                                 <%=product.price%>
                             </div><!-- End .product-price -->
                         </div><!-- End .product-body -->
                         <div class="product-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                            <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
                         </div><!-- End .product-action -->
                     </div><!-- End .product -->
                 <%}})%>
@@ -400,7 +401,7 @@
                                     
                                     <div class="product product-11 mt-v3 text-center">
                                         <figure class="product-media">
-                                            <a href="product.html">
+                                            <a href="/product?id=<%=value._id%>">
                                                 <img src="/static/produtsImages/<%=value.images[0]%>" alt="Product image" class="product-image">
                                                 <img src="/static/produtsImages/<%=value.images[1]%>" alt="Product image" class="product-image-hover">
                                             </a>
@@ -411,9 +412,9 @@
                                         </figure><!-- End .product-media -->
 
                                         <div class="product-body">
-                                            <h3 class="product-title"><a href="product.html">Block Side Table/Trolley</a></h3><!-- End .product-title -->
+                                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
                                             <div class="product-price">
-                                                $229,00
+                                               $ <%=value.price%>
                                             </div><!-- End .product-price -->
 
                                             <div class="product-nav product-nav-dots">
@@ -422,7 +423,7 @@
                                             </div><!-- End .product-nav -->
                                         </div><!-- End .product-body -->
                                         <div class="product-action">
-                                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
                                         </div><!-- End .product-action -->
                                     </div><!-- End .product -->
                                   
@@ -443,7 +444,7 @@
                                     <div class="product product-11 mt-v3 text-center">
                                         <figure class="product-media">
                                             <span class="product-label label-new">NEW</span>
-                                            <a href="product.html">
+                                            <a href="/product?id=<%=value._id%>">
                                                 <img src="/static/produtsImages/<%=product.images[0]%>" alt="Product image" class="product-image">
                                                 <img src="/static/produtsImages/<%=product.images[1]%>" alt="Product image" class="product-image-hover">
                                             </a>
@@ -454,13 +455,13 @@
                                         </figure><!-- End .product-media -->
 
                                         <div class="product-body">
-                                            <h3 class="product-title"><a href="product.html">Garden Armchair</a></h3><!-- End .product-title -->
+                                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
                                             <div class="product-price">
-                                                $94,00
+                                                $ <%=value.price%>
                                             </div><!-- End .product-price -->
                                         </div><!-- End .product-body -->
                                         <div class="product-action">
-                                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
                                         </div><!-- End .product-action -->
                                     </div><!-- End .product -->
                                 </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
@@ -680,7 +681,8 @@
                 </div>
             </div>
         </div>
+
         <%- include("../layouts/userFooter2.ejs")%>
         
-   
-    <%- include("../layouts/footer.ejs")%>
+           
+        <%- include("../layouts/footer.ejs")%>

@@ -17,7 +17,7 @@
         </a>
 
         <nav class="main-nav">
-          <ul class="menu sf-arrows">
+          <ul class="menu sf-arrow">
             <li class="megamenu-container active">
               <a href="/home" class="sf-with-ul">Home</a>
             </li>
@@ -25,7 +25,7 @@
               <a href="/allproducts" class="sf-with-ul">Shop</a>
             </li>
             <li>
-              <a href="product.html" class="sf-with-ul">Whishlis</a>
+              <a href="product.html" class="sf-with-ul">Whishlist</a>
             </li>
             <li>
               <a href="product.html" class="sf-with-ul">orders</a>
@@ -45,7 +45,7 @@
       </div>
       <!-- End .header-left -->
 
-      <div class="header-right">
+      <div class="header-right ">
         <div class="header-search">
           <a href="#" class="search-toggle" role="button" title="Search"
             ><i class="icon-search"></i
@@ -67,7 +67,7 @@
         </div>
         <!-- End .header-search -->
 
-        <div class="dropdown cart-dropdown">
+        <div class="dropdown cart-dropdown ">
           <a
             href="#"
             class="dropdown-toggle"
@@ -77,37 +77,52 @@
             aria-expanded="false"
             data-display="static"
           >
-            <i class="icon-user"></i>
-            <span class="cart-count">2</span>
+          <% if(user){%>
+            <span class="btn text-primary"><i class="icon-user"></i>My Account</span>
+           
           </a>
 
-          <% if(typeof  user!=="undefined"){%>
+          
           <div class="dropdown-menu dropdown-menu-right">
             <div class="user-card-wrap">
               <div class="user-card">
-                <div class="logout-button">
-                  <a href="/logout">
-                    <button type="submit" class="btn btn-outline-primary-2">
-                      <span>LOGOUT</span>
-                      <i class="icon-long-arrow-right"></i>
-                    </button>
-                  </a>
-                </div>
+                <ul class="user-actions">
+                  <li>
+                    <a href="/profile">
+                      <i class="icon-user larger-icon"></i> My Profile
+                    </a>
+                  </li>
+                  <li class="divider"></li>
+                  <li>
+                    <a href="/orders">
+                      <i class="icon-shopping-cart larger-icon"></i> Orders
+                    </a>
+                  </li>
+                  <li class="divider"></li>
+                  <li>
+                    <a href="/logout">
+                      <i class="icon-user larger-icon"></i>
+                       Logout
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
-
+          
             <div class="dropdown-cart-action">
               <!-- Your shopping cart content goes here -->
             </div>
           </div>
+          
           <!-- End .dropdown-menu -->
 
           <%}else{%>
+            <span class="btn text-primary "><i class="icon-user"></i>Login</span>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="user-card-wrap">
               <div class="user-card">
                 <div class="logout-button">
-                  <a href="/logout">
+                  <a href="/login">
                     <button type="submit" class="btn btn-outline-primary-2">
                       <span>Login</span>
                       <i class="icon-long-arrow-right"></i>
@@ -127,32 +142,13 @@
         </div>
         <!-- End .cart-dropdown -->
 
-        <div class="dropdown cart-dropdown">
+        
           <a
-            href="/cart"
-            class="dropdown-toggle"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            data-display="static"
-          >
+            href="/cart">
             <i class="icon-shopping-cart"></i>
             <span class="cart-count">2</span>
           </a>
 
-          <div class="dropdown-menu dropdown-menu-right">
-            <div class="dropdown-cart-action">
-              <a href="/cart" class="btn btn-primary">View Cart</a>
-              <a href="checkout.html" class="btn btn-outline-primary-2"
-                ><span>Checkout</span><i class="icon-long-arrow-right"></i
-              ></a>
-            </div>
-            <!-- End .dropdown-cart-total -->
-          </div>
-          <!-- End .dropdown-menu -->
-        </div>
-        <!-- End .cart-dropdown -->
       </div>
       <!-- End .header-right -->
     </div>

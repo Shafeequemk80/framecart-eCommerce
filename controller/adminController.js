@@ -62,7 +62,7 @@ const loadLogin = async (req, res) => {
     console.log(error.message);
   }
 };
-const verifylogin = async (req, res) => {
+const  verifylogin = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
@@ -74,7 +74,6 @@ const verifylogin = async (req, res) => {
           res.render("login", { message: "No account found" });
         } else {
          req.session.user_id = adminData._id;
-        const userData =  await User.findById(req.session.user_id)
           res.redirect("/admin/dashboard");
         }
       } else {

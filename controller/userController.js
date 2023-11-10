@@ -172,7 +172,6 @@ const checkotp = async (req, res) => {
 
     if (currTime <= req.session.otp.expiry) {
       if (req.session.otp.code == verifyotp) {
-      
         const spassword = await securePassword(req.session.password);
         const user = new User({
           username: req.session.username,
@@ -186,11 +185,11 @@ const checkotp = async (req, res) => {
         });
 
         const userData = await user.save();
-        console.log(userData);
-        res.redirect("email-verified");
+
         if (userData) {
           req.session.user_id = userData._id;
         }
+        res.redirect("email-verified");
       } else {
         res.render("verify", { message: "OTP is ivalid" });
       }
@@ -201,6 +200,7 @@ const checkotp = async (req, res) => {
     console.log(error.message);
   }
 };
+
 
 const resend = async (req, res) => {
   try {
@@ -234,43 +234,45 @@ const verifylogin = async (req, res) => {
     const password = req.body.password;
 
     const userData = await User.findOne({ email: email });
-    console.log(userData);
+
     if (userData) {
       const passwordMatch = await bctypt.compare(password, userData.password);
       if (passwordMatch) {
         if (userData.is_Verified == 0) {
-          res.render("login",{ message: "Your account is suspended" });
+          res.status(400).json({ message: "Your account is suspended" });
         } else {
           req.session.user_id = userData._id;
           res.redirect("/home");
         }
       } else {
-        res.render("login",{ message: "Your email or password is incorrect" });
+        res
+          .status(400).json({ message: "Your email or password is incorrect" });
       }
     } else {
-      res.render("login",{ message: "Your email or password is incorrect" });
+      res.status(400).json({ message: "Your email or password is incorrect" });
     }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const loadHome = async (req, res) => {
   try {
     const id = req.session.user_id;
-    console.log(id)
-    
+    console.log(id);
+
     const userData = await User.findById(id);
     console.log(userData);
     const categorydata = await Category.find({ active: 0 }).sort({
       createdAt: -1,
     });
 
-    const prodactdata = await Product.find({ active: 0 }).sort({ createdAt: -1 }).populate('frameshape'); 
+    const prodactdata = await Product.find({ active: 0 }).sort({
+      createdAt: -1,
+    });
 
-   console.log(prodactdata);
     res.render("home", {
-     
       product: prodactdata,
       category: categorydata,
       user: userData,
@@ -349,7 +351,7 @@ const getallproducts = async (req, res) => {
     const userData = await User.findById(id);
 
     const productData = await Product.find({});
-    res.render("allproducts", { product: productData, user: userData, });
+    res.render("allproducts", { product: productData, user: userData });
   } catch (error) {
     console.log(error.message);
   }
@@ -357,11 +359,14 @@ const getallproducts = async (req, res) => {
 
 const getoneproduct = async (req, res) => {
   try {
-   const id= req.query.id;
+    const id = req.query.id;
+    const user_id= req.session.user_id
 
-       const productData = await Product.findById(id);
-    res.render("product", { product: productData });
+    const userData=await User.findById(user_id)
 
+
+    const productData = await Product.findById(id);
+    res.render("product", { product: productData,user:userData });
   } catch (error) {
     console.log(error.message);
   }
@@ -371,15 +376,46 @@ const loadcart = async (req, res) => {
     const id = req.session.user_id;
     const userData = await User.findById(id);
 
-    const cartData = await Cart.findOne({ user: id }).populate('products.product');
-console.log(cartData.products);
-    res.render("cart", { user: userData, cartData: cartData});
+    const cartData = await Cart.findOne({ user: id }).populate(
+      "products.product"
+    );
+
+    res.render("cart", { user: userData, cartData: cartData });
   } catch (error) {
     console.log(error.message);
   }
 };
 
 
+const profile= async (req,res)=>{
+  const id = req.session.user_id;
+  const userData = await User.findById(id);
+res.render("profile",{user:userData});
+
+}
+
+
+const editprofile=async (req,res)=>{
+try {
+
+  const user_id=req.session.user_id
+
+ 
+  const updateData =await User.findByIdAndUpdate({_id:user_id},{$set:{
+    username: req.body.username,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    mobile: req.body.mobile
+
+  }})
+  res.redirect("/profile")
+
+} catch (error) {
+  console.log(error.message)
+}
+
+}
 module.exports = {
   loadregister,
   insestUser,
@@ -399,4 +435,9 @@ module.exports = {
   logout,
   getallproducts,
   loadcart,
+  profile,
+  editprofile
+
+
+
 };

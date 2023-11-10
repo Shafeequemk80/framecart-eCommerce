@@ -15,6 +15,10 @@ const cartSchema = new mongoose.Schema({
         count: {
           type: Number,
           default: 1 // Set a default count if needed
+        },
+        totalprice:{
+          type:Number,
+          default:0,
         }
       }
     ],
@@ -23,9 +27,9 @@ const cartSchema = new mongoose.Schema({
     required: true,
   },
 
-  quantity:{
+  ammount:{
     type :Number,
-    default:1
+    required:true
   }
 
 

@@ -20,7 +20,7 @@ user_route.set("views", "./views/users");
 user_route.use("/static", express.static(path.join(__dirname, "./public")));
 
 user_route.get("/login", auth.isLogout, userController.loadlogin),
-  user_route.get("/", auth.isLogout, userController.loadlogin),
+  user_route.get("/", userController.loadHome),
   user_route.post("/login", auth.isLogout, userController.verifylogin),
   user_route.get("/signup", auth.isLogout, userController.loadregister);
 user_route.post("/signup", auth.isLogout, userController.insestUser);
@@ -45,4 +45,8 @@ user_route.get("/allproducts", userController.getallproducts);
 user_route.get("/product", userController.getoneproduct);
 user_route.get("/cart", auth.islogin, userController.loadcart);
 user_route.get("/addtocart", auth.islogin, cartController.addtocart);
+user_route.post("/actionincart", auth.islogin, cartController.actionincart);
+user_route.get("/deletefromcart", auth.islogin, cartController.deletefromcart);
+user_route.get("/profile", auth.islogin, userController.profile);
+user_route.post("/editproduct", auth.islogin, userController.editprofile);
 module.exports = user_route;

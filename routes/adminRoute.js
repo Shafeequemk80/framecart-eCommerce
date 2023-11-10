@@ -37,21 +37,21 @@ admin_route.post("/resetpassword", adminController.verifyreset);
 admin_route.get("/customers", adminController.customerload);
 admin_route.get("/logout", adminController.logout);
 
-admin_route.get("/orders", adminController.loadorders);
-admin_route.get("/suspenduser", customersCrontroller.suspenduser);
-admin_route.get("/activeuser", customersCrontroller.activeuser);
-admin_route.get("/products", adminController.loadproducts);
-admin_route.get("/addproducts",productsCrontroller.addproduct);
-admin_route.post("/addproducts",multer.productimagesUpload.array("images",),productsCrontroller.saveproduct);
-admin_route.get("/editproducts",productsCrontroller.editproducts);
-admin_route.post("/editproducts",multer.productimagesUpload.array("images"),productsCrontroller.saveditproducts);
-admin_route.get("/suspendproduct", productsCrontroller.suspendproduct);
-admin_route.get("/activeproduct", productsCrontroller.activeproduct);
+admin_route.get("/orders", auth.islogin, adminController.loadorders);
+admin_route.get("/suspenduser", auth.islogin, customersCrontroller.suspenduser);
+admin_route.get("/activeuser", auth.islogin, customersCrontroller.activeuser);
+admin_route.get("/products", auth.islogin, adminController.loadproducts);
+admin_route.get("/addproducts", auth.islogin,productsCrontroller.addproduct);
+admin_route.post("/addproducts", auth.islogin,multer.productimagesUpload.array("images",),productsCrontroller.saveproduct);
+admin_route.get("/editproducts", auth.islogin,productsCrontroller.editproducts);
+admin_route.post("/editproducts", auth.islogin,multer.productimagesUpload.array("images"),productsCrontroller.saveditproducts);
+admin_route.get("/suspendproduct", auth.islogin, productsCrontroller.suspendproduct);
+admin_route.get("/activeproduct", auth.islogin, productsCrontroller.activeproduct);
 
-admin_route.get("/category",categoryCrontroller.loadcategorypage)
-admin_route.get("/addcategory",categoryCrontroller.loadcatergory)
-admin_route.post("/addcategory",multer.categoryimageupload.single("image",),categoryCrontroller.savecategory)
+admin_route.get("/category", auth.islogin,categoryCrontroller.loadcategorypage)
+admin_route.get("/addcategory", auth.islogin,categoryCrontroller.loadcatergory)
+admin_route.post("/addcategory", auth.islogin,multer.categoryimageupload.single("image",),categoryCrontroller.savecategory)
 
-admin_route.get("/suspendcategory",categoryCrontroller.suspendcategory)
-admin_route.get("/activecategory",categoryCrontroller.activecategory)
+admin_route.get("/suspendcategory", auth.islogin,categoryCrontroller.suspendcategory)
+admin_route.get("/activecategory", auth.islogin,categoryCrontroller.activecategory)
 module.exports = admin_route;

@@ -8,8 +8,8 @@ const productsSchema = new mongoose.Schema({
   },
 
   frameshape: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'category',
+    type:String,
+    required:true
   },
 
   description: {
