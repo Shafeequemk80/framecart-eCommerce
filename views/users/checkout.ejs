@@ -1,0 +1,488 @@
+<%- include("../layouts/header.ejs")%>
+<div class="page-wrapper">
+  <%- include("../layouts/userNavbar.ejs")%>
+
+  <main class="main">
+    <div
+      class="page-header text-center"
+      style="background-image: url('/static/assets/images/page-header-bg.jpg')"
+    >
+      <div class="container">
+        <h1 class="page-title">Checkout<span>Shop</span></h1>
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ol>
+      </div>
+      <!-- End .container -->
+    </nav>
+    <!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+      <div class="checkout">
+        <div class="container">
+          <form action="/verify-payment" method="post">
+            <div class="row">
+              <div class="col-lg-9">
+                <div class="accordion-summary-left" id="accordion-payment">
+                  <div class="card">
+                    <div class="card-header" id="heading-2">
+                      <h2 class="card-title">
+                        <a
+                          class="collapsed x"
+                          role="button"
+                          data-toggle="collapse"
+                          href="#collapse-2"
+                          aria-expanded="true"
+                          aria-controls="collapse-2"
+                        >
+                          <h4>Select a delivery address</h4>
+                        </a>
+                      </h2>
+                    </div>
+                    <!-- End .card-header -->
+                    <div
+                      id="collapse-2"
+                      class="collapse show"
+                      aria-labelledby="heading-2"
+                      data-parent="#accordion-payment"
+                    >
+                      <div class="card-body">
+                        <% if (address && address.length !== 0) { for (let i = 0; i <
+                        address.length; i++) { %>
+                        <div
+                          class="address-col-checkout-main col-11 mt-5 mt-lg-5 ml-4 ml-sm-0 mt-lg-0 mr-lg-5 my-lg-5 d-flex justify-content-start"
+                        >
+                          <label class="address-radio-label">
+                            <div class="address-col-checkout">
+                              <input
+                                type="radio"
+                                name="selectedAddress"
+                                value="<%= address[i]._id %>" required
+                              />
+                              <div class="address-details">
+                                <h6 class="show_address pl-5">
+                                  <strong><%= address[i].fullname %></strong>
+                                  <%= address[i].mobile %>, <%=
+                                  address[i].address %>, <%= address[i].locality
+                                  %>,
+                                  <br />
+                                  <%= address[i].city %>, <%= address[i].state
+                                  %>, <%= address[i].zipcode %>
+                                </h6>
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+                        <% }} %>
+                      
+						<div class="d-flex justify-content-end mr-5">
+							<a
+							class="collapsed x"
+							role="button"
+							data-toggle="collapse"
+							href="#collapse-3"
+							aria-expanded="false"
+							aria-controls="collapse-3"
+						  >
+              
+							<button class="btn btn-outline-primary-2 btn-order mr-5">Select this Address</button>
+						  </a>
+            <a onclick="addressModal()"  class="btn btn-outline-primary-2 btn-order  mr-5" > Add new Address</a>
+
+						  
+						</div>
+                      </div>
+                      <!-- End .card-body -->
+                    </div>
+                    <!-- End .collapse -->
+                  </div>  
+                  <!-- End .card -->
+
+                  <div class="card">
+                    <div class="card-header" id="heading-3">
+                      <h2 class="card-title">
+                        <a
+                          class="collapsed"
+                          role="button"
+                          data-toggle="collapse"
+                          href="#collapse-3"
+                          aria-expanded="false"
+                          aria-controls="collapse-3"
+                        >
+                          <h4>Payment method</h4>
+                        </a>
+                      </h2>
+                    </div>
+                    <!-- End .card-header -->
+
+                    <div
+                      id="collapse-3"
+                      class="collapse"
+                      aria-labelledby="heading-3"
+                      data-parent="#accordion-payment"
+                    >
+                      <div class="card-body">
+                        <div class="text-dark row d-flex col-12 mx-5">
+                          <div class="col-md-5 payment-col">
+                            <label>
+                              <input
+                                type="radio"
+                                name="paymentType"
+                                value="COD"
+                              />
+                              Cash on Devlivery
+                            </label>
+                          </div>
+                          <div class="col-md-5 payment-col ml-md-4">
+                            <label>
+                              <input
+                                type="radio"
+                                name="paymentType"
+                                value="OnlinePayment"
+                              />
+                              Online payment
+                            </label>
+                          </div>
+                          <div class="col-md-11 mr-md-5 payment-col">
+                            <label>
+                              <input
+                                type="radio"
+                                name="paymentType"
+                                value="Wallet" 
+                              />
+                              Wallet
+                              <img
+                                src="/static/assets/images/payments-summary.png"
+                                alt="payments cards"
+                              />
+                            </label>
+                          </div>
+                        </div>
+                    <div class="d-flex justify-content-end mr-4">
+                      <a
+                      class="collapsed x"
+                      role="button"
+                      data-toggle="collapse"
+                      href="#collapse-4"
+                      aria-expanded="false"
+                      aria-controls="collapse-4"
+                      >
+                      <button class="btn btn-outline-primary-2 btn-order mr-5">Select this Method</button>
+                      </a>
+                    </div>
+                      </div>
+                      
+                      <!-- End .card-body -->
+                    </div>
+                    <!-- End .collapse -->
+                  </div>
+                  <!-- End .card -->
+
+                  <div class="card">
+                    <div class="card-header" id="heading-4">
+                      <h2 class="card-title">
+                        <a
+                          class="collapsed"
+                          role="button"
+                          data-toggle="collapse"
+                          href="#collapse-4"
+                          aria-expanded="false"
+                          aria-controls="collapse-4"
+                        >
+                          <h4>Items and delivery</h4>
+                        </a>
+                      </h2>
+                    </div>
+                    <!-- End .card-header -->
+                    <div
+                      id="collapse-4"
+                      class="collapse"
+                      aria-labelledby="heading-4"
+                      data-parent="#accordion-payment"
+                    >
+                      <div
+                        class="card-body summary bg-light col-12 d-flex align-items-center  flex-column rounded"
+                      >
+                       
+					  <%for(var i=0;i<
+						cart?.products?.length;i++){%>
+						<div class="col-10  d-flex justify-content-start  mt-2  rounded" style="background-color: white;">
+						<div class="m-5 col-3">
+							<img
+							src="/static/produtsImages/<%= cart.products[i].product.images[0] %>"
+						 style="width:350px; height: auto;"	alt=""
+						  />
+						</div>
+
+						<div class="mt-3">
+							<h5><%= cart.products[i].product.productname %></h5>
+						
+							<h6 >₹ <%= cart.products[i].product.price *cart.products[i].count %></h6>
+
+							<p class="justify-content-start"><%= cart.products[i].product.description %></p>
+							<br>
+							<h6>Qty:<%= cart.products[i].count%></h6>
+						</div>
+					  </div>
+					  <%}%>
+					  <hr>
+					  <div class="col-10">
+						
+							
+							  <h3 class="summary-title">Cart Total</h3>
+							  <!-- End .summary-title -->
+			  
+							  <table class="table table-summary">
+								<tbody>
+								  <tr >
+									<td>Subtotal:</td>
+									<td id="subAmount"><%=cart?.ammount%></td>
+								  </tr>
+								  <!-- End .summary-subtotal -->
+								  <tr class="summary-shipping">
+									<td>discount:</td>
+									<td>0:00</td>
+								  </tr>
+			  
+								  <!-- End .summary-shipping-estimate -->
+			  
+								  <tr class="summary-total">
+									<td>Total:</td>
+									<td id="totalAmount"><%=cart?.ammount%></td>
+								  </tr>
+								  <!-- End .summary-total -->
+								</tbody>
+							  </table>
+			  
+							  <!-- End .table table-summary -->
+			  
+							  <button class="btn btn-outline-primary-2 btn-order btn-block"
+								>PROCEED TO CHECKOUT</button>
+							
+							<!-- End .summary -->
+			  
+						</form>
+						
+
+					  </div>
+                      </div>
+                      <!-- End .card-body -->
+                    </div>
+                    <!-- End .collapse -->
+                  </div>
+                  <!-- End .card -->
+                </div>
+                <!-- End .accordion -->
+              </div>
+              <!-- End .col-lg-9 -->
+              <aside class="col-lg-3">
+                <div class="summary">
+                  <h3 class="summary-title">Your Order</h3>
+                  <!-- End .summary-title -->
+
+                  <table class="table table-summary">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a href="#">Beige knitted elastic runner shoes</a>
+                        </td>
+                        <td>$84.00</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <a href="#">Blue utility pinafore denimdress</a>
+                        </td>
+                        <td>$76,00</td>
+                      </tr>
+                      <tr class="summary-subtotal">
+                        <td>Subtotal:</td>
+                        <td>$160.00</td>
+                      </tr>
+                      <!-- End .summary-subtotal -->
+                      <tr>
+                        <td>Shipping:</td>
+                        <td>Free shipping</td>
+                      </tr>
+                      <tr class="summary-total">
+                        <td>Total:</td>
+                        <td>$160.00</td>
+                      </tr>
+                      <!-- End .summary-total -->
+                    </tbody>
+                  </table>
+                  <!-- End .table table-summary -->
+
+                  
+                  <!-- End .accordion -->
+
+                  <button
+                    type="submit"
+                    class="btn btn-outline-primary-2 btn-order btn-block"
+                  >
+                    <span class="btn-text rounded-pill">Place Order</span>
+                    <span  class="btn-hover-text">Proceed to Checkout</span>
+                  </button>
+                </div>
+                <!-- End .summary -->
+              </aside>
+              <!-- End .col-lg-3 -->
+            </div>
+            <!-- End .row -->
+          </form>
+
+        </div>
+        <!-- End .container -->
+      </div>
+      <!-- End .checkout -->
+    </div>
+    <!-- End .page-content -->
+  </main>
+  <!-- End .main -->
+</div>
+<!-- End .page-wrapper -->
+
+
+
+
+
+<!-- Add this script block at the end of your HTML file -->
+<!-- ... (previous HTML code) ... -->
+<button id="addAddresBTN" data-bs-toggle="modal" data-bs-target="#exampleModal" hidden> </button>
+
+
+      
+<!-- Modal with centered layout -->
+
+      
+<!-- Modal with centered layout -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content p-5 pt-3">
+      <span class="close" type="button" class="btn btn-primary " data-bs-dismiss="modal">&times;</span>
+      
+      <div class="modal-header d-flex justify-content-center align-items-center">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Address</h5>
+
+      </div>
+      
+      <div class="modal-body">
+        <form action="/newaddress" method="post" id="delivery-address-form">
+          <div class="mb-3">
+            <label for="fullname" class="form-label">Full Name*</label>
+            <input type="text" class="form-control" id="fullname" name="fullname" required>
+          </div>
+          
+          <div class="">
+            <label for="mobile" class="form-label">Mobile*</label>
+            <input type="text" class="form-control" id="mobile" name="mobile" required>
+          </div>
+          
+          <div class="">
+            <label for="address" class="form-label">Address*</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+          </div>
+          
+          <div class="d-flex justify-content-center">
+            <div class=" col-8">
+              <label for="locality" class="form-label">Locality*</label>
+              <input type="text" class="form-control" id="locality" name="locality" required>
+            </div>
+            
+            <div class=" col-4">
+              <label for="zipcode" class="form-label">Zip Code*</label>
+              <input type="number" class="form-control" id="zipcode" name="zipcode" required>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-center">
+            <div class=" col-6">
+              <label for="city" class="form-label">City*</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+            
+            <div class=" col-6">
+              <label for="state" class="form-label">State*</label>
+              <select class="form-control" id="state" name="state" required>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+              <select class="form-control" id="state" name="state" required>
+                <!-- Options for states -->
+              </select>
+            </div>
+          </div>
+          
+      </div>
+      
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-primary "  data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Modal with centered and scrollable layout -->
+
+<!-- Modal with centered and scrollable layout -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/inputSpinnerPlugin.js"></script>
+
+<script>
+  function addressModal(){
+    
+    document.getElementById("addAddresBTN").click()
+
+  }
+  // document.getElementById("addressModal").addEventListener('click', ()=>{
+  // })
+</script>
+
+<%- include("../layouts/userFooter.ejs")%> <%-
+include("../layouts/userFooter2.ejs")%> 
+<%- include("../layouts/footer.ejs")%>

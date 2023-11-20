@@ -1,5 +1,6 @@
 const bctypt = require("bcrypt");
 const User = require("../model/userModel");
+const Order = require("../model/orderModel");
 const Category = require("../model/category");
 const Products = require("../model/productsModel");
 const nodemailer = require("nodemailer");
@@ -203,7 +204,9 @@ try {
 const loadorders =async (req,res)=>{
 
   try {
-    res.render("orders")
+const order =await Order.find().populate('user');
+
+    res.render("orders",{order:order})
 
   } catch (error) {
     console.log(error.message);

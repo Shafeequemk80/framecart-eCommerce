@@ -11,14 +11,14 @@ app.use(nocache());
 
 app.use(bodyparser.urlencoded({extended:true}))
 app.use(bodyparser.json());
-
+ 
 
 app.set("view engine", "ejs");
 app.set("views","./views/users");
 
 app.use("/static", express.static("./public"));
 
-app.use("/", user_route);
+app.use("/", user_route); 
 
 app.use("/admin", admin_route);
 const PORT =  3000;

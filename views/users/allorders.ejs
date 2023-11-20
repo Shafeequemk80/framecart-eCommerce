@@ -1,0 +1,91 @@
+<%- include("../layouts/header.ejs")%> 
+<div class="page-wrapper">
+  <%- include("../layouts/userNavbar.ejs")%>
+
+  <main class="main">
+    <div
+      class="page-header text-center"
+      style="background-image: url('/static/assets/images/page-header-bg.jpg')"
+    >
+      <div class="container">
+        <h1 class="page-title">All Orders<span>Order</span></h1>
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/allproducts">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">All Orders</li>
+        </ol>
+      </div>
+      <!-- End .container -->
+    </nav>
+    <!-- End .breadcrumb-nav -->
+
+
+    <%if(products){products.forEach((value,i)=>{%>
+    <div class="container d-flex justify-content-center mb-5">
+      <div
+        class=" bg-light col-8 d-flex flex-column pt-5 pl-5 "
+      >
+      <div class="d-flex align-items-start flex-column mb-3">
+        <h6>Order Placed</h6>
+        <p><%=value.order.deliveryDate%></p>
+        <h6>
+          Delivery Expect On : <strong><%=value.order.orderDate%> </strong>
+        </h6>
+        </div >
+        <div class="d-flex border-bottom w-100">
+          <div>
+            <img
+              src="/static/produtsImages/<%=value.productDetails.images[0]%>"
+              style="width: auto; width: 190px"
+              alt="Image Desc"
+            />
+          </div>
+          <div class="pl-5 d-flex align-items-start flex-column">
+            <h5><%=value.productDetails.productname%></h5>
+            <p>Qty: <%=value.count%></p>
+            <p><%=value.paymentStatus%></p>
+            <h4><%=value.totalprice%></h4>
+
+            <%if(value.orderStatus!=="Cancelled"){%>
+
+         <a href="/cancelorder?id=<%=value.productDetails._id%>"> <button class="btn btn-primary mb-5 ">Cancel</button></a>
+         <%}else{%>
+          <a > <button class="btn btn-primary mb-5 ">Cancelled</button></a>
+          <%}%>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center py-3 pb-3">
+          <ol id="progress-bar">
+            <li class="step-done">Step 1</li>
+            <li class="step-active">Step 2</li>
+            <li class="step-todo">Step 3</li>
+            <li class="step-todo">Step 4</li>
+            <li class="step-todo">Step 5</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+  <%})}%>
+
+    <!-- End .page-content -->
+  </main>
+</div>
+
+<!-- End .main -->
+<%- include("../layouts/userFooter.ejs")%>
+<%-include("../layouts/userFooter2.ejs")%>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/inputSpinnerPlugin.js"></script>
+
+<!-- ... (remaining HTML code) ... -->
+
+<%- include("../layouts/footer.ejs")%>

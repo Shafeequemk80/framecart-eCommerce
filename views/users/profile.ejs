@@ -33,9 +33,7 @@
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
 								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
-								    </li>
+								   
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
@@ -51,6 +49,7 @@
 	                		<div class="col-md-8 col-lg-9 ">
 	                			<div class="tab-content">
 									<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+										<div class=" d-flex justify-content-center mt-3"> <h3>User Profile</h3></div>
 										<form action="/editproduct" method="post" id="user-profile-form">
 											<!-- CSRF token for security -->
 											<input type="hidden" name="user_id" value=<%=user._id%>" />
@@ -89,24 +88,65 @@
 											<div class="d-flex text-center">
 												<div class="form-group">
 													<button type="submit" class="btn btn-outline-primary-2 w-100">
-														<span>UPDATE PROFILE</span>
+														<span>Upadate Profile</span>
 														<i class="icon-long-arrow-right"></i>
 													</button>
 												</div>
 											</div>
 										</form>
 									
-										<% if (typeof message !== "undefined") { %>
-											<div class="alert alert-secondary" role="alert">
-												<!-- Replace the message with your dynamic message -->
-												<%= message %>
-											</div>
-										<% } %>
 									</div><!-- .End .tab-pane -->
 									
 
 								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
+										<div class="row">
+								    		
+											<div class="col-lg-6">
+												<a href="/order">
+												<div class="card card-dashboard">
+													<div class="card-body  d-flex align-items-center justify-content-center">
+														<div class="card-title-container">
+															<i class="icon-shopping-order "></i>
+														</div>
+														<div class=" d-flex flex-column ">
+															<h3 class="card-title">All Orders</h3>
+														<!-- End .card-title-container -->
+											
+														<p>You have not set up this type of address yet.
+													</div>
+													</div><!-- End .card-body -->
+												</div><!-- End .card-dashboard -->
+											</a>
+											</div><!-- End .col-lg-6 -->
+										
+											
+											<div class="col-lg-6">
+												<a href="/address">
+												<div class="card card-dashboard">
+													<div class="card-body  d-flex align-items-center justify-content-center">
+														<div class="card-title-container">
+													
+																<img
+																  src="/static/assets/images/icons/map.png"
+																  class="mr-5"
+																  style="width: 70px; height: auto"
+																  alt=""
+																/>
+															  
+														</div>
+														<div class=" d-flex flex-column ">
+															<h3 class="card-title">All Address</h3>
+														<!-- End .card-title-container -->
+											
+														<p>You have not set up this type of address yet.
+													</div>
+													</div><!-- End .card-body -->
+												</div><!-- End .card-dashboard -->
+											</a>
+											</div><!-- End .col-lg-6 -->
+										
+											
+								    	</div><!-- End .row -->
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
 								    </div><!-- .End .tab-pane -->
 
@@ -115,38 +155,7 @@
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
 								    </div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-								    	<p>The following addresses will be used on the checkout page by default.</p>
-
-								    	<div class="row">
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-
-														<p>User Name<br>
-														User Company<br>
-														John str<br>
-														New York, NY 10001<br>
-														1-234-987-6543<br>
-														yourmail@mail.com<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
-
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
-
-														<p>You have not set up this type of address yet.<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
-								    	</div><!-- End .row -->
-								    </div><!-- .End .tab-pane -->
+								    
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
 								    	<form action="#">

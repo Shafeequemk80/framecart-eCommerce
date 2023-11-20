@@ -243,8 +243,9 @@
                         </div><!-- End .product-price -->
                     </div><!-- End .product-body -->
                     <div class="product-action">
-                        
-                        <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
+                        <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                            <span>add to cart</span>
+                        </button>
                     </div><!-- End .product-action -->
                 </div><!-- End .product -->
                 <%}})%>
@@ -299,7 +300,9 @@
                             </div><!-- End .product-price -->
                         </div><!-- End .product-body -->
                         <div class="product-action">
-                            <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
+                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                                <span>add to cart</span>
+                            </button>
                         </div><!-- End .product-action -->
                     </div><!-- End .product -->
                 <%}})%>
@@ -423,7 +426,9 @@
                                             </div><!-- End .product-nav -->
                                         </div><!-- End .product-body -->
                                         <div class="product-action">
-                                            <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                                                <span>add to cart</span>
+                                            </button>
                                         </div><!-- End .product-action -->
                                     </div><!-- End .product -->
                                   
@@ -460,9 +465,15 @@
                                                 $ <%=value.price%>
                                             </div><!-- End .product-price -->
                                         </div><!-- End .product-body -->
+                                        
                                         <div class="product-action">
-                                            <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
-                                        </div><!-- End .product-action -->
+                                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                                                <span>add to cart</span>
+                                            </button>
+                                        </div>
+                                        
+                                        
+                                        <!-- End .product-action -->
                                     </div><!-- End .product -->
                                 </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
                                 <%}})%>
@@ -681,6 +692,75 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Modal HTML -->
+        <div class="modal" id="addToCartModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Adding Item to Cart</h5>
+                        <!-- No close button here -->
+                    </div>
+                    <div class="modal-body text-center">
+                        <div id="loadingSection">
+                            <img src="path/to/your/loading.gif" alt="Loading GIF" class="loading-gif">
+                            <p>Loading...</p>
+                        </div>
+                        <div id="successSection" style="display: none;">
+                            <p id="addedToCartText">Your item has been successfully added to the cart.</p>
+                        </div>
+                    </div>
+                    <!-- No modal-footer section here -->
+                </div>
+            </div>
+        </div>
+        
+        
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Use querySelectorAll to select all elements with the class 'addToCartButton'
+                var addToCartButtons = document.querySelectorAll('.addToCartButton');
+        
+                // Add a click event listener to each button
+                addToCartButtons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                       
+                        var productId = this.getAttribute('data-product-id');
+        
+                        // Use fetch to send a POST request with the product ID in the request body
+                        fetch('/addtocart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ id: productId }),
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log(data);
+
+                        Swal.fire({
+                                title: "Item Added in Cart!",
+                                text: "You clicked the button!",
+                                icon: "success"
+                                });
+                                 })
+                            .catch(error => {
+                                console.error('There was a problem with the fetch operation:', error);
+                            });
+                    });
+                });
+            });
+        </script>
 
         <%- include("../layouts/userFooter2.ejs")%>
         

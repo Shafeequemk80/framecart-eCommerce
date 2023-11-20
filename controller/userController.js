@@ -201,7 +201,6 @@ const checkotp = async (req, res) => {
   }
 };
 
-
 const resend = async (req, res) => {
   try {
     const generatedOTP = generateAndStoreOTP(req);
@@ -246,7 +245,8 @@ const verifylogin = async (req, res) => {
         }
       } else {
         res
-          .status(400).json({ message: "Your email or password is incorrect" });
+          .status(400)
+          .json({ message: "Your email or password is incorrect" });
       }
     } else {
       res.status(400).json({ message: "Your email or password is incorrect" });
@@ -360,13 +360,12 @@ const getallproducts = async (req, res) => {
 const getoneproduct = async (req, res) => {
   try {
     const id = req.query.id;
-    const user_id= req.session.user_id
+    const user_id = req.session.user_id;
 
-    const userData=await User.findById(user_id)
-
+    const userData = await User.findById(user_id);
 
     const productData = await Product.findById(id);
-    res.render("product", { product: productData,user:userData });
+    res.render("product", { product: productData, user: userData });
   } catch (error) {
     console.log(error.message);
   }
@@ -378,44 +377,46 @@ const loadcart = async (req, res) => {
 
     const cartData = await Cart.findOne({ user: id }).populate(
       "products.product"
-    );
-
+    )
     res.render("cart", { user: userData, cartData: cartData });
+  
   } catch (error) {
     console.log(error.message);
   }
 };
 
+const profile = async (req, res) => {
+  try {
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
 
-const profile= async (req,res)=>{
-  const id = req.session.user_id;
-  const userData = await User.findById(id);
-res.render("profile",{user:userData});
+    res.render("profile", { user: userData });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-}
+const editprofile = async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
 
-
-const editprofile=async (req,res)=>{
-try {
-
-  const user_id=req.session.user_id
-
- 
-  const updateData =await User.findByIdAndUpdate({_id:user_id},{$set:{
-    username: req.body.username,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    mobile: req.body.mobile
-
-  }})
-  res.redirect("/profile")
-
-} catch (error) {
-  console.log(error.message)
-}
-
-}
+    const updateData = await User.findByIdAndUpdate(
+      { _id: user_id },
+      {
+        $set: {
+          username: req.body.username,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          email: req.body.email,
+          mobile: req.body.mobile,
+        },
+      }
+    );
+    res.redirect("/profile");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 module.exports = {
   loadregister,
   insestUser,
@@ -436,8 +437,5 @@ module.exports = {
   getallproducts,
   loadcart,
   profile,
-  editprofile
-
-
-
+  editprofile,
 };

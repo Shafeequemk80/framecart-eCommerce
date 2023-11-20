@@ -54,4 +54,5 @@ admin_route.post("/addcategory", auth.islogin,multer.categoryimageupload.single(
 
 admin_route.get("/suspendcategory", auth.islogin,categoryCrontroller.suspendcategory)
 admin_route.get("/activecategory", auth.islogin,categoryCrontroller.activecategory)
+
 module.exports = admin_route;

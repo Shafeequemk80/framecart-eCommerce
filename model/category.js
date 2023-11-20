@@ -22,6 +22,37 @@ const categorySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  address:[{
+    fullname: {
+      type: String,
+      required: true,
+    },
+
+    mobile: {
+      type: Number,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: false,
+    },
+    locality: {
+      type: String,
+      required: true,
+    },
+    zipcode: {
+      type: Number,
+      default: 0,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    }] 
   })
 
 

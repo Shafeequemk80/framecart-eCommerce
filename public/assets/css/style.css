@@ -1114,6 +1114,11 @@ blockquote.text-white cite span {
   border-radius: 20px;
   box-shadow: none;
 }
+
+
+.form-control-cart{
+  border: none;
+} 
 .header-search select {
   width: 100%;
   border: none;
@@ -5410,7 +5415,10 @@ p {
   clear: both;
   content: "";
 }
+
+
 .card-title {
+
   font-size: 1.8rem;
   line-height: 1.2;
   margin-bottom: 0;
@@ -5454,11 +5462,11 @@ p {
   transform: translateY(-50%);
   -ms-transform: translateY(-50%);
 }
-.card-body {
-  padding: 0.4rem 4rem 1.8rem 1.2rem;
-  border: none;
-  border-radius: 0;
+
+.collapse  .col-3{
+  height: 50px;
 }
+
 .accordion-icon .card-body {
   padding-left: 5.5rem !important;
 }
@@ -5720,7 +5728,7 @@ p {
   line-height: 1.5;
   letter-spacing: -0.01em;
   min-width: 170px;
-  border-radius: 0;
+  border-radius: 1rem;
   white-space: normal;
   transition: all 0.3s;
 }
@@ -10769,7 +10777,7 @@ button:focus {
   padding: 1rem 1.5rem;
   max-width: 198px;
   color: black;
-  border: 0.1rem solid black;
+  border: none;
 }
 .product-details-action .btn-cart span {
   font-size: 1.4rem;
@@ -11153,6 +11161,7 @@ button:focus {
   width: 100%;
 }
 .product-details-sidebar .details-action-col .btn-product {
+  border: none;
   flex: 1 1 auto;
   max-width: 230px;
 }
@@ -13240,9 +13249,8 @@ button:focus {
 }
 .summary {
   padding: 2.5rem 3rem 3rem;
-  border: 0.1rem dashed #d7d7d7;
   background-color: #f9f9f9;
-  border-radius: 0.3rem;
+  border-radius: 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
@@ -13366,6 +13374,53 @@ button:focus {
 .accordion-summary .card-body {
   padding: 0.4rem 0 0.8rem 3rem;
 }
+
+
+.accordion-summary-left {
+  margin-bottom: 3.2rem;
+}
+.accordion-summary-left .card {
+  color: #999;
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.67;
+  border: none;
+  background-color: transparent;
+}
+.accordion-summary-left .card-title {
+  font-weight: 300;
+  font-size: 1.4rem;
+  color: #333;
+  letter-spacing: 0;
+}
+.accordion-summary-left .card-title a {
+  color: inherit;
+  padding: 0.7rem 0 0.7rem 3rem;
+}
+.accordion-summary-left .card-title a img {
+  margin-top: 1rem;
+}
+.accordion-summary-left .card-title a:hover,
+.accordion-summary-left .card-title a:focus {
+  color: inherit;
+}
+.accordion-summary-left .card-title a small {
+  font-size: 1.1rem;
+  color: #999;
+}
+
+
+.accordion-summary-left .card-title a.collapsed:before {
+  border-color: #dadada;
+}
+.accordion-summary-left .card-title a.collapsed:after {
+  opacity: 0;
+  visibility: hidden;
+}
+.accordion-summary-left .card-body {
+  padding: 0.4rem 0 0.8rem ;
+}
+
 .paypal-link {
   cursor: pointer;
   margin-top: 0.2rem;
@@ -13776,7 +13831,7 @@ button:focus {
   padding-bottom: 2rem;
 }
 .dashboard .tab-pane p {
-  margin-bottom: 1rem;
+  line-height: 2rem;
 }
 .dashboard .btn {
   min-width: 123px;
@@ -13842,9 +13897,10 @@ margin-right: 20px;
   margin-bottom: 0.5rem;
 }
 .card-dashboard .card-body {
-  padding: 4rem 2.8rem 2rem;
+  padding: 2rem 2.8rem 2rem;
   
 }
+
 .error-content {
   color: #777;
   font-weight: 400;
@@ -15499,6 +15555,12 @@ margin-right: 20px;
 .icon-plus:before {
   content: "\f2c2";
 }
+.icon-plus-address:before {
+  font-size: 5rem;
+
+
+  content: "\f2c2";
+}
 .icon-quora:before {
   content: "\f2c4";
 }
@@ -15562,6 +15624,15 @@ margin-right: 20px;
 .icon-shopping-cart:before {
   content: "\f2fa";
   font-size: 2.5rem;
+}
+.icon-shopping-order:before {
+  content: "\f2fa";
+  font-size: 10rem;
+}
+.icon-shopping-incart:before {
+  content: "\f2fa";
+  font-size: 10rem;
+  
 }
 .icon-spinner:before {
   content: "\f311";
@@ -16398,3 +16469,236 @@ margin-right: 20px;
   border-left: 1px solid rgba(0,0,0,0.2);
   pointer-events: none;
 }
+
+    .modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .loading-gif {
+        width: 50px; /* Adjust the width as needed */
+        height: 50px; /* Adjust the height as needed */
+    }
+
+.address-col{ 
+  display: flex;
+  background-color:#F1EFEF;
+  align-items: center;
+  justify-content: center;
+  height: 150px; 
+  border-radius: 10px ;
+  
+
+}
+.address-col-checkout-main{ 
+  display: flex;
+border: 1rem ;
+border-color: #000 solid;
+  align-items: center;
+  justify-content: center;
+  height: 100px; 
+  border-radius: 10px;
+
+
+}.address-col-checkout-main :focus{ 
+  display: flex;
+border: 1rem ;
+border-color: #000 solid;
+  align-items: center;
+  justify-content: center;
+  height: 100px; 
+  border-radius: 10px;
+  background-color:#F1EFEF;
+
+}
+.address-col-checkout { 
+  display: flex;
+border: 1rem ;
+border-color: #000 solid;
+  align-items: center;
+  justify-content: center;
+  height: 100px; 
+  border-radius: 10px;
+
+}
+
+
+
+  
+.modal-content {
+  border-radius: 10px;
+  height: auto;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: #dc3545;
+}
+  /* Close button style */
+  .close {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 40px;
+  }
+  .show_address{
+    line-height: 2.5rem;
+  }
+
+  .quantity-decrease123,.quantity-increase123{
+
+    height: 4rem;
+    border: none;
+  }
+  .quantity-decrease123:hover,.quantity-increase123:hover {
+    border: #000;
+    height: 4rem;
+    border: none;
+  }
+
+  .payment-col{
+
+border:1.5px #393E46 solid;
+border-radius: .5rem;
+height: 5rem;
+margin-bottom: 2rem;
+display: flex;
+padding-left: 2rem;
+margin-right: 5rem;
+
+align-items: center;
+  }
+.address-action{
+  position: absolute;
+  bottom: 1.5rem;
+  right: 3rem;
+  display: flex;
+  align-items: end;
+  justify-self: flex-end;
+}
+/* CSS for fade-in effect */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn ease-in-out 1s forwards; /* Added forwards to keep the final state after animation */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* CSS for top transition */
+.top-transition {
+  transition: top 0.5s ease-in-out;
+}
+
+/* Apply both classes to the element */
+.btn-container {
+  position: relative;
+  top: -20px; /* Adjust the initial position as needed */
+}
+
+/* Apply the classes to the relevant elements */
+.btn-container.fade-in.top-transition {
+  top: 0;
+}
+  /* Colors */
+  :root {
+    --default: #212121;
+    --grey: #efefef;
+    --main-color: #000;
+  }
+
+  /* Basic */
+  body {
+  
+    text-align: center;
+    padding-top: 50px;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h1 {
+    font-weight: 700;
+  }
+
+  /* Progress bar */
+  #progress-bar {
+    display: table;
+    width: 100%;
+    margin: 0;
+    padding: 15px 15px 0;
+    table-layout: fixed;
+    counter-reset: step;
+  }
+
+  #progress-bar li {
+    list-style-type: none;
+    display: table-cell;
+    width: 20%;
+    font-size: 16px;
+    position: relative;
+    text-align: center;
+  }
+
+  #progress-bar li:before {
+    width: 50px;
+    height: 50px;
+    color: var(--default);
+    content: counter(step);
+    counter-increment: step;
+    line-height: 50px;
+    font-size: 18px;
+    border: 1px solid var(--grey);
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+
+  #progress-bar li:after {
+    width: 100%;
+    height: 10px;
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    top: 25px;
+    left: -50%;
+    z-index: -1;
+  }
+
+  #progress-bar li:first-child:after {
+    content: none;
+  }
+
+  #progress-bar li.step-done,
+  #progress-bar li.step-active {
+    color: var(--main-color);
+  }
+
+  #progress-bar li.step-done:before,
+  #progress-bar li.step-active:before {
+    border-color: var(--main-color);
+    background-color: var(--main-color);
+    color: #fff;
+    font-family: "FontAwesome";
+  }
+
+  #progress-bar li.step-done + li:after,
+  #progress-bar li.step-active + li:after {
+    background-color: var(--main-color);
+  }
+
+  #progress-bar li.step-active:before {
+    font-weight: 700;
+  }

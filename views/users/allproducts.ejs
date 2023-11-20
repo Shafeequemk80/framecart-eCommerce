@@ -55,7 +55,7 @@
                             <div class="product">
                                 <figure class="product-media">
                                     <span class="product-label label-new"></span>
-                                    <a href="product.html">
+                                    <a href="/product?id=<%=value._id%>">
                                         <img src="/static/produtsImages/<%=value.images[0]%>" alt="Product image" class="product-image">
                                     </a>
 
@@ -64,7 +64,10 @@
                                     </div><!-- End .product-action -->
 
                                     <div class="product-action action-icon-top">
-                                        <a href="/addtocart?id=<%=value._id%>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                       
+                                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                                                <span>add to cart</span>
+                                            </button>
                                         <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
                                      
                                     </div><!-- End .product-action -->
@@ -358,8 +361,58 @@
     </main><!-- End .main -->
  
 
+
+
 </div><!-- End .page-wrapper -->
 <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+
+
+        
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Use querySelectorAll to select all elements with the class 'addToCartButton'
+        var addToCartButtons = document.querySelectorAll('.addToCartButton');
+
+        // Add a click event listener to each button
+        addToCartButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+               
+                var productId = this.getAttribute('data-product-id');
+
+                // Use fetch to send a POST request with the product ID in the request body
+                fetch('/addtocart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: productId }),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+
+                Swal.fire({
+                        title: "Item Added in Cart!",
+                        text: "You clicked the button!",
+                        icon: "success"
+                        });
+                         })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            });
+        });
+    });
+</script>
+
 <%- include("../layouts/userFooter.ejs")%>
 <%- include("../layouts/userFooter2.ejs")%>
    <%- include("../layouts/footer.ejs")%>
