@@ -225,14 +225,14 @@
                 <div class="product product-11 text-center">
                     <figure class="product-media">
                         <a href="/product?id=<%=value._id%>">
-                            <img src="/static/produtsImages/<%=value.images[0]%>" alt="Product image" class="product-image">
-                            <img src="/static/produtsImages/<%=value.images[1]%>" alt="Product image" class="product-image-hover">
+                            <img src="/static/productsImages/<%=value.images.image1%>" alt="Product image" class="product-image">
+                            <img src="/static/productsImages/<%=value.images.image2%>" alt="Product image" class="product-image-hover">
                         </a>
                         
                         <input type="hidden" name="productprice"  value="<%=value.price%>">
                         
                         <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist"><span>add to wishlist</span></a>
+                            <a  class="btn-product-icon btn-wishlist addTowishButton"  wish-id="<%=value._id%>"><span>add to wishlist</span></a>
                         </div><!-- End .product-action-vertical -->
                     </figure><!-- End .product-media -->
 
@@ -284,12 +284,12 @@
                     <div class="product product-11 text-center">
                         <figure class="product-media">
                             <a href="/product?id=<%=value._id%>">
-                                <img src="/static/produtsImages/<%=product.images[0]%>" alt="Product image" class="product-image">
-                                <img src="/static/produtsImages/<%=product.images[1]%>" alt="Product image" class="product-image-hover">
+                                <img src="/static/productsImages/<%=product.images.image1%>" alt="Product image" class="product-image">
+                                <img src="/static/productsImages/<%=product.images.image2%>" alt="Product image" class="product-image-hover">
                             </a>
     
                             <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist"><span>add to wishlist</span></a>
+                                <a  class="btn-product-icon btn-wishlist addTowishButton "  wish-id="<%=value._id%>" ><span>add to wishlist</span></a>
                             </div><!-- End .product-action-vertical -->
                         </figure><!-- End .product-media -->
     
@@ -405,12 +405,12 @@
                                     <div class="product product-11 mt-v3 text-center">
                                         <figure class="product-media">
                                             <a href="/product?id=<%=value._id%>">
-                                                <img src="/static/produtsImages/<%=value.images[0]%>" alt="Product image" class="product-image">
-                                                <img src="/static/produtsImages/<%=value.images[1]%>" alt="Product image" class="product-image-hover">
+                                                <img src="/static/productsImages/<%=value.images.image1%>" alt="Product image" class="product-image">
+                                                <img src="/static/productsImages/<%=value.images.image2%>" alt="Product image" class="product-image-hover">
                                             </a>
 
                                             <div class="product-action-vertical">
-                                                <a href="#" class="btn-product-icon btn-wishlist "><span>add to wishlist</span></a>
+                                                <a class="btn-product-icon btn-wishlist addTowishButton"  wish-id="<%=value._id%>" ><span>add to wishlist</span></a>
                                             </div><!-- End .product-action-vertical -->
                                         </figure><!-- End .product-media -->
 
@@ -450,12 +450,12 @@
                                         <figure class="product-media">
                                             <span class="product-label label-new">NEW</span>
                                             <a href="/product?id=<%=value._id%>">
-                                                <img src="/static/produtsImages/<%=product.images[0]%>" alt="Product image" class="product-image">
-                                                <img src="/static/produtsImages/<%=product.images[1]%>" alt="Product image" class="product-image-hover">
+                                                <img src="/static/productsImages/<%=product.images.image1%>" alt="Product image" class="product-image">
+                                                <img src="/static/productsImages/<%=product.images.image2%>" alt="Product image" class="product-image-hover">
                                             </a>
 
                                             <div class="product-action-vertical">
-                                                <a href="#" class="btn-product-icon btn-wishlist "><span>add to wishlist</span></a>
+                                                <a href="#" class="btn-product-icon btn-wishlist addTowishButton"  wish-id="<%=value._id%>"><span>add to wishlist</span></a>
                                             </div><!-- End .product-action-vertical -->
                                         </figure><!-- End .product-media -->
 
@@ -746,13 +746,22 @@
                                 return response.json();
                             })
                             .then(data => {
-                                console.log(data);
+                                if(data.message==true){
 
                         Swal.fire({
                                 title: "Item Added in Cart!",
                                 text: "You clicked the button!",
                                 icon: "success"
                                 });
+
+                            }else{
+                                Swal.fire({
+                                title: "no stock availible!",
+                                text: "You clicked the button!",
+                                icon: "error"
+                                });
+
+                            }
                                  })
                             .catch(error => {
                                 console.error('There was a problem with the fetch operation:', error);
@@ -761,6 +770,67 @@
                 });
             });
         </script>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Use querySelectorAll to select all elements with the class 'addToCartButton'
+        var addToCartButtons = document.querySelectorAll('.addTowishButton');
+
+        // Add a click event listener to each button
+        addToCartButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+               
+                var productId = this.getAttribute('wish-id');
+                       
+                // Use fetch to send a POST request with the product ID in the request body
+                fetch('/addtowishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: productId }),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        
+                           if(data.success) {
+                            Swal.fire({
+                        title: "Item Added in Wishlist!",
+                        text: "You clicked the button!",
+                        icon: "success"
+                        });
+                           
+                     
+                    } else if (data.existingproduct){
+							Swal.fire({
+							title: 'Product Already in Wishlist',
+							text: 'This product is already in your wishlist.',
+							icon: 'info',
+							confirmButtonColor: '#3085d6',
+							confirmButtonText: 'OK'
+						});
+
+
+							}
+                            
+                       
+                        })
+
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            });
+        });
+    });
+</script>
 
         <%- include("../layouts/userFooter2.ejs")%>
         

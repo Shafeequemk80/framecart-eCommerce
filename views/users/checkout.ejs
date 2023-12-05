@@ -28,7 +28,7 @@
     <div class="page-content">
       <div class="checkout">
         <div class="container">
-          <form action="/verify-payment" method="post">
+          <form id="checkoutForm">
             <div class="row">
               <div class="col-lg-9">
                 <div class="accordion-summary-left" id="accordion-payment">
@@ -55,8 +55,8 @@
                       data-parent="#accordion-payment"
                     >
                       <div class="card-body">
-                        <% if (address && address.length !== 0) { for (let i = 0; i <
-                        address.length; i++) { %>
+                        <% if (address && address.length !== 0) { for (let i =
+                        0; i < address.length; i++) { %>
                         <div
                           class="address-col-checkout-main col-11 mt-5 mt-lg-5 ml-4 ml-sm-0 mt-lg-0 mr-lg-5 my-lg-5 d-flex justify-content-start"
                         >
@@ -65,7 +65,8 @@
                               <input
                                 type="radio"
                                 name="selectedAddress"
-                                value="<%= address[i]._id %>" required
+                                value="<%= address[i]._id %>"
+                                required
                               />
                               <div class="address-details">
                                 <h6 class="show_address pl-5">
@@ -82,28 +83,34 @@
                           </label>
                         </div>
                         <% }} %>
-                      
-						<div class="d-flex justify-content-end mr-5">
-							<a
-							class="collapsed x"
-							role="button"
-							data-toggle="collapse"
-							href="#collapse-3"
-							aria-expanded="false"
-							aria-controls="collapse-3"
-						  >
-              
-							<button class="btn btn-outline-primary-2 btn-order mr-5">Select this Address</button>
-						  </a>
-            <a onclick="addressModal()"  class="btn btn-outline-primary-2 btn-order  mr-5" > Add new Address</a>
 
-						  
-						</div>
+                        <div class="d-flex justify-content-sm-end col-10">
+                          <a
+                            class="collapsed x"
+                            role="button"
+                            data-toggle="collapse"
+                            href="#collapse-3"
+                            aria-expanded="false"
+                            aria-controls="collapse-3"
+                          >
+                            <button
+                              class="btn btn-outline-primary-2 btn-order mr-sm-5 mr-2"
+                            >
+                              Select this Address
+                            </button>
+                          </a>
+                          <a
+                            onclick="addressModal()"
+                            class="btn btn-outline-primary-2 btn-order"
+                          >
+                            Add new Address</a
+                          >
+                        </div>
                       </div>
                       <!-- End .card-body -->
                     </div>
                     <!-- End .collapse -->
-                  </div>  
+                  </div>
                   <!-- End .card -->
 
                   <div class="card">
@@ -156,7 +163,7 @@
                               <input
                                 type="radio"
                                 name="paymentType"
-                                value="Wallet" 
+                                value="Wallet"
                               />
                               Wallet
                               <img
@@ -166,20 +173,24 @@
                             </label>
                           </div>
                         </div>
-                    <div class="d-flex justify-content-end mr-4">
-                      <a
-                      class="collapsed x"
-                      role="button"
-                      data-toggle="collapse"
-                      href="#collapse-4"
-                      aria-expanded="false"
-                      aria-controls="collapse-4"
-                      >
-                      <button class="btn btn-outline-primary-2 btn-order mr-5">Select this Method</button>
-                      </a>
-                    </div>
+                        <div class="d-flex justify-content-end mr-4">
+                          <a
+                            class="collapsed x"
+                            role="button"
+                            data-toggle="collapse"
+                            href="#collapse-4"
+                            aria-expanded="false"
+                            aria-controls="collapse-4"
+                          >
+                            <button
+                              class="btn btn-outline-primary-2 btn-order mr-5"
+                            >
+                              Select this Method
+                            </button>
+                          </a>
+                        </div>
                       </div>
-                      
+
                       <!-- End .card-body -->
                     </div>
                     <!-- End .collapse -->
@@ -209,70 +220,73 @@
                       data-parent="#accordion-payment"
                     >
                       <div
-                        class="card-body summary bg-light col-12 d-flex align-items-center  flex-column rounded"
+                        class="card-body summary bg-light col-12 d-flex align-items-center flex-column rounded"
                       >
-                       
-					  <%for(var i=0;i<
-						cart?.products?.length;i++){%>
-						<div class="col-10  d-flex justify-content-start  mt-2  rounded" style="background-color: white;">
-						<div class="m-5 col-3">
-							<img
-							src="/static/produtsImages/<%= cart.products[i].product.images[0] %>"
-						 style="width:350px; height: auto;"	alt=""
-						  />
-						</div>
+                        <%for(var i=0;i< cart?.products?.length;i++){%>
+                        <div class="row">
+                          <div class="m-5 col-sm-4 col-10">
+                            <!-- Use col-12 for full width on mobile -->
+                            <img
+                              class="w-100 h-auto w-75"
+                              src="/static/productsImages/<%= cart.products[i].product.images[0] %>"
+                              alt=""
+                            />
+                          </div>
 
-						<div class="mt-3">
-							<h5><%= cart.products[i].product.productname %></h5>
-						
-							<h6 >₹ <%= cart.products[i].product.price *cart.products[i].count %></h6>
+                          <div class="mt-3 m-sm-1 m-5 col-sm-6 col-10">
+                            <!-- Use col-12 for full width on mobile -->
+                            <h5><%= cart.products[i].product.productname %></h5>
+                            <h6>
+                              ₹ <%= cart.products[i].product.price *
+                              cart.products[i].count %>
+                            </h6>
+                            <p class="justify-content-start text-justify">
+                              <%= cart.products[i].product.description %>
+                            </p>
+                            <br />
+                            <h6>Qty: <%= cart.products[i].count %></h6>
+                          </div>
+                        </div>
 
-							<p class="justify-content-start"><%= cart.products[i].product.description %></p>
-							<br>
-							<h6>Qty:<%= cart.products[i].count%></h6>
-						</div>
-					  </div>
-					  <%}%>
-					  <hr>
-					  <div class="col-10">
-						
-							
-							  <h3 class="summary-title">Cart Total</h3>
-							  <!-- End .summary-title -->
-			  
-							  <table class="table table-summary">
-								<tbody>
-								  <tr >
-									<td>Subtotal:</td>
-									<td id="subAmount"><%=cart?.ammount%></td>
-								  </tr>
-								  <!-- End .summary-subtotal -->
-								  <tr class="summary-shipping">
-									<td>discount:</td>
-									<td>0:00</td>
-								  </tr>
-			  
-								  <!-- End .summary-shipping-estimate -->
-			  
-								  <tr class="summary-total">
-									<td>Total:</td>
-									<td id="totalAmount"><%=cart?.ammount%></td>
-								  </tr>
-								  <!-- End .summary-total -->
-								</tbody>
-							  </table>
-			  
-							  <!-- End .table table-summary -->
-			  
-							  <button class="btn btn-outline-primary-2 btn-order btn-block"
-								>PROCEED TO CHECKOUT</button>
-							
-							<!-- End .summary -->
-			  
-						</form>
-						
+                        <%}%>
+                        <hr />
+                        <div class="col-10">
+                          <h3 class="summary-title">Cart Total</h3>
+                          <!-- End .summary-title -->
 
-					  </div>
+                          <table class="table table-summary">
+                            <tbody>
+                              <tr>
+                                <td>Subtotal:</td>
+                                <td id="subAmount"><%=cart?.ammount%></td>
+                              </tr>
+                              <!-- End .summary-subtotal -->
+                              <tr class="summary-shipping">
+                                <td>discount:</td>
+                                <td>0:00</td>
+                              </tr>
+
+                              <!-- End .summary-shipping-estimate -->
+
+                              <tr class="summary-total">
+                                <td>Total:</td>
+                                <td id="totalAmount"><%=cart?.ammount%></td>
+                              </tr>
+                              <!-- End .summary-total -->
+                            </tbody>
+                          </table>
+
+                          <!-- End .table table-summary -->
+
+                          <button
+                            class="btn btn-outline-primary-2 btn-order btn-block"
+                            type="submit"
+                          >
+                            PROCEED TO CHECKOUT
+                          </button>
+
+                          <!-- End .summary -->
+                        </div>
                       </div>
                       <!-- End .card-body -->
                     </div>
@@ -328,7 +342,6 @@
                   </table>
                   <!-- End .table table-summary -->
 
-                  
                   <!-- End .accordion -->
 
                   <button
@@ -336,7 +349,7 @@
                     class="btn btn-outline-primary-2 btn-order btn-block"
                   >
                     <span class="btn-text rounded-pill">Place Order</span>
-                    <span  class="btn-hover-text">Proceed to Checkout</span>
+                    <span class="btn-hover-text">Proceed to Checkout</span>
                   </button>
                 </div>
                 <!-- End .summary -->
@@ -345,7 +358,6 @@
             </div>
             <!-- End .row -->
           </form>
-
         </div>
         <!-- End .container -->
       </div>
@@ -357,66 +369,114 @@
 </div>
 <!-- End .page-wrapper -->
 
-
-
-
-
 <!-- Add this script block at the end of your HTML file -->
 <!-- ... (previous HTML code) ... -->
-<button id="addAddresBTN" data-bs-toggle="modal" data-bs-target="#exampleModal" hidden> </button>
+<button
+  id="addAddresBTN"
+  data-bs-toggle="modal"
+  data-bs-target="#exampleModal"
+  hidden
+></button>
 
-
-      
 <!-- Modal with centered layout -->
 
-      
 <!-- Modal with centered layout -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content p-5 pt-3">
-      <span class="close" type="button" class="btn btn-primary " data-bs-dismiss="modal">&times;</span>
-      
-      <div class="modal-header d-flex justify-content-center align-items-center">
-        <h5 class="modal-title" id="exampleModalLabel">Add New Address</h5>
+      <span
+        class="close"
+        type="button"
+        class="btn btn-primary"
+        data-bs-dismiss="modal"
+        >&times;</span
+      >
 
+      <div
+        class="modal-header d-flex justify-content-center align-items-center"
+      >
+        <h5 class="modal-title" id="exampleModalLabel">Add New Address</h5>
       </div>
-      
+
       <div class="modal-body">
         <form action="/newaddress" method="post" id="delivery-address-form">
           <div class="mb-3">
             <label for="fullname" class="form-label">Full Name*</label>
-            <input type="text" class="form-control" id="fullname" name="fullname" required>
+            <input
+              type="text"
+              class="form-control"
+              id="fullname"
+              name="fullname"
+              required
+            />
           </div>
-          
+
           <div class="">
             <label for="mobile" class="form-label">Mobile*</label>
-            <input type="text" class="form-control" id="mobile" name="mobile" required>
+            <input
+              type="text"
+              class="form-control"
+              id="mobile"
+              name="mobile"
+              required
+            />
           </div>
-          
+
           <div class="">
             <label for="address" class="form-label">Address*</label>
-            <input type="text" class="form-control" id="address" name="address" required>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              name="address"
+              required
+            />
           </div>
-          
+
           <div class="d-flex justify-content-center">
-            <div class=" col-8">
+            <div class="col-8">
               <label for="locality" class="form-label">Locality*</label>
-              <input type="text" class="form-control" id="locality" name="locality" required>
+              <input
+                type="text"
+                class="form-control"
+                id="locality"
+                name="locality"
+                required
+              />
             </div>
-            
-            <div class=" col-4">
+
+            <div class="col-4">
               <label for="zipcode" class="form-label">Zip Code*</label>
-              <input type="number" class="form-control" id="zipcode" name="zipcode" required>
+              <input
+                type="number"
+                class="form-control"
+                id="zipcode"
+                name="zipcode"
+                required
+              />
             </div>
           </div>
-          
+
           <div class="d-flex justify-content-center">
-            <div class=" col-6">
+            <div class="col-6">
               <label for="city" class="form-label">City*</label>
-              <input type="text" class="form-control" id="city" name="city" required>
+              <input
+                type="text"
+                class="form-control"
+                id="city"
+                name="city"
+                required
+              />
             </div>
-            
-            <div class=" col-6">
+
+            <div class="col-6">
               <label for="state" class="form-label">State*</label>
               <select class="form-control" id="state" name="state" required>
                 <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -447,20 +507,19 @@
                 <option value="Uttar Pradesh">Uttar Pradesh</option>
                 <option value="Uttarakhand">Uttarakhand</option>
                 <option value="West Bengal">West Bengal</option>
-              <select class="form-control" id="state" name="state" required>
-                <!-- Options for states -->
               </select>
             </div>
           </div>
-          
+       
       </div>
-      
+
       <div class="modal-footer d-flex justify-content-center">
-        <button type="button" class="btn btn-primary "  data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Close
+        </button>
         <button type="submit" class="btn btn-primary">Save changes</button>
       </div>
     </form>
-      
     </div>
   </div>
 </div>
@@ -474,15 +533,104 @@
 <script src="path/to/inputSpinnerPlugin.js"></script>
 
 <script>
-  function addressModal(){
-    
-    document.getElementById("addAddresBTN").click()
-
+  function addressModal() {
+    document.getElementById("addAddresBTN").click();
   }
   // document.getElementById("addressModal").addEventListener('click', ()=>{
   // })
 </script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script>
+  document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    $.ajax({
+      url: "/verify-payment",
+      method: "post",
+      data: $("#checkoutForm").serialize(),
+      success: function (response) {
+        if (response.outOfStock) {
+          Swal.fire({
+            icon: "error",
+            title: "Some products are out of stock!",
+            html: "The following products are out of stock:",
+          });
+        } else if (response.cod) {
+          window.location.href = `/success-payment?id=${response.newOrderId}`;
+
+        } else if (response.online) {
+            console.log(response);
+          var options = {
+            key: response.key_id,
+            amount: response.amount,
+            currency: "INR",
+            name: "Framefy",
+            description: "Test Transaction",
+            image: "hhttps://www.google.com/imgres?imgurl=https%3A%2F%2Fimg.freepik.com%2Ffree-vector%2Fbird-colorful-logo-gradient-vector_343694-1365.jpg&tbnid=qrn4zRugFoxeWM&vet=12ahUKEwitno_4k9-CAxU37DgGHUKQCCoQMygBegQIARBw..i&imgrefurl=https%3A%2F%2Fwww.freepik.com%2Fvectors%2Flogo-design&docid=MBTKclygwadmYM&w=626&h=626&q=logo&ved=2ahUKEwitno_4k9-CAxU37DgGHUKQCCoQMygBegQIARBw",
+            order_id: response.order_id,
+            handler: function (res) {
+              alert(res.razorpay_payment_id);
+              alert(res.razorpay_order_id);
+              alert(res.razorpay_signature);
+
+              fetch('/verifyonlinepayment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ response:res,data:response }),
+                })
+
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the JSON in the response
+              })
+              .then(data => {
+               if (data.online) {
+                window.location.href = `/success-payment?id=${response.newOrderId}`;
+               }
+              })
+              .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+              });
+            },
+            prefill: {
+              name: response.name,
+              email: response.email,
+              contact: response.contact,
+            },
+            notes: {
+              address: "Razorpay Corporate Office",
+            },
+            theme: {
+              color: "#3399cc",
+            },
+          };
+
+          var rzp1 = new Razorpay(options);
+          
+          rzp1.on("payment.failed", function (response) {
+            alert(response.error.code);
+            alert(response.error.description);
+          });
+          rzp1.open();
+         
+        }else{
+          alert(err.message);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("AJAX Request Error:", error);
+      },
+    });
+  });
+</script>
+
 
 <%- include("../layouts/userFooter.ejs")%> <%-
-include("../layouts/userFooter2.ejs")%> 
-<%- include("../layouts/footer.ejs")%>
+include("../layouts/userFooter2.ejs")%> <%- include("../layouts/footer.ejs")%>

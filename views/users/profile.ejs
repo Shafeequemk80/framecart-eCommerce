@@ -1,215 +1,502 @@
 <%-include("../layouts/header.ejs")%>
-    <div class="page-wrapper">
-        <%-include("../layouts/userNavbar.ejs")%>
-        <main class="main">
-        	<div class="page-header text-center" style="background-image: url('/static/assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">My Account<span>Shop</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+<div class="page-wrapper">
+  <%-include("../layouts/userNavbar.ejs")%>
+  <main class="main">
+    <div
+      class="page-header text-center"
+      style="background-image: url('/static/assets/images/page-header-bg.jpg')"
+    >
+      <div class="container">
+        <h1 class="page-title">My Account<span>Shop</span></h1>
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">My Account</li>
+        </ol>
+      </div>
+      <!-- End .container -->
+    </nav>
+    <!-- End .breadcrumb-nav -->
 
-            <div class="page-content">
-            	<div class="dashboard">
-	                <div class="container">
-	                	<div class="row">
-	                	
-							<aside class="col-md-4 col-lg-3">
-	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-								    <li class="nav-item">
-								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">My Profile</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-								    </li>
-								   
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" href="#">Sign Out</a>
-								    </li>
-								</ul>
-	                		</aside><!-- End .col-lg-3 -->
-						
-							
+    <div class="page-content">
+      <div class="dashboard">
+        <div class="container">
+          <div class="row">
+            <aside class="col-md-4 col-lg-3">
+              <ul
+                class="nav nav-dashboard flex-column mb-3 mb-md-0"
+                role="tablist"
+              >
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    id="tab-dashboard-link"
+                    data-toggle="tab"
+                    href="#tab-dashboard"
+                    role="tab"
+                    aria-controls="tab-dashboard"
+                    aria-selected="true"
+                    >My Profile</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="tab-orders-link"
+                    data-toggle="tab"
+                    href="#tab-orders"
+                    role="tab"
+                    aria-controls="tab-orders"
+                    aria-selected="false"
+                    >Orders</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="tab-downloads-link"
+                    data-toggle="tab"
+                    href="#tab-downloads"
+                    role="tab"
+                    aria-controls="tab-downloads"
+                    aria-selected="false"
+                    >Downloads</a
+                  >
+                </li>
+
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="tab-account-link"
+                    data-toggle="tab"
+                    href="#tab-account"
+                    role="tab"
+                    aria-controls="tab-account"
+                    aria-selected="false"
+                    >Account Details</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Sign Out</a>
+                </li>
+              </ul>
+            </aside>
+            <!-- End .col-lg-3 -->
+
+            <div class="col-md-8 col-lg-9">
+              <div class="tab-content">
+                <div
+                  class="tab-pane fade show active"
+                  id="tab-dashboard"
+                  role="tabpanel"
+                  aria-labelledby="tab-dashboard-link"
+                >
+                  <div class="d-flex justify-content-center mt-3">
+                    <h3>User Profile</h3>
+                  </div>
+                  <form
+                    action="/editproduct"
+                    method="post"
+                    id="user-profile-form"
+                  >
+                    <!-- CSRF token for security -->
+                    <input
+                      type="hidden"
+                      name="user_id"
+                      value="<=user._id%"
+                     />
+
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="<%=user.username%>"
+                        id="username"
+                        name="username"
+                      />
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="form-group w-50">
+                        <label for="firstname">First name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          value="<%=user.firstname%>"
+                          id="firstname"
+                          name="firstname"
+                        />
+                      </div>
+                      <div class="form-group w-50 ml-3">
+                        <label for="lastname">Last name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          value="<%=user.lastname%>"
+                          id="lastname"
+                          name="lastname"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Your email address</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        value="<%=user.email%>"
+                        id="email"
+                        name="email"
+                      />
+                      <span id="email-error" class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="mobile">Your mobile</label>
+                      <input
+                        type="tel"
+                        class="form-control"
+                        value="<%=user.mobile%>"
+                        id="mobile"
+                        pattern="[0-9]{10}"
+                        name="mobile"
+                      />
+                    </div>
+
+                    <!-- Additional profile inputs go here -->
+
+                    <small
+                      id="password-error"
+                      class="error-message text-danger"
+                    ></small>
+
+                    <div class="d-flex text-center">
+                      <div class="form-group">
+                        <button
+                          type="submit"
+                          class="btn btn-outline-primary-2 w-100"
+                        >
+                          <span>Upadate Profile</span>
+                          <i class="icon-long-arrow-right"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <!-- .End .tab-pane -->
+
+                <div
+                  class="tab-pane fade"
+                  id="tab-orders"
+                  role="tabpanel"
+                  aria-labelledby="tab-orders-link"
+                >
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <a href="/allorders">
+                        <div class="card card-dashboard">
+                          <div
+                            class="card-body d-flex align-items-center justify-content-center"
+                          >
+                            <div class="card-title-container">
+                              <i class="icon-shopping-order"></i>
+                            </div>
+                            <div class="d-flex flex-column">
+                              <h3 class="card-title">All Orders</h3>
+                              <!-- End .card-title-container -->
+
+                              <p>
+                                You have not set up this type of address yet.
+                              </p>
+                            </div>
+                          </div>
+                          <!-- End .card-body -->
+                        </div>
+                        <!-- End .card-dashboard -->
+                      </a>
+                    </div>
+                    <!-- End .col-lg-6 -->
+
+                    <div class="col-lg-6">
+                      <a href="/address">
+                        <div class="card card-dashboard">
+                          <div
+                            class="card-body d-flex align-items-center justify-content-center"
+                          >
+                            <div class="card-title-container">
+                              <img
+                                src="/static/assets/images/icons/map.png"
+                                class="mr-5"
+                                style="width: 70px; height: auto"
+                                alt=""
+                              />
+                            </div>
+                            <div class="d-flex flex-column">
+                              <h3 class="card-title">All Address</h3>
+                              <!-- End .card-title-container -->
+
+                              <p>
+                                You have not set up this type of address yet.
+                              </p>
+                            </div>
+                          </div>
+                          <!-- End .card-body -->
+                        </div>
+                        <!-- End .card-dashboard -->
+                      </a>
+                    </div>
+                    <!-- End .col-lg-6 -->
+                  </div>
+                  <!-- End .row -->
+                  <a href="category.html" class="btn btn-outline-primary-2"
+                    ><span>GO SHOP</span><i class="icon-long-arrow-right"></i
+                  ></a>
+                </div>
+                <!-- .End .tab-pane -->
+
+                <div
+                  class="tab-pane fade"
+                  id="tab-downloads"
+                  role="tabpanel"
+                  aria-labelledby="tab-downloads-link"
+                >
+                  <p>No downloads available yet.</p>
+                  <a href="category.html" class="btn btn-outline-primary-2"
+                    ><span>GO SHOP</span><i class="icon-long-arrow-right"></i
+                  ></a>
+                </div>
+                <!-- .End .tab-pane -->
+
+                <div
+                  class="tab-pane fade bg-light"
+                  id="tab-account"
+                  role="tabpanel"
+                  aria-labelledby="tab-account-link"
+                >
+                  <div class="border p-5 account-deatails-change mb-2">
+                    <h6>Change Email</h6>
+                    <form id="change-email-form">
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="change-email"
+                        name="email"
+                        placeholder="Enter New Email address"
+                      />
+
+                      <p id="change-email-error" class="error-message"></p>
+                      <button
+                        type="button"
+                        id="change-email-submit"
+                        class="btn btn-outline-primary-2 mt-1"
+                      >
+                        <span>Change Email</span>
+                        <i class="icon-long-arrow-right"></i>
+                      </button>
+                    </form>
+                  </div>
+                  <h6>Change password</h6>
+
+				  <form id="passwordChangeForm">
+					<div class="border p-5 account-deatails-change">
+					  <input type="text" id="currentPassword" class="form-control" placeholder="Enter Current password" />
+					  <p class="error-message" id="currentPassword-error"></p>
+					  <input type="password" id="newPassword" class="form-control" placeholder="Enter New password" />
+					  <p class="error-message" id="newPassword-error"></p>
+					  <input type="password" id="confirmNewPassword" class="form-control mb-2" placeholder="Confirm new password" />
+					  <p class="error-message" id="confirmNewPassword-error"></p>
+					  <button type="button" class="btn btn-outline-primary-2" onclick="fetchPasswordChange()">
+						<span>SAVE CHANGES</span>
+						<i class="icon-long-arrow-right"></i>
+					  </button>
+					</div>
+				  </form>
+				  
+
+                </div>
+                <!-- .End .tab-pane -->
+              </div>
+            </div>
+            <!-- End .col-lg-9 -->
+          </div>
+          <!-- End .row -->
+        </div>
+        <!-- End .container -->
+      </div>
+      <!-- End .dashboard -->
+    </div>
+    <!-- End .page-content -->
+  </main>
+  <!-- End .main -->
+
+  <script src="/static/js/validation.js"></script>
+
+  <%- include("../layouts/userFooter.ejs")%> <%-
+  include("../layouts/userFooter2.ejs")%>
+  <script>
+	document.getElementById("passwordChangeForm").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission
+  fetchPasswordChange();
+});
+
+function fetchPasswordChange() {
+	
+  const currentPassword = document.getElementById("currentPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+  const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+  
+
+  if (currentPassword === "") {
+    showErrorAndRemove("currentPassword-error", 'Please fill in all required fields.');
+    return;
+  }
+
+  if (newPassword === "") {
+    showErrorAndRemove("newPassword-error", 'Please fill in all required fields.');
+    return;
+  }
+
+  if (confirmNewPassword === "") {
+    showErrorAndRemove("confirmNewPassword-error", 'Please fill in all required fields.');
+    return;
+  }
+
+  const passwordRegex = /^(?=.*[!@#$%^&*]).{6,}$/;
+
+if (!newPassword || !passwordRegex.test(newPassword)) {
+
+  showErrorAndRemove("newPassword-error", 'Password must be at least 6 characters and contain a special character.');
+  return
+}
 
 
-	                		<div class="col-md-8 col-lg-9 ">
-	                			<div class="tab-content">
-									<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-										<div class=" d-flex justify-content-center mt-3"> <h3>User Profile</h3></div>
-										<form action="/editproduct" method="post" id="user-profile-form">
-											<!-- CSRF token for security -->
-											<input type="hidden" name="user_id" value=<%=user._id%>" />
-									
-											<div class="form-group">
-												<label for="username">Username</label>
-												<input type="text" class="form-control" value="<%=user.username%>" id="username" name="username"  />
-											</div>
-									
-											<div class="d-flex">
-												<div class="form-group w-50">
-													<label for="firstname">First name</label>
-													<input type="text" class="form-control" value="<%=user.firstname%>" id="firstname" name="firstname"  />
-												</div>
-												<div class="form-group w-50 ml-3">
-													<label for="lastname">Last name</label>
-													<input type="text" class="form-control" value="<%=user.lastname%>" id="lastname" name="lastname"  />
-												</div>
-											</div>
-									
-											<div class="form-group">
-												<label for="email">Your email address</label>
-												<input type="email" class="form-control" value="<%=user.email%>" id="email" name="email"  />
-												<span id="email-error" class="error-message"></span>
-											</div>
-									
-											<div class="form-group">
-												<label for="mobile">Your mobile</label>
-												<input type="tel" class="form-control" value="<%=user.mobile%>" id="mobile" pattern="[0-9]{10}" name="mobile" />
-											</div>
-									
-											<!-- Additional profile inputs go here -->
-									
-											<small id="password-error" class="error-message text-danger"></small>
-									
-											<div class="d-flex text-center">
-												<div class="form-group">
-													<button type="submit" class="btn btn-outline-primary-2 w-100">
-														<span>Upadate Profile</span>
-														<i class="icon-long-arrow-right"></i>
-													</button>
-												</div>
-											</div>
-										</form>
-									
-									</div><!-- .End .tab-pane -->
-									
-
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-										<div class="row">
-								    		
-											<div class="col-lg-6">
-												<a href="/order">
-												<div class="card card-dashboard">
-													<div class="card-body  d-flex align-items-center justify-content-center">
-														<div class="card-title-container">
-															<i class="icon-shopping-order "></i>
-														</div>
-														<div class=" d-flex flex-column ">
-															<h3 class="card-title">All Orders</h3>
-														<!-- End .card-title-container -->
-											
-														<p>You have not set up this type of address yet.
-													</div>
-													</div><!-- End .card-body -->
-												</div><!-- End .card-dashboard -->
-											</a>
-											</div><!-- End .col-lg-6 -->
-										
-											
-											<div class="col-lg-6">
-												<a href="/address">
-												<div class="card card-dashboard">
-													<div class="card-body  d-flex align-items-center justify-content-center">
-														<div class="card-title-container">
-													
-																<img
-																  src="/static/assets/images/icons/map.png"
-																  class="mr-5"
-																  style="width: 70px; height: auto"
-																  alt=""
-																/>
-															  
-														</div>
-														<div class=" d-flex flex-column ">
-															<h3 class="card-title">All Address</h3>
-														<!-- End .card-title-container -->
-											
-														<p>You have not set up this type of address yet.
-													</div>
-													</div><!-- End .card-body -->
-												</div><!-- End .card-dashboard -->
-											</a>
-											</div><!-- End .col-lg-6 -->
-										
-											
-								    	</div><!-- End .row -->
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
-
-								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<p>No downloads available yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
-
-								    
-
-								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
-			                				<div class="row">
-			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-
-			                					<div class="col-sm-6">
-			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
-
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
-		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
-
-		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
-
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
-
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
-
-		                					<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>SAVE CHANGES</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
-			                			</form>
-								    </div><!-- .End .tab-pane -->
-								</div>
-	                		</div><!-- End .col-lg-9 -->
-	                	</div><!-- End .row -->
-	                </div><!-- End .container -->
-                </div><!-- End .dashboard -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
-
-        <%- include("../layouts/userFooter.ejs")%>
 
 
-        <%- include("../layouts/userFooter2.ejs")%>
+  fetch("/changepassword", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmNewPassword: confirmNewPassword,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => handlePasswordChangeResponse(data))
+    .catch((error) => {
+      console.error("Error:", error);
+      // Handle errors or show an error message to the user
+    });
+}
+
+function handlePasswordChangeResponse(data) {
+  if (data.updatePassword) {
+    Swal.fire({
+      icon: "success",
+      title: "Success!",
+      text: "Password changed successfully.",
+    }).then(() => {
+
+window.location.reload()
+})
+  } else if (data.notMatch) {
+    showErrorAndRemove("confirmNewPassword-error", "Passwords do not match. Please try again.");
+	
+  } else if (data.oldNotMatch) {
+    showErrorAndRemove("currentPassword-error", "Passwords do not match. Please try again.");
+ 
+}
+}
+
+function showErrorAndRemove(errorId, errorMessage) {
+  // Display the error message
+  const errorElement = document.getElementById(errorId);
+  errorElement.textContent = errorMessage;
+
+  // Remove the error message after 5 seconds (5000 milliseconds)
+  setTimeout(() => {
+    errorElement.textContent = '';
+  }, 5000);
+}
 
 
-        
-    
+  </script>
+  
 
-        
-   
-    <%- include("../layouts/footer.ejs")%>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("change-email-form");
+      const submitButton = document.getElementById("change-email-submit");
+
+      submitButton.addEventListener("click", function () {
+        const emailInput = document.getElementById("change-email");
+        const email = emailInput.value;
+
+        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+        if (!email || !emailRegex.test(email)) {
+          document.getElementById("change-email-error").textContent =
+            "Please enter a valid email address. (eg: example@gmail.com)";
+          isValid = false;
+        } else {
+          // Validation logic (you can implement your own validation)
+
+          // Perform the fetch request
+          fetch("/changeemail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.exists) {
+                document.getElementById("change-email-error").textContent =
+                  "Email already exists";
+              } else if (data.mailsent) {
+                window.location.href = "/verify_email_change";
+              }
+            })
+            .then((data) => {
+              if (data.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Email Change Successful!",
+                  text: "Your email has been successfully changed.",
+                });
+              } else {
+                // Handle other errors
+                console.error("Error:", data.message || "Unknown error");
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "An error occurred. Please try again later.",
+                });
+              }
+            })
+
+            .catch((error) => {
+              // Handle network or unexpected errors
+              console.error("Network or unexpected error:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "An error occurred. Please try again later.",
+              });
+            });
+        }
+      });
+    });
+  </script>
+
+  <%- include("../layouts/footer.ejs")%>
+</div>

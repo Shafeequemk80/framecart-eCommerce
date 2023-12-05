@@ -63,7 +63,7 @@ const loadLogin = async (req, res) => {
     console.log(error.message);
   }
 };
-const  verifylogin = async (req, res) => {
+const verifylogin = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
@@ -74,7 +74,7 @@ const  verifylogin = async (req, res) => {
         if (adminData.is_Admin == 0) {
           res.render("login", { message: "No account found" });
         } else {
-         req.session.user_id = adminData._id;
+          req.session.admin_id = adminData._id;
           res.redirect("/admin/dashboard");
         }
       } else {
@@ -92,7 +92,6 @@ const  verifylogin = async (req, res) => {
 
 const loaddashboard = async (req, res) => {
   try {
-
     res.render("dashboard");
   } catch (error) {
     console.log(error.message);
@@ -128,90 +127,277 @@ const verifyforget = async (req, res) => {
   } catch (error) {}
 };
 
-const loadreset =async (req,res)=>{
-
-
+const loadreset = async (req, res) => {
   try {
-    
-const token=req.query.token
-const tokenData= await User.findOne({token:token})
-if (tokenData) {
-  res.render("resetpassword",{user_id:tokenData._id})
-} else {
-  res.render("404")
-}
-
+    const token = req.query.token;
+    const tokenData = await User.findOne({ token: token });
+    if (tokenData) {
+      res.render("resetpassword", { user_id: tokenData._id });
+    } else {
+      res.render("404");
+    }
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
+const verifyreset = async (req, res) => {
+  try {
+    const password = req.body.password;
+    const user_id = req.body.user_id;
 
-const verifyreset=async (req,res)=>{
+    const spassword = await securePassword(password);
+    const updateData = await User.updateOne(
+      { _id: user_id },
+      { $set: { password: spassword, token: "" } }
+    );
+    if (updateData) {
+      res.redirect("/");
+    } else {
+      res.render("resetpassword", { message: "passwrod reset not success" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const customerload = async (req, res) => {
+  try {
+    var search = "";
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    console.log(search, "search value ");
+    var page = 1;
+    if (req.query.page) {
+      page = req.query.page;
+    }
+
+    var limit = 2;
+
+    const userData = await User.find({
+      $or: [
+        { firstname: { $regex: ".*" + search + ".*", $options: "i" } },
+        { email: { $regex: ".*" + search + ".*", $options: "i" } },
+      ],
+    })
+
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+
+    const count = await User.find({
+      $or: [
+        { firstname: { $regex: ".*" + search + ".*", $options: "i" } },
+        { email: { $regex: ".*" + search + ".*", $options: "i" } },
+      ],
+    }).countDocuments();
+
+    const currentPage = page * 1;
+
+    res.render("customers", {
+      users: userData,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      previospage: page - 1,
+      nextpage: parseInt(page) + 1,
+      count: count,
+      search: search,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    req.session.admin_id = null;
+    res.redirect("/admin");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const loadproducts = async (req, res) => {
+  var search = "";
+
+  if (req.query.search) {
+    search = req.query.search;
+  }
+
+  console.log(search, "search value ");
+  var page = 1;
+  if (req.query.page) {
+    page = req.query.page;
+  }
+
+  var limit = 5;
+
+  const productData = await Products.find({
+    $or: [
+      { productname: { $regex: ".*" + search + ".*", $options: "i" } },
+      { frameshape: { $regex: ".*" + search + ".*", $options: "i" } },
+    ],
+  })
+
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .exec();
+
+  const count = await Products.find({
+    $or: [
+      { productname: { $regex: ".*" + search + ".*", $options: "i" } },
+      {frameshape: { $regex: ".*" + search + ".*", $options: "i" } },
+    ],
+  }).countDocuments();
+
+  res.render("products", {
+    products: productData,
+    totalPages: Math.ceil(count / limit),
+    currentPage: page,
+    previospage: page - 1,
+    nextpage: parseInt(page) + 1,
+    count: count,
+    search: search,
+  });
 
   try {
-    const password= req.body.password;
-    const user_id=req.body.user_id;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-    const spassword=await securePassword(password);
-      const updateData=await User.updateOne({_id:user_id},{$set:{password:spassword,token:""}});
-      if (updateData) {
-    res.redirect("/");
-      } else {
-        res.render("resetpassword",{message:"passwrod reset not success"})
+const loadorders = async (req, res) => {
+  try {
+    var search = "";
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    console.log(search, "search value ");
+    var page = 1;
+    if (req.query.page) {
+      page = req.query.page;
+    }
+    let limit = 5;
+
+    const order = await Order.find({
+      $or: [
+        { paymentMethod: { $regex: ".*" + search + ".*", $options: "i" } },
+        { orderId: { $regex: ".*" + search + ".*", $options: "i" } },
+        { "user.firstname": { $regex: new RegExp(search, "i") } },
+      ],
+    })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .populate("user")
+      .sort({ orderDate: -1 })
+      .exec();
+
+    const count = await Order.find({
+      $or: [{ paymentMethod: { $regex: ".*" + search + ".*", $options: "i" } },
+      { orderId: { $regex: ".*" + search + ".*", $options: "i" } },
+      { "user.firstname": { $regex: new RegExp(search, "i") } },],
+    }).countDocuments();
+
+    const currentPage = page * 1;
+
+    res.render("orders", {
+      order: order,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      previospage: page - 1,
+      nextpage: parseInt(page) + 1,
+      count: count,
+      search: search,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const allorderitems = async (req, res) => {
+  try {
+    const orderId = req.query.orderId;
+
+    const userOrders = await Order.find({ orderId: orderId })
+      .populate("products.product")
+      .sort({ _id: -1 });
+
+    // Extracting product details from the orders
+    const products = userOrders.reduce((allProducts, order) => {
+      const orderProducts = order.products.map((product) => {
+        return {
+          order: order,
+          productDetails: product.product, // Extract the populated product details
+          count: product.count,
+          totalprice: product.totalprice,
+          paymentStatus: product.paymentStatus,
+          orderStatus: product.orderStatus,
+        };
+      });
+      return [...allProducts, ...orderProducts];
+    }, []);
+
+    res.render("allorderitems", { orders: products });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateOrderStatus = async (req, res) => {
+  try {
+    const orderStatus = req.body.newStatus;
+    const orderId = req.body.orderId;
+    const id = req.body.id;
+    let statusLevel = 0;
+
+    switch (orderStatus) {
+      case "Shipped":
+        statusLevel = 2;
+        break;
+      case "Out of Delivery":
+        statusLevel = 3;
+        break;
+      case "Delivered":
+        statusLevel = 4;
+        break;
+    }
+    console.log(statusLevel);
+    const order = await Order.findOne({
+      orderId: orderId,
+      "products.product": id,
+    });
+    console.log("Order:", order);
+
+    const updateOrderStatus = await Order.updateOne(
+      {
+        orderId: orderId,
+        "products.product": id,
+      },
+      {
+        $set: {
+          "products.$.orderStatus": orderStatus,
+          "products.$.statusLevel": statusLevel,
+        },
       }
-
-
+    );
+    console.log(updateOrderStatus);
+    if (updateOrderStatus) {
+      return res.status(200).json({ success: true });
+    } else {
+      return res.status(400).json({ success: false });
+    }
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
   }
-}
-
-
-const customerload=async(req,res)=>{
-try {
- 
-  const userData =  await User.find()
-  res.render("customers",{users:userData})
-} catch (error) {
-  console.log(error.message);
-}
-}
-const logout=async(req,res)=>{
-  try {
-    
-req.session.destroy();
-res.redirect("/admin")
-
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-
-const loadproducts =async (req,res)=>{
-  
-  const productData= await Products.find()
-res.render("products",{products:productData,})
-
-try {
-  
-} catch (error) {
-  console.log(error.message);
-}
-}
-
-const loadorders =async (req,res)=>{
-
-  try {
-const order =await Order.find().populate('user');
-
-    res.render("orders",{order:order})
-
-  } catch (error) {
-    console.log(error.message);
-  }
-}
+};
 
 module.exports = {
   loadLogin,
@@ -225,5 +411,6 @@ module.exports = {
   logout,
   loadproducts,
   loadorders,
-
+  allorderitems,
+  updateOrderStatus,
 };

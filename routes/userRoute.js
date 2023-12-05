@@ -10,6 +10,7 @@ const auth = require("../middleware/userAuth");
 const addressController=require("../controller/addressController")
 const checkoutController=require("../controller/checkoutController")
 const orderController=require("../controller/orderController")
+const wishlistController = require("../controller/wishlistController");
 user_route.use(
   session({
     secret: config.sessionSecret,
@@ -30,15 +31,17 @@ user_route.post("/signup", auth.isLogout, userController.insestUser);
 
 user_route.get("/verify", userController.loadverifyotp);
 user_route.post("/verify", userController.checkotp);
-
+user_route.get("/verify_email_change", userController.verify_email_change);
+user_route.post("/verify_email_change", userController.check_verifyemail_change);
 user_route.get("/email-verified", userController.confimverify);
+user_route.post("/changepassword", userController.changepassword);
 
 user_route.get("/home", userController.loadHome),
 
 user_route.get("/forgetpassword", auth.isLogout, userController.loadforget);
 user_route.post("/forgetpassword", auth.isLogout, userController.verifyforget);
 
-user_route.get("/resend-otp", auth.isLogout, userController.resend);
+user_route.get("/resend-otp", userController.resend);
 
 user_route.get("/resetpassword", userController.loadreset);
 user_route.post("/resetpassword", userController.resetpassword);
@@ -55,15 +58,25 @@ user_route.post("/editproduct", auth.islogin, userController.editprofile);
 user_route.get("/address",auth.islogin,addressController.address)
 user_route.post("/newaddress",auth.islogin,addressController.addnewaddress)
 user_route.post("/editaddress",auth.islogin,addressController.editaddress)
-user_route.get("/deleteaddress",addressController.deleteaddress)
+user_route.get("/deleteaddress",auth.islogin,addressController.deleteaddress)
 
 
-user_route.get("/loadcheckout",checkoutController.loadcheckout)
-user_route.get("/checkout",checkoutController.getcheckout)
+user_route.get("/loadcheckout",auth.islogin,checkoutController.loadcheckout)
+user_route.get("/checkout",auth.islogin,checkoutController.getcheckout)
+user_route.get("/verifycheckout",auth.islogin,checkoutController.verifycheckout)
 
-user_route.post("/verify-payment",checkoutController.verifypayment)
+user_route.post("/verify-payment",auth.islogin,checkoutController.verifypayment)
+user_route.get("/success-payment",auth.islogin,checkoutController.paymentsuccess)
+user_route.post("/verifyonlinepayment",auth.islogin,checkoutController.verifyonlinepayment)
 
 
-user_route.get("/allorders",orderController.allorders)
-user_route.get("/cancelorder",orderController.cancelorder)
+user_route.get("/allorders",auth.islogin,orderController.allorders)
+user_route.post("/cancelorder",auth.islogin,orderController.cancelorder)
+
+user_route.post("/addtowishlist",auth.islogin,wishlistController.addtowishlist)
+user_route.get("/whishlist",auth.islogin,wishlistController.getwishlist)
+user_route.get("/deletefromwishlist",auth.islogin,wishlistController.deletefromwishlist)
+
+user_route.post("/changeemail",auth.islogin,userController.changeemail)
+
 module.exports = user_route;

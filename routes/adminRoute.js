@@ -38,13 +38,17 @@ admin_route.get("/customers", adminController.customerload);
 admin_route.get("/logout", adminController.logout);
 
 admin_route.get("/orders", auth.islogin, adminController.loadorders);
+admin_route.get("/allorderitems",auth.islogin,adminController.allorderitems);
+admin_route.post("/updateOrderStatus",auth.islogin,adminController.updateOrderStatus)
+
 admin_route.get("/suspenduser", auth.islogin, customersCrontroller.suspenduser);
 admin_route.get("/activeuser", auth.islogin, customersCrontroller.activeuser);
+
 admin_route.get("/products", auth.islogin, adminController.loadproducts);
 admin_route.get("/addproducts", auth.islogin,productsCrontroller.addproduct);
-admin_route.post("/addproducts", auth.islogin,multer.productimagesUpload.array("images",),productsCrontroller.saveproduct);
+admin_route.post("/addproducts", auth.islogin,multer.productImagesUpload,productsCrontroller.saveproduct);
 admin_route.get("/editproducts", auth.islogin,productsCrontroller.editproducts);
-admin_route.post("/editproducts", auth.islogin,multer.productimagesUpload.array("images"),productsCrontroller.saveditproducts);
+admin_route.post("/editproducts", auth.islogin,multer.productImagesUpload,productsCrontroller.saveditproducts);
 admin_route.get("/suspendproduct", auth.islogin, productsCrontroller.suspendproduct);
 admin_route.get("/activeproduct", auth.islogin, productsCrontroller.activeproduct);
 

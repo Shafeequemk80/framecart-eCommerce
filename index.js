@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 mongoose.connect("mongodb://127.0.0.1:27017/frmecart");
 const app = express();
 const path = require("path");
+require('dotenv').config();
 const user_route = require("./routes/userRoute");
 const admin_route = require("./routes/adminRoute");
 const bodyparser=require("body-parser");

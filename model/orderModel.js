@@ -33,6 +33,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      statusLevel: {
+        type: Number,
+        default:1,
+      },
     },
   ],
   address: [
@@ -83,9 +87,10 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  
   amount: {
     type: Number,
-    required: true,
+    default:1,
   },
 });
 

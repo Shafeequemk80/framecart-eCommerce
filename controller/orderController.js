@@ -2,6 +2,7 @@ const Category = require("../model/category");
 const Products = require("../model/productsModel");
 const user_route = require("../routes/userRoute");
 const Order = require("../model/orderModel");
+const { logout } = require("./userController");
 
 
 
@@ -24,6 +25,7 @@ const allorders = async (req, res) => {
             totalprice: product.totalprice,
             paymentStatus: product.paymentStatus,
             orderStatus: product.orderStatus,
+            statusLevel: product.statusLevel,
           };
         });
         return [...allProducts, ...orderProducts];
@@ -50,27 +52,39 @@ const allorders = async (req, res) => {
 //     }
 // }
 const cancelorder = async (req, res) => {
-    try {
-      const user_id = req.session.user_id;
-      const id = req.query.id;
-  
-      const orderUpdate = await Order.findOneAndUpdate(
-        { user: user_id, "products.product": id },
-        { $set: { "products.$.orderStatus": "Cancelled" } }
-      );
-  
-      if (orderUpdate) {
-        // The product was successfully updated in the order
-        res.status(200).send("Product status updated to Cancelled.");
-      } else {
-        // No modifications were made, likely because the product was not found in the order
-        res.status(404).send("Product not found in order.");
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).send("Internal Server Error");
+  try {
+    const user_id = req.session.user_id;
+    const id = req.body.id;
+    const orderId= req.body.orderId
+    const count =req.body.count
+    console.log(req.body);
+    console.log(req.body.id);
+    console.log(req.body.orderId);
+
+
+    const orderUpdate = await Order.findOneAndUpdate(
+      { user: user_id, "products.product": id ,orderId:orderId},
+      { $set: { "products.$.orderStatus": "Cancelled" } }
+    );orderUpdate
+
+    const updatestock = await Products.findByIdAndUpdate(
+      id,
+      { $inc: { stock: count } }
+    );
+
+    if (orderUpdate&&updatestock) {
+     
+      return res.status(200).json({ success: true  });
+    } else {
+    
+      return res.status(404).json({ success: false });
     }
-  };
+  } catch (error) {
+    console.error('Error cancelling order:', error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
   
 module.exports ={
     allorders,

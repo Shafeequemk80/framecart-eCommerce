@@ -20,17 +20,21 @@ include("../layouts/adminSideBar.ejs")%>
                 <div class="toggle-expand-content" data-content="pageMenu">
                   <ul class="nk-block-tools g-3">
                     <li>
-                      <div class="form-control-wrap">
-                        <div class="form-icon form-icon-right">
-                          <em class="icon ni ni-search"></em>
+                      <form id="searchForm" action="" method="get">
+                        <div class="form-control-wrap">
+                          <div class="form-icon form-icon-right">
+                            <em id="searchIcon" class="icon ni ni-search" onclick="submitForm()"></em>
+                          </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="default-04"
+                            placeholder="Search by name"
+                            name="search"
+                          />
                         </div>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="default-04"
-                          placeholder="Quick search by id"
-                        />
-                      </div>
+                      </form>
+                      
                     </li>
                     <li>
                       <div class="drodown">
@@ -68,9 +72,9 @@ include("../layouts/adminSideBar.ejs")%>
           </div>
         </div>
 
-        <div class="nk-block text-center ">
-          <div class="nk-tb-list is-separate mb-3 ">
-            <div class="nk-tb-item nk-tb-head ">
+        <div class="nk-block text-center">
+          <div class="nk-tb-list is-separate mb-3">
+            <div class="nk-tb-item nk-tb-head">
               <div class="nk-tb-col nk-tb-col-check">
                 <div
                   class="custom-control custom-control-sm custom-checkbox notext"
@@ -85,10 +89,6 @@ include("../layouts/adminSideBar.ejs")%>
               <div class="nk-tb-col tb-col-sm"><span>Category Name</span></div>
               <div class="nk-tb-col"><span>Status</span></div>
               <div class="nk-tb-col"><span>Action</span></div>
-        
-       
-           
-           
             </div>
 
             <%category.forEach((value,index)=>{%>
@@ -111,28 +111,38 @@ include("../layouts/adminSideBar.ejs")%>
               <div class="nk-tb-col tb-col-sm">
                 <span class="tb-product"
                   ><img
-                    src="/static/produtsImages/icons/<%=value.icon%>"
+                    src="/static/productsImages/icons/<%=value.icon%>"
                     alt=""
                     class="thumb"
                   /><span class="title"><%=value.categoryname%></span></span
                 >
               </div>
               <div class="nk-tb-col">
-                <span class="tb-sub"> <% if (value.active == 0) { %><p class="text-success">active</p><% } else { %><p class="text-danger">Blocked</p><% } %></span>
+                <span class="tb-sub">
+                  <% if (value.active == 0) { %>
+                  <p class="text-success">active</p>
+                  <% } else { %>
+                  <p class="text-danger">Blocked</p>
+                  <% } %></span
+                >
               </div>
-              
-        
+
               <div class="nk-tb-col tb-col-md">
                 <div class="asterisk tb-asterisk text-center">
-                 <% if (value.active == 1) { %> <a href="/admin/activecategory?id=<%=value._id%>"><p class="btn btn-success">active</p></a><% } else { %> <a href="/admin/suspendcategory?id=<%=value._id%>"><p class="btn btn-danger">Block</p></a><% } %>
-
+                  <% if (value.active == 1) { %>
+                  <a href="/admin/activecategory?id=<%=value._id%>"
+                    ><p class="btn btn-success">active</p></a
+                  ><% } else { %>
+                  <a href="/admin/suspendcategory?id=<%=value._id%>"
+                    ><p class="btn btn-danger">Block</p></a
+                  ><% } %>
                 </div>
               </div>
-              
             </div>
 
             <%})%>
           </div>
+        
           <div class="card">
             <div class="card-inner">
               <div class="nk-block-between-md g-3">
@@ -140,68 +150,72 @@ include("../layouts/adminSideBar.ejs")%>
                   <ul
                     class="pagination justify-content-center justify-content-md-start"
                   >
+                  <% if (previospage > 0) { %>
                     <li class="page-item">
-                      <a class="page-link" href="#"
-                        ><em class="icon ni ni-chevrons-left"></em
+                      <a class="page-link" href="?page=<%= previospage %>&search=<%=search%>"
+                        ><em   class="icon ni ni-chevrons-left"></em
                       ></a>
                     </li>
+                    <% } %>
+                    <% let page=0;
+                    if(totalPages< 10){
+                      page= Math.ceil(totalPages/3);
+                    }else{
+                      page= Math.floor(totalPages/5);
+                    }
+                    
+                    for (let i=1;i<=page;i++){%>
                     <li class="page-item">
-                      <a class="page-link" href="#">1</a>
+                      <a class="page-link" href="?page=<%= i %>&search=<%=search%>"><%=i%></a>
+
                     </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#">2</a>
-                    </li>
+                    <%}%>
+                   
+                    
                     <li class="page-item">
                       <span class="page-link"
                         ><em class="icon ni ni-more-h"></em
                       ></span>
                     </li>
+                    <% 
+                    
+                    for (let i=totalPages-1 ;i<=totalPages ;i++){%>
                     <li class="page-item">
-                      <a class="page-link" href="#">6</a>
+                      <a  class="page-link" href="?page=<%=i %>&search=<%=search%>"><%=i%></a>
                     </li>
+                    
+                    <% } %> <% if (currentPage < totalPages) { %>
                     <li class="page-item">
-                      <a class="page-link" href="#">7</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#"
-                        ><em class="icon ni ni-chevrons-right"></em
+                      <a class="page-link" href="?page=<%= nextpage %>&search=<%=search%>"
+                        ><em  class="icon ni ni-chevrons-right"></em
                       ></a>
                     </li>
+                    <% } %>
                   </ul>
                 </div>
                 <div class="g">
                   <div
                     class="pagination-goto d-flex justify-content-center justify-content-md-start gx-3"
                   >
+              
                     <div>Page</div>
                     <div>
                       <select
-                        class="form-select js-select2"
-                        data-search="on"
-                        data-dropdown="xs center"
-                      >
-                        <option value="page-1">1</option>
-                        <option value="page-2">2</option>
-                        <option value="page-4">4</option>
-                        <option value="page-5">5</option>
-                        <option value="page-6">6</option>
-                        <option value="page-7">7</option>
-                        <option value="page-8">8</option>
-                        <option value="page-9">9</option>
-                        <option value="page-10">10</option>
-                        <option value="page-11">11</option>
-                        <option value="page-12">12</option>
-                        <option value="page-13">13</option>
-                        <option value="page-14">14</option>
-                        <option value="page-15">15</option>
-                        <option value="page-16">16</option>
-                        <option value="page-17">17</option>
-                        <option value="page-18">18</option>
-                        <option value="page-19">19</option>
-                        <option value="page-20">20</option>
-                      </select>
+              
+                      class="form-select js-select2"
+                      data-search="on"
+                      onchange="window.location.href='?page=' + this.value"
+                      
+                      data-dropdown="xs center"
+                    >
+                      <% for (let i = 1; i <= totalPages; i++) { %>
+                        <option value="<%= i %>" <% if (i === currentPage ) { %>selected<% } %>>
+                          <%= i %>
+                        </option>
+                      <% } %>
+                    </select>
                     </div>
-                    <div>OF 102</div>
+                    <div><%=totalPages%></div>
                   </div>
                 </div>
               </div>
@@ -396,19 +410,30 @@ include("../layouts/adminSideBar.ejs")%>
                     </div>
                   </div>
                 </div> -->
-              <!-- <div class="col-12">
+        <!-- <div class="col-12">
                 <button type="submit" class="btn btn-primary">
                   <em class="icon ni ni-plus"></em>
                   <span>Add New</span>
                 </button>
               </div> -->
-            </div>
-          </form>
-        </div>
       </div>
     </div>
   </div>
 </div>
+
+
+
+
+<script>
+  function submitForm() {
+    // Get the form element by its ID
+    var form = document.getElementById('searchForm');
+    
+    // Submit the form
+    form.submit();
+  }
+</script>
+
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>

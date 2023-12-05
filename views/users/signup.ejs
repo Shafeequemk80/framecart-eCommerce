@@ -32,7 +32,7 @@
           role="tabpanel"
           aria-labelledby="register-tab-2"
         >
-          <form action="" method="post"  id="registration-form">
+          <form action="" method="post"  id="registration-form" onsubmit="return validationSignup()">
             <!-- CSRF token for security -->
             <input type="hidden" name="_csrf" value="your_csrf_token_here" />
 
@@ -43,8 +43,9 @@
                 class="form-control"
                 id="username"
                 name="username"
-                required
+                
               />
+              <p id="username-error" class="error-message"></p>
             </div>
             <div class="d-flex">
               <div class="form-group w-75">
@@ -53,9 +54,9 @@
                   type="text"
                   class="form-control"
                   id="firstname"
-                  name="firstname"
-                  required
-                />
+                  name="firstname"/>
+                  <p id="firstname-error" class="error-message"></p>
+                
               </div>
               <div class="form-group w-25 ml-3">
                 <label for="lastname">Last name*</label>
@@ -64,8 +65,9 @@
                   class="form-control"
                   id="lastname"
                   name="lastname"
-                  required
+                 
                 />
+                <p id="lastname-error" class="error-message"></p>
               </div>
             </div>
 
@@ -76,9 +78,10 @@
                 class="form-control"
                 id="email"
                 name="email"
-                required
+               
               />
-              <span id="email-error" class="error-message"></span>
+
+                <p id="email-error" class="error-message"></p>
             </div>
             <div class="form-group">
               <label for="mobile">Your mobile*</label>
@@ -86,11 +89,11 @@
                 type="tel"
                 class="form-control"
                 id="mobile"
-                pattern="[0-9]{10}" 
+               
                 name="mobile"
-                required
+                
               />
-             
+              <p id="mobile-error" class="error-message"></p>
             </div>
             <div class="d-flex">
               <div class="form-group w-50">
@@ -100,19 +103,20 @@
                   class="form-control"
                   id="password"
                   name="password"
-                  required
+                
                 />
-           
+                <p id="password-error" class="error-message"></p>
               </div>
               <div class="form-group w-50 ml-5">
                 <label for="password-2">Confirm Password*</label>
                 <input
                   type="password"
                   class="form-control"
-                  id="password-2"
+                  id="cpassword"
                   name="password_2"
-                  required
+                 
                 />
+                <p id="cpassword-mismatch" class="error-message"></p>
               </div>
              
             </div>
@@ -146,9 +150,11 @@
 </main>
 <!-- End .main -->
 
-
+<script src="/static/js/validation.js"></script>
 <%- include("../layouts/userFooter.ejs")%> 
 
+
+<!-- 
 <script>
   const isStrongPassword = (password) => {
     // Use a regular expression to check for a strong password:
@@ -179,6 +185,6 @@
       passwordError.textContent = "";
     }
   });
-</script>
+</script> -->
 
 <%-include("../layouts/footer.ejs")%>

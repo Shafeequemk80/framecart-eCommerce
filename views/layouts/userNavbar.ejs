@@ -19,19 +19,19 @@
         <nav class="main-nav">
           <ul class="menu sf-arrow">
             <li class="megamenu-container active">
-              <a href="/home" class="sf-with-ul">Home</a>
+              <a href="/home" class="sf-with-ul"><i class="fa-light fa-house"></i> Home</a>
             </li>
             <li>
-              <a href="/allproducts" class="sf-with-ul">Shop</a>
+              <a href="/allproducts" class="sf-with-ul"><i class="fa-brands fa-shopify"></i> Shop</a>
             </li>
             <li>
-              <a href="product.html" class="sf-with-ul">Whishlist</a>
+              <a href="/whishlist" class="sf-with-ul"><i class="fa-sharp fa-regular fa-heart"></i> Whishlist</a>
             </li>
             <li>
-              <a href="product.html" class="sf-with-ul">orders</a>
+              <a href="/allorders" class="sf-with-ul"><i class="fa-light fa-bag-shopping"></i> orders</a>
             </li>
             <li>
-              <a href="#" class="sf-with-ul">More</a>
+              <a href="#" class="sf-with-ul"><i class="fa-sharp fa-solid fa-cowbell-circle-plus"></i> More</a>
 
               <ul>
                 <li><a href="/404">About</a></li>
@@ -78,7 +78,7 @@
             data-display="static"
           >
           <% if(user){%>
-            <span class="btn text-primary"><i class="icon-user"></i>My Account</span>
+            <span class="btn text-primary" ><i class="icon-user "></i>My Account</span>
            
           </a>
 
@@ -86,9 +86,9 @@
           <div class="dropdown-menu dropdown-menu-right">
             <div class="user-card-wrap">
               <div class="user-card">
-                <ul class="user-actions">
+                <ul class="user-actions ">
                   <li>
-                    <a href="/profile">
+                    <a href="/profile" >
                       <i class="icon-user larger-icon"></i> My Profile
                     </a>
                   </li>
@@ -101,8 +101,7 @@
                   <li class="divider"></li>
                   <li>
                     <a href="/logout">
-                      <i class="icon-user larger-icon"></i>
-                       Logout
+                       <i class="fa-regular fa-arrow-right-from-bracket"></i> Logout
                     </a>
                   </li>
                 </ul>
@@ -117,8 +116,8 @@
           <!-- End .dropdown-menu -->
 
           <%}else{%>
-            <span class="btn text-primary "><i class="icon-user"></i>Login</span>
-          <div class="dropdown-menu dropdown-menu-right">
+            <a href="/login" ><span class="btn text-primary "><i class="fa-light fa-user mr-2"></i>Login</span></a>
+          <!-- <div class="dropdown-menu dropdown-menu-right">
             <div class="user-card-wrap">
               <div class="user-card">
                 <div class="logout-button">
@@ -133,10 +132,10 @@
             </div>
 
             <div class="dropdown-cart-action">
-              <!-- Your shopping cart content goes here -->
+              
             </div>
           </div>
-          <!-- End .dropdown-menu -->
+          End .dropdown-menu -->
 
           <%}%>
         </div>
@@ -145,8 +144,8 @@
         
           <a
             href="/cart">
-            <i class="icon-shopping-cart"></i>
-            <span class="cart-count">2</span>
+            <i class="icon-shopping-cart ml-lg-3"></i>
+            <span class="cart-count"></span>
           </a>
 
       </div>

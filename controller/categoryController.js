@@ -36,8 +36,48 @@ res.render("addcategory",{message:`Category with name "${newname}" already exist
 
 const loadcategorypage = async (req, res) => {
   try {
-    const categoryData = await Category.find({}).sort({ createdAt: -1 });
-    res.render("category", { category: categoryData });
+    var search = "";
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    console.log(search, "search value ");
+    var page = 1;
+    if (req.query.page) {
+      page = req.query.page;
+    }
+
+    var limit = 5;
+
+    const categoryData = await Category.find({
+      $or: [
+        { categoryname: { $regex: ".*" + search + ".*", $options: "i" } },
+       
+      ],
+    })
+
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+
+    const count = await Category.find({
+      $or: [
+        { categoryname: { $regex: ".*" + search + ".*", $options: "i" } },
+      ],
+    }).countDocuments();
+
+
+
+   
+    res.render("category", 
+    { category: categoryData,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      previospage: page - 1,
+      nextpage: parseInt(page) + 1,
+      count: count,
+      search: search, });
   } catch (error) {
     console.log(error.message);
   }

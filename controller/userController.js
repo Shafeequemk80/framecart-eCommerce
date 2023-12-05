@@ -1,4 +1,4 @@
-const bctypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productsModel");
@@ -34,7 +34,7 @@ function generateAndStoreOTP(req) {
 }
 const securePassword = async (password) => {
   try {
-    const passwordHash = await bctypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
     return passwordHash;
   } catch (error) {
     console.log(error.message);
@@ -142,7 +142,7 @@ const insestUser = async (req, res) => {
         const generatedOTP = generateAndStoreOTP(req);
 
         sendVerifyMail(req.session.email, req.session.firstname, generatedOTP);
-
+        console.log(generatedOTP);
         res.render("verify", {
           name: "Please enter the one-time password to verify your account",
           mail: req.session.email,
@@ -158,64 +158,73 @@ const insestUser = async (req, res) => {
 
 const loadverifyotp = async (req, res) => {
   try {
-    res.redirect("/verify");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const checkotp = async (req, res) => {
-  try {
-    const verifyotp = req.body.otp;
-
-    const currTime = Math.floor(Date.now()) / 1000;
-
-    if (currTime <= req.session.otp.expiry) {
-      if (req.session.otp.code == verifyotp) {
-        const spassword = await securePassword(req.session.password);
-        const user = new User({
-          username: req.session.username,
-          firstname: req.session.firstname,
-          lastname: req.session.lastname,
-          email: req.session.email,
-          password: spassword,
-          mobile: req.session.mobile,
-          fullname: req.session.fullname,
-          is_Verified: 1,
-        });
-
-        const userData = await user.save();
-
-        if (userData) {
-          req.session.user_id = userData._id;
-        }
-        res.redirect("email-verified");
-      } else {
-        res.render("verify", { message: "OTP is ivalid" });
-      }
-    } else {
-      res.render("verify", { message: "OTP is exprired Resend Otp" });
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const resend = async (req, res) => {
-  try {
-    const generatedOTP = generateAndStoreOTP(req);
-    console.log(generatedOTP);
-    const fullname = req.session.fullname;
-    sendVerifyMail(req.session.email, fullname, generatedOTP);
-
     res.render("verify");
   } catch (error) {
     console.log(error.message);
   }
 };
+const checkotp = async (req, res) => {
+  try {
+    const verifyotp = req.body.otp;
+    const currTime = Math.floor(Date.now() / 1000);
+      console.log(verifyotp);
+    if (currTime <= req.session.otp.expiry) {
+      if (req.session.otp.code === verifyotp) {
+        const hashedPassword = await securePassword(req.session.password);
+        
+        const newUser = new User({
+          username: req.session.username,
+          firstname: req.session.firstname,
+          lastname: req.session.lastname,
+          email: req.session.email,
+          password: hashedPassword,
+          mobile: req.session.mobile,
+          fullname: req.session.fullname,
+          is_Verified: 1,
+        });
+
+        const savedUser = await newUser.save();
+
+        if (savedUser) {
+          req.session.user_id = savedUser._id;
+          res.json({ success: true });
+        } else {
+          res.status(500).json({ success: false, message: 'Error creating user' });
+        }
+      } else {
+        console.log('Invalid OTP');
+        res.json({ invalid: true, message: 'Invalid OTP' });
+      }
+    } else {
+      res.json({ expired: true, message: 'OTP has expired' });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+const resend = async (req, res) => {
+  try {
+
+    const generatedOTP = generateAndStoreOTP(req);
+    const email = req.session.email;
+    console.log(email,"email");
+   const name=req.session.firstname||'';
+    // Assuming sendVerifyMail is correctly implemented
+    sendVerifyMail(email, name, generatedOTP);
+
+    console.log(`Resent OTP to ${email} for user ${name}`);
+    
+    res.json({ resendsuccess: true });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 const confimverify = async (req, res) => {
   try {
-    res.render("email-verified");
+    res.redirect("/login");
   } catch (error) {
     console.log(error.message);
   }
@@ -235,7 +244,7 @@ const verifylogin = async (req, res) => {
     const userData = await User.findOne({ email: email });
 
     if (userData) {
-      const passwordMatch = await bctypt.compare(password, userData.password);
+      const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
         if (userData.is_Verified == 0) {
           res.status(400).json({ message: "Your account is suspended" });
@@ -335,27 +344,106 @@ const resetpassword = async (req, res) => {
     { $set: { password: spassword, token: "" } }
   );
 
-  res.redirect("/");
+  res.redirect("/login");
 };
 const logout = async (req, res) => {
   try {
-    req.session.destroy();
+    req.session.user_id=null
     res.redirect("/");
   } catch (error) {
     console.log(error.message);
   }
 };
+
 const getallproducts = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
+    const categorytData = await Category.find({});
+    let sortObject={}
+   
+    let sort = req.query.sort ? req.query.sort : '';  
+    if(sort=='lh'){
+      sortObject.price=1;
+    }  else if(sort=='hl'){
+      sortObject.price=-1;
+      console.log(sort);
+    }else if(sort=='latest'){
+      sortObject.createdAt=-1;
+    }
 
-    const productData = await Product.find({});
-    res.render("allproducts", { product: productData, user: userData });
+    // Search parameters
+    const search = req.query.search || '';
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    // MongoDB queries
+    const nameRegex = { productname: { $regex: ".*" + search + ".*", $options: "i" } };
+    const shapeRegex = { frameshape: { $regex: ".*" + search + ".*", $options: "i" } };
+
+    const query = {
+      $or: [nameRegex, shapeRegex],
+    };
+
+    // Apply category filter
+    if (req.query.categories) {
+      const categoriesFilter = { frameshape: { $in: req.query.categories } };
+      Object.assign(query, categoriesFilter);
+    }
+
+    // Apply price filter
+    if (req.query.prices) {
+
+      const value=req.query.prices.split(",")
+
+      const minPrice = parseInt(value[0]);
+      const maxPrice = parseInt(value[1]);
+    
+
+
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        const priceFilter = {
+          price: {
+            $gte: minPrice,
+            $lte: maxPrice,
+          },
+        };
+        Object.assign(query, priceFilter);
+      } else {
+        // Handle invalid price values (e.g., log an error or provide default values)
+        console.error('Invalid price values:', req.query.prices);
+      }
+    }
+   
+
+    // Fetch products based on search and pagination
+    const productData = await Product.find(query)
+      .limit(limit)
+      .sort(sortObject)
+      .skip((page - 1) * limit)
+      .exec();
+
+    // Count total products for pagination
+    const count = await Product.countDocuments(query);
+
+    // Render the page with filtered products
+    res.render("allproducts", {
+      product: productData,
+      user: userData,
+      categorytData,
+      page,
+      currentPage: page,
+      previospage: page - 1,
+      nextpage: parseInt(page) + 1,
+      count: count,
+      totalPages: Math.ceil(count / limit),
+    });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const getoneproduct = async (req, res) => {
   try {
@@ -365,7 +453,11 @@ const getoneproduct = async (req, res) => {
     const userData = await User.findById(user_id);
 
     const productData = await Product.findById(id);
-    res.render("product", { product: productData, user: userData });
+   
+      const categoryData = await Product.find({frameshape:productData.frameshape});
+      console.log(categoryData);
+
+    res.render("product", { product: productData, user: userData,categoryData:categoryData });
   } catch (error) {
     console.log(error.message);
   }
@@ -378,7 +470,21 @@ const loadcart = async (req, res) => {
     const cartData = await Cart.findOne({ user: id }).populate(
       "products.product"
     )
-    res.render("cart", { user: userData, cartData: cartData });
+    let totalAmount = 0;
+if (cartData) {
+  
+    
+
+    for (const cartItem of cartData.products) {
+      const productPrice = cartItem.product.price;
+      const productCount = cartItem.count;
+      totalAmount += productPrice * productCount;
+    }
+
+  }
+
+    
+    res.render("cart", { user: userData, cartData: cartData,totalAmount:totalAmount });
   
   } catch (error) {
     console.log(error.message);
@@ -387,6 +493,7 @@ const loadcart = async (req, res) => {
 
 const profile = async (req, res) => {
   try {
+    
     const id = req.session.user_id;
     const userData = await User.findById(id);
 
@@ -417,6 +524,124 @@ const editprofile = async (req, res) => {
     console.log(error.message);
   }
 };
+const changeemail = async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
+    const email = req.body.email;
+    
+
+    // Check if the email already exists
+    const existingEmail = await User.findOne({ email: email });
+
+    if (existingEmail) {
+      // Email already exists
+      res.json({ exists: true });
+    } else {
+  
+const generatedOTP = generateAndStoreOTP(req);
+console.log(generatedOTP);
+req.session.email = email;
+
+
+sendVerifyMail(email, user_id.firstname, generatedOTP);
+
+return res.json({ mailsent: true})
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+const verify_email_change = async (req, res) => {
+  try {
+const email = req.session.email
+
+    res.render("verifyemailchange",{ email: email});
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const check_verifyemail_change = async (req, res) => {
+
+  try {
+    const verifyotp = req.body.otp;
+    const currTime = Math.floor(Date.now() / 1000);
+      console.log(verifyotp);
+    if (currTime <= req.session.otp.expiry) {
+      if (req.session.otp.code === verifyotp) {
+        const email = req.session.email
+        const user_id = req.session.user_id;
+
+console.log(email,"df")
+
+        const updateEmail = await User.updateOne({ _id: user_id }, { $set: { email: email } });
+
+      
+
+        if (updateEmail.modifiedCount === 1) {
+         
+          res.json({ success: true });
+        } else {
+          res.status(500).json({ success: false, message: 'Error creating user' });
+        }
+      } else {
+        console.log('Invalid OTP');
+        res.json({ invalid: true, message: 'Invalid OTP' });
+      }
+    } else {
+      res.json({ expired: true, message: 'OTP has expired' });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+
+};
+
+const changepassword = async (req, res) => {
+  try {
+    console.log(req.body);
+
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    const user_id = req.session.user_id;
+
+
+    const userData = await User.findById(user_id);
+
+
+    const passwordMatch = await bcrypt.compare(currentPassword, userData.password);
+
+    if (passwordMatch) {
+      
+      if (newPassword === confirmNewPassword) {
+        const spassword = await securePassword(newPassword);
+
+        await User.updateOne({ _id: user_id }, { $set: { password: spassword } });
+
+        return res.json({ updatePassword: true, message: 'Password updated successfully.' });
+      } else {
+        return res.status(400).json({ notMatch: true, error: 'New password and confirm password do not match.' });
+      }
+    } else {
+      return res.status(400).json({ oldNotMatch: true, error: 'Current password does not match.' });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// Function to validate the new password on the server side
+const validateNewPassword = (password) => {
+  const passwordRegex = /^(?=.*[!@#$%^&*]).{6,}$/;
+  return passwordRegex.test(password);
+};
+
+
+
+
+
 module.exports = {
   loadregister,
   insestUser,
@@ -438,4 +663,8 @@ module.exports = {
   loadcart,
   profile,
   editprofile,
+  changeemail,
+  verify_email_change,
+  check_verifyemail_change,
+  changepassword
 };

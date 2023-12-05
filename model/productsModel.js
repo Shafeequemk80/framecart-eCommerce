@@ -28,10 +28,24 @@ const productsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  images: {
-    type: [String],
-    required: true,
-  },
+  images:{
+    image1:{
+        type:String,
+        require:true
+    },
+    image2:{
+        type:String,
+        require:true
+    },
+    image3:{
+        type:String,
+        require:true
+    },
+    image4:{
+        type:String,
+        require:true
+    }
+},
   active: {
     type: Number,
     default: 0,

@@ -1,5 +1,6 @@
 <%- include("../layouts/adminHeader.ejs")%> <%-
 include("../layouts/adminSideBar.ejs")%>
+
 <div class="nk-content">
   <div class="container-fluid">
     <div class="nk-content-inner">
@@ -10,7 +11,7 @@ include("../layouts/adminSideBar.ejs")%>
               <h3 class="nk-block-title page-title">
                 Products <span class="text-grey">/ edit Product</span>
               </h3>
-              <input type="hidden" name="user_id" value="<%=products._id %>">
+              <input type="hidden" name="user_id" value="<%=products._id %>" />
               <div class="container-fluid mt-3">
                 <div class="row">
                   <div class="col-md-12 mx-auto">
@@ -24,12 +25,11 @@ include("../layouts/adminSideBar.ejs")%>
                           <div class="row g-3 mt-2">
                             <div class="col-md-12">
                               <div class="">
-                                
                                 <label for="product-title" class="form-label"
                                   >Product Name</label
                                 >
                                 <input
-                                  type="text" 
+                                  type="text"
                                   value="<%=products.productname%>"
                                   name="productname"
                                   id="product-title"
@@ -40,11 +40,19 @@ include("../layouts/adminSideBar.ejs")%>
                             </div>
                             <div class="col-md-6">
                               <div>
-                                <label for="frameshape" class="form-label">Frame Shape</label>
-                                <select name="frameshape" id="frameshape" class="form-control" required>
-
+                                <label for="frameshape" class="form-label"
+                                  >Frame Shape</label
+                                >
+                                <select
+                                  name="frameshape"
+                                  id="frameshape"
+                                  class="form-control"
+                                  required
+                                >
                                   <%category.forEach((value)=>{%>
-                                  <option value="<%=value.categoryname%>"><%=value.categoryname%></option>
+                                  <option value="<%=value.categoryname%>">
+                                    <%=value.categoryname%>
+                                  </option>
                                   <%})%>
                                   <!-- Add more options as needed -->
                                 </select>
@@ -103,29 +111,33 @@ include("../layouts/adminSideBar.ejs")%>
                                 <textarea
                                   name="description"
                                   id="description"
-                                  
                                   class="form-control"
                                   required
-                                >"<%=products.description%>"</textarea>
+                                >
+                                    "<%=products.description%>"
+                                    </textarea
+                                >
                               </div>
                             </div>
 
-                            
                             <div class="col-12 row mt-4">
-                              <%for(let i=0;i < 4;i++){%>  
+                              <% for (let i = 0; i < 4; i++) { %>
                                 <div class="col-6 col-md-3 mb-3 rounded-image-preview">
-                                  <label class="image-label"  for="imageInput<%= i + 1 %>">Image Slot <%= i + 1 %>
-                                  <div class=" rounded-image-preview">
-                                    <img   id="imagePreview<%= i + 1 %>" src="<%= products.images[i] ? '/static/produtsImages/' + products.images[i] : '/static/admin/assets/images/dummy/dummyimage.jpg' %>" alt="Preview" name="images" />
-                                  </div>
-                                  <input type="file"  value="/static/produtsImages/<%=products.images[i]%>"  name="images" class="imageInput" id="imageInput<%= i + 1 %>" accept="image/*"  />
-                                </label>
+                                  <label class="image-label" for="imageInput<%= i + 1 %>">Image Slot <%= i + 1 %>
+                                    <div class="rounded-image-preview">
+                                      <img
+                                        id="imagePreview<%= i + 1 %>"
+                                        src="<%= products.images['image' + (i + 1)] ? '/static/productsImages/' + products.images['image' + (i + 1)] : '/static/admin/assets/images/dummy/dummyimage.jpg' %>"
+                                        alt="Preview"
+                                        name="images"
+                                      />
+                                    </div>
+                                    <input type="file" name="image<%= i + 1 %>" class="imageInput" id="imageInput<%= i + 1 %>" />
+                                  </label>
                                 </div>
-  
-                             
-                    <%}%>
-  
-                              
+                              <% } %>
+                            </div>
+                            
                             <div class="col-12">
                               <button type="submit" class="btn btn-primary">
                                 <em class="icon ni ni-plus"></em>
@@ -145,25 +157,29 @@ include("../layouts/adminSideBar.ejs")%>
       </div>
     </div>
   </div>
-  
 
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
-  $(document).ready(function() {
-    $(".imageInput").change(function() {
-      var input = this;
-      var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
-
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function(e) {
-          imagePreview.src = e.target.result;
-          $(imagePreview).show();
-        };
-
-        reader.readAsDataURL(input.files[0]);
-}});});
+    $(document).ready(function () {
+      $(".imageInput").change(function () {
+        var input = this;
+        var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
+  
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+  
+          reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            $(imagePreview).show();
+          };
+  
+          reader.readAsDataURL(input.files[0]);
+        }
+      });
+    });
   </script>
+
+
   <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>

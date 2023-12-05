@@ -1062,6 +1062,7 @@ blockquote.text-white cite span {
   border-radius: 20px;
   z-index: 10;
 }
+
 .header-search .header-search-wrapper.show {
   display: flex;
 }
@@ -2793,6 +2794,11 @@ p {
   .header-middle .header-center {
     display: none;
   }
+}
+  @media screen and (max-width: 991px) {
+    .toolbox-sort label {
+      display: none;
+    }
   .top-menu:not(.top-link-menu) ul {
     min-width: 141px;
   }
@@ -6357,8 +6363,11 @@ p {
   position: relative;
   margin-bottom: 1rem;
   transition: box-shadow 0.35s ease;
-  background-color: #fff;
+  
 }
+
+
+
 .owl-carousel .product {
   margin-bottom: 0 !important;
 }
@@ -6812,6 +6821,7 @@ p {
   font-size: 1.6rem;
 }
 .btn-wishlist:before {
+ 
   content: "\f234";
 }
 .product-body .btn-wishlist {
@@ -7445,6 +7455,8 @@ p {
 .product.product-10 .product-body .btn-wishlist:focus::before {
   content: "\f233";
 }
+
+
 .product.product-10 .btn-product:hover span,
 .product.product-10 .btn-product:focus span {
   color: black;
@@ -7579,7 +7591,7 @@ p {
   box-shadow: none;
 }
 .product.product-11:hover,
-.product.product-11:focus {
+  :focus {
   z-index: 10;
 }
 .product.product-list {
@@ -9769,6 +9781,7 @@ button:focus {
   height: unset;
 }
 .quickView-content .btn-wishlist:before {
+  
   content: "\f234";
 }
 .quickView-content .btn-compare:before {
@@ -10112,7 +10125,7 @@ button:focus {
 .toolbox {
   display: flex;
   align-items: center;
-  flex-direction: column;
+
   flex-wrap: wrap;
   font-weight: 400;
   font-size: 1.4rem;
@@ -10408,8 +10421,7 @@ button:focus {
   opacity: 1;
 }
 .filter-price {
-  padding-top: 0.2rem;
-  padding-bottom: 3rem;
+  
 }
 .filter-price-text {
   margin-bottom: 2rem;
@@ -15634,6 +15646,7 @@ margin-right: 20px;
   font-size: 10rem;
   
 }
+
 .icon-spinner:before {
   content: "\f311";
 }
@@ -16435,6 +16448,18 @@ margin-right: 20px;
 }
 /*# sourceMappingURL=style.css.map */
 
+
+.fa-beat-fade:before {
+ 
+  font-size: 10rem;
+  
+}
+.fa-cart-plus:before {
+ 
+  font-size: 10rem;
+  
+}
+
 /* Google fonts import link */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 *{
@@ -16620,85 +16645,122 @@ align-items: center;
   }
 
   /* Basic */
-  body {
+ 
+
+
+
+
+  :-moz-any-link:focus {
+      outline: none;
+  }
   
-    text-align: center;
-    padding-top: 50px;
-    font-family: 'Open Sans', sans-serif;
+  
+  #progressbar {
+      margin-bottom: 3vh;
+      overflow: hidden;
+      color: white;
+      padding-left: 0px;
+      margin-top: 3vh;
+      
   }
-
-  h1 {
-    font-weight: 700;
+  
+  #progressbar li {
+      list-style-type: none;
+      font-size: 1rem;
+     
+      float: left;
+      position: relative;
+      font-weight: 400;
+      color: #000;
   }
-
-  /* Progress bar */
-  #progress-bar {
-    display: table;
-    width: 100%;
-    margin: 0;
-    padding: 15px 15px 0;
-    table-layout: fixed;
-    counter-reset: step;
+  
+  #progressbar #step1:before {
+      content: "";
+      color: #000;
+      width: 20px;
+      height: 20px;
+      margin-left: 0px !important;
   }
-
-  #progress-bar li {
-    list-style-type: none;
-    display: table-cell;
-    width: 20%;
-    font-size: 16px;
-    position: relative;
-    text-align: center;
+  
+  #progressbar #step2:before {
+      content: "";
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      margin-left: 32%;
   }
-
-  #progress-bar li:before {
-    width: 50px;
-    height: 50px;
-    color: var(--default);
-    content: counter(step);
-    counter-increment: step;
-    line-height: 50px;
-    font-size: 18px;
-    border: 1px solid var(--grey);
-    display: block;
-    text-align: center;
-    margin: 0 auto 10px auto;
-    border-radius: 50%;
-    background-color: #fff;
+  
+  #progressbar #step3:before {
+      content: "";
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      margin-right: 32% ; 
   }
-
-  #progress-bar li:after {
-    width: 100%;
-    height: 10px;
-    content: '';
-    position: absolute;
-    background-color: #fff;
-    top: 25px;
-    left: -50%;
-    z-index: -1;
+  
+  #progressbar #step4:before {
+      content: "";
+      color: rgb(151, 149, 149, 0.651);
+      width: 20px;
+      height: 20px;
+      margin-right: 0px !important;
   }
-
-  #progress-bar li:first-child:after {
-    content: none;
+  
+  #progressbar li:before {
+      line-height: 29px;
+      display: block;
+      font-size: 12px;
+      background: rgb(151, 149, 149);
+      border-radius: 50%;
+      margin: auto;
+      z-index: -1;
+      margin-bottom: 1vh;
   }
-
-  #progress-bar li.step-done,
-  #progress-bar li.step-active {
-    color: var(--main-color);
+  
+  #progressbar li:after {
+      content: '';
+      height: 3px;
+      background: rgb(151, 149, 149, 0.651);
+      position: absolute;
+      left: 0%;
+      right: 0%;
+      margin-bottom: 2vh;
+      top: 8px;
+      z-index: 1;
   }
-
-  #progress-bar li.step-done:before,
-  #progress-bar li.step-active:before {
-    border-color: var(--main-color);
-    background-color: var(--main-color);
-    color: #fff;
-    font-family: "FontAwesome";
+  .progress-track{
+      padding: 0 8%;
+      width: 100%;
   }
-
-  #progress-bar li.step-done + li:after,
-  #progress-bar li.step-active + li:after {
-    background-color: var(--main-color);
+  #progressbar li:nth-child(2):after {
+      margin-right: auto;
   }
-
-  #progress-bar li.step-active:before {
-    font-weight: 700;
+  
+  #progressbar li:nth-child(1):after {
+      margin: auto;
   }
+  
+  #progressbar li:nth-child(3):after {
+      float: left;
+      width: 68%;
+  }
+  #progressbar li:nth-child(4):after {
+      margin-left: auto;
+      width: 132%;
+  }
+  
+  #progressbar li.active:before,
+  #progressbar li.active:after {
+      background: #000;
+  }
+  
+  .track-bold {
+      font-size: 1.2rem !important;
+  }
+  
+  
+  .account-deatails-change{
+    background-color: white;
+    border-radius: 1rem;
+  }
+  

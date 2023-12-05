@@ -105,43 +105,31 @@ include("../layouts/adminSideBar.ejs")%>
                                 ></textarea>
                               </div>
                             </div>
+                            
                             <div class="col-12 row mt-4">
-
-                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
-                                <label class="image-label" for="imageInput1">Image Slot 1
-                                <div class=" rounded-image-preview">
-                                  <img   id="imagePreview1" src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images" />
+                              <% for (let i = 1; i <= 4; i++) { %>
+                                <div class="col-6 col-md-3 mb-3 rounded-image-preview">
+                                  <label class="image-label" for="imageInput<%= i %>">Image Slot <%= i %>
+                                    <div class="rounded-image-preview">
+                                      <img
+                                        id="imagePreview<%= i %>"
+                                        src="/static/admin/assets/images/dummy/dummyimage.jpg"
+                                        alt="Preview"
+                                        name="images"
+                                      />
+                                    </div>
+                                    <input
+                                      type="file"
+                                      name="image<%= i %>"
+                                      class="imageInput"
+                                      id="imageInput<%= i %>"
+                                      accept="image/*"
+                                    />
+                                  </label>
                                 </div>
-                                <input type="file" name="images" class="imageInput" id="imageInput1" accept="image/*" />
-                              </label>
-                              </div>
-
-                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
-                                <label class="image-label" for="imageInput2">Image Slot 1
-                                <div class=" rounded-image-preview">
-                                  <img  id="imagePreview2"  src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images" />
-                                </div>
-                                <input type="file" name="images" class="imageInput" id="imageInput2" accept="image/*" />
-                              </label>
-                              </div>
-
-                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
-                                <label class="image-label" for="imageInput3">Image Slot 1
-                                <div class=" rounded-image-preview">
-                                  <img id="imagePreview3" src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images" id="imagePreview" />
-                                </div>
-                                <input type="file" name="images" class="imageInput" id="imageInput3" accept="image/*" />
-                              </label>
-                              </div>
-
-                              <div class="col-6 col-md-3 mb-3 rounded-image-preview">
-                                <label class="image-label" for="imageInput4">Image Slot 1
-                                <div class=" rounded-image-preview">
-                                  <img id="imagePreview4" src="/static/admin/assets/images/dummy/dummyimage.jpg" alt="Preview" name="images"  />
-                                </div>
-                                <input type="file" name="images" class="imageInput" id="imageInput4" accept="image/*" />
-                              </label>
-                              </div>
+                              <% } %>
+                          
+                              <!-- Include other form fields if any -->
                             </div>
 
                             <div class="col-12">
@@ -166,6 +154,26 @@ include("../layouts/adminSideBar.ejs")%>
   
 
   <script>
+    $(document).ready(function () {
+      $(".imageInput").change(function () {
+        var input = this;
+        var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
+  
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+  
+          reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            $(imagePreview).show();
+          };
+  
+          reader.readAsDataURL(input.files[0]);
+        }
+      });
+    });
+  </script>
+
+  <!-- <script>
   $(document).ready(function() {
     $(".imageInput").change(function() {
       var input = this;
@@ -181,7 +189,7 @@ include("../layouts/adminSideBar.ejs")%>
 
         reader.readAsDataURL(input.files[0]);
 }});});
-  </script>
+  </script> -->
   <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>

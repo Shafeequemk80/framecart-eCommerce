@@ -119,19 +119,45 @@ $(document).ready(function () {
 		e.preventDefault();
     });
 
+    var $sidebarToggler = $('.icon-close');
+    $sidebarToggler.on('click', function (e) {
+		$body.toggleClass('sidebar-filter-active');
+		$(this).toggleClass('active');
+		e.preventDefault();
+    });
+
     $('.sidebar-filter-overlay').on('click', function (e) {
 		$body.removeClass('sidebar-filter-active');
 		$sidebarToggler.removeClass('active');
 		e.preventDefault();
     });
 
-    // Clear All checkbox/remove filters in sidebar filter
     $('.sidebar-filter-clear').on('click', function (e) {
-    	$('.sidebar-shop').find('input').prop('checked', false);
-
-    	e.preventDefault();
+        // Uncheck checkboxes
+        $('.sidebar-shop').find('input').prop('checked', false);
+    
+        // Reset the dropdown to its default value
+        $('.dropdown-select').val($('.dropdown-select option:first').val());
+    
+        // Reset the price slider to its default range
+        var defaultRange = [0, 10000]; // Set your default range values
+        priceSlider.noUiSlider.set(defaultRange);
+        
+        // Update the displayed range and the hidden input field
+        updatePriceRange(defaultRange);
+    
+        e.preventDefault();
     });
-
+    
+    // Function to update the displayed range and the hidden input field
+    function updatePriceRange(values) {
+        $('#filter-price-range').text(values.join(' - '));
+        $('#filter-price-input').val(values.join('-'));
+    
+        // Store the values in localStorage
+        localStorage.setItem('filterPriceValues', JSON.stringify(values));
+    }
+    
     // Popup - Iframe Video - Map etc.
     if ( $.fn.magnificPopup ) {
         $('.btn-iframe').magnificPopup({
@@ -162,34 +188,53 @@ $(document).ready(function () {
     }
 
     // Slider For category pages / filter price
-    if ( typeof noUiSlider === 'object' ) {
-		var priceSlider  = document.getElementById('price-slider');
+    if (typeof noUiSlider === 'object') {
 
-		// Check if #price-slider elem is exists if not return
-		// to prevent error logs
-		if (priceSlider == null) return;
-
-		noUiSlider.create(priceSlider, {
-			start: [ 0, 750 ],
-			connect: true,
-			step: 50,
-			margin: 200,
-			range: {
-				'min': 0,
-				'max': 1000
-			},
-			tooltips: true,
-			format: wNumb({
-		        decimals: 0,
-		        prefix: '$'
-		    })
-		});
-
-		// Update Price Range
-		priceSlider.noUiSlider.on('update', function( values, handle ){
-			$('#filter-price-range').text(values.join(' - '));
-		});
-	}
+        var priceSlider = document.getElementById('price-slider');
+    
+        // Check if #price-slider element exists, if not return to prevent errors
+        if (priceSlider == null) return;
+    
+        // Function to update the displayed range and the hidden input field
+        function updatePriceRange(values) {
+            $('#filter-price-range').text(values.join(' - '));
+            $('#filter-price-input').val(values.join('-'));
+    
+            // Store the values in localStorage
+            localStorage.setItem('filterPriceValues', JSON.stringify(values));
+        }
+    
+        // Initialize noUiSlider
+        noUiSlider.create(priceSlider, {
+            start: [0, 10000],
+            connect: true,
+            step: 50,
+            margin: 200,
+            range: {
+                'min': 0,
+                'max': 10000
+            },
+            tooltips: true,
+            format: wNumb({
+                decimals: 0,
+                // prefix: '$'
+            })
+        });
+    
+        // Check if there are stored values in localStorage and set them
+        const storedPriceValues = localStorage.getItem('filterPriceValues');
+        if (storedPriceValues) {
+            const parsedValues = JSON.parse(storedPriceValues);
+            priceSlider.noUiSlider.set(parsedValues);
+            updatePriceRange(parsedValues);
+        }
+    
+        // Update Price Range
+        priceSlider.noUiSlider.on('update', function (values, handle) {
+            updatePriceRange(values);
+        });
+    }
+    
 
 	// Product countdown
 	if ( $.fn.countdown ) {
