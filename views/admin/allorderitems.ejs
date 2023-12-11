@@ -27,7 +27,7 @@
               </div>
               <div class="nk-block">
                 <div class="nk-tb-list is-separate is-medium mb-3 ">
-                  <% orders.forEach(function(value) { %>
+                  <% orders.forEach(function(value,index) { %>
                     <!-- Order Details Section -->
                     <div class="container d-flex justify-content-center mb-5 ">
                       <div class="bg-light col-8 d-flex flex-column pt-5 p-5">
@@ -35,11 +35,11 @@
                           <h6>Order Placed</h6>
                           <!-- Replace with your order details content -->
                           <p><%= value.order.deliveryDate %></p>
-                          <h6>Delivery Expect On: <strong><%= value.order.orderDate %></strong></h6>
+                          <h6>Delivery Expect On: <strong></strong></h6>
                         </div>
                         <div class="d-flex border-bottom w-100">
                           <div>
-                            <img src="/static/productsImages/<%= value.productDetails.images[0] %>" style="width: auto; width: 190px" alt="Image Desc" />
+                            <img src="/static/productsImages/<%= value.productDetails.images.image1 %>" style="width: auto; width: 190px" alt="Image Desc" />
                           </div>
                           <div class="ps-5 d-flex align-items-start flex-column">
                             <h5><%= value.productDetails.productname %></h5>
@@ -57,20 +57,19 @@
                               </a>
                             <% } %>
                            <div class="d-flex flex-row col-12">
-                            <form id="orderStatusForm">
-                              <input type="hidden" value="<%= value.productDetails._id %>" name="id">
-                              <input type="hidden" value="<%= value.order.orderId %>" name="orderId">
+                            <form id="<%= `orderStatusForm_${index}` %>">
                               <div class="form-group">
-                                <label for="newStatus">New Status:</label>
-                                <select class="form-control" id="newStatus" name="newStatus">
-                                  <option value="Shipped">Shipped</option>
-                                  <option value="Out of Delivery">Out of Delivery</option>
-                                  <option value="Delivered">Delivered</option>
+                                <label for="<%= `newStatus_${index}` %>">New Status:</label>
+                                <select class="form-control" id="<%= `newStatus_${index}` %>" name="newStatus" <%= value.orderStatus === 'Delivered' ? 'disabled' : '' %>>
+                                  <option value="Shipped" <%= value.orderStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                  <option value="Out of Delivery" <%= value.orderStatus === 'Out of Delivery' ? 'selected' : '' %>>Out of Delivery</option>
+                                  <option value="Delivered" <%= value.orderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                                   <!-- Add more options as needed -->
                                 </select>
                               </div>
+                      
                               <div class="form-group">
-                                <button type="submit" class="btn btn-primary" onclick="changeOrderStatus(event)">Change Status</button>
+                                <button type="submit" class="<%= `btn btn-primary btn-primary_${index}` %>" onclick="changeOrderStatus(event, '<%= value.productDetails._id %>', '<%= value.order.orderId %>', '<%= index %>')" <%= value.orderStatus === 'Delivered' ? 'disabled' : '' %>>Change Status</button>
                               </div>
                             </form>
                         </div>
@@ -91,23 +90,20 @@
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-  function changeOrderStatus(event) {
+  function changeOrderStatus(event, id, orderId, orderIndex) {
     event.preventDefault(); // Prevent the default form submission
- 
-  
+
     // Get the selected value from the dropdown
-    const newStatus = document.getElementById("newStatus").value;
-  
-    // Get the values from the hidden inputs
-    const id = document.querySelector('input[name="id"]').value;
-    const orderId = document.querySelector('input[name="orderId"]').value;
-  
+    const newStatusElement = document.getElementById(`newStatus_${orderIndex}`);
+    const newStatus = newStatusElement.options[newStatusElement.selectedIndex].value;
+
     // Perform an AJAX request to update the data
     updateOrderStatus(orderId, newStatus, id);
   }
-  
+
   function updateOrderStatus(orderId, newStatus, id) {
     // Example: Perform an AJAX request to update the order status
     fetch("/admin/updateOrderStatus", {
@@ -117,16 +113,52 @@
       },
       body: JSON.stringify({ orderId: orderId, newStatus: newStatus, id: id }),
     })
-      .then(response => response.json())
-      .then(data => {
-      
-      })
+    .then(response => response.json())
+.then(data => {
+  if (data.message === "Delivered") {
+    Swal.fire({
+      icon: 'success',
+      title: 'Order Status Changed',
+      text: 'The order status has been updated successfully!',
+    });
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+ 
+    
+    
+    const dropdown = document.getElementById(`newStatus_${orderIndex}`);
+    const button = document.getElementsByClassName(`btn-primary_${orderIndex}`);
+    button.disabled = true;
+    dropdown.disabled = true;
+   
+  }
+
+  if (data.success) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Order Status Changed',
+      text: 'The order status has been updated successfully!',
+    });
+  } else {
+    Swal.fire({
+      icon: 'error', // Change the icon to 'error'
+      title: 'Error',
+      text: 'There was an error updating the order status. Please try again.',
+      customClass: {
+        popup: 'my-custom-popup-class',
+        title: 'my-custom-title-class',
+        content: 'my-custom-content-class',
+      },
+    });
+  }
+})
       .catch(error => {
         console.error('Error:', error);
         // Handle the error (e.g., show an error message)
       });
   }
-  </script>
+</script>
 
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>

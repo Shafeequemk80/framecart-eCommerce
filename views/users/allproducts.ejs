@@ -75,13 +75,33 @@
         </div>
         <!-- End .toolbox -->
 
+       
         <div class="products">
           <div class="row">
-            <%product.forEach((value,i)=>{if(i< 12){%>
+            <%product.forEach((value,i)=>{%>
+             
             <div class="col-6 col-md-4 col-lg-4 col-xl-3">
               <div class="product ">
                 <figure class="product-media">
-                  <span class="product-label label-top"></span>
+                  <% 
+        // Find the maximum offer percentage among all category offers
+        const maxCategoryOffer = Math.max(...categorytData
+          .filter(category => category.categoryname === value.frameshape && category.offer && category.offer.action === 1)
+          .map(category => category.offer.percentage || 0)
+        );
+
+        // Determine the final offer percentage to display
+        const finalOfferPercentage = Math.max(maxCategoryOffer, value.offer ? value.offer.percentage : 0);
+        %>
+        <% if (finalOfferPercentage !== 0) { %>
+          <span class="product-label label-sale">
+            <%= finalOfferPercentage %>% OFF
+          </span>
+        <% } %>
+
+        <a href="/product?id=<%= value._id %>">
+                 
+                  
                   <a href="/product?id=<%=value._id%>">
                     <img
                       src="/static/productsImages/<%=value.images.image1%>"
@@ -123,7 +143,14 @@
                   </h3>
                   <!-- End .product-title -->
                   <p><%= value.frameshape %></p>
+
+                  <%if(value.discountprice==null){%>
                   <div class="product-price">$<%= value.price %></div>
+                  <%}else{%>
+                    
+                    <div class="product-price"><del>$<%= value.price %></del> <hr>  $<%= value.discountprice %></div>
+                    
+                    <%}%>
                   <!-- End .product-price -->
                   <div class="ratings-container">
                     <div class="ratings">
@@ -146,7 +173,7 @@
             </div>
             <!-- End .col-sm-6 col-lg-4 col-xl-3 -->
 
-            <%}})%>
+            <%})%>
            
           </div>
           <!-- End .row -->
@@ -404,127 +431,120 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // Button for triggering the filter update
-    var filterButton = document.getElementById("filterButton");
-    filterButton.addEventListener("click", updateFilters);
+  // Button for triggering the filter update
+  var filterButton = document.getElementById("filterButton");
+  filterButton.addEventListener("click", updateFilters);
 
-    // Form for search input
-    var searchForm = document.getElementById("searchForm");
-    searchForm.addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent the default form submission behavior
-      updateFilters();
-    });
-
-    // Pagination links
-    var currentPageLinks = document.querySelectorAll(".currentpage");
-    currentPageLinks.forEach(function (link) {
-      link.addEventListener("click", function (event) {
-        event.preventDefault();
-        var pageNumber = parseInt(event.target.innerText);
-        updateFilters(pageNumber);
-      });
-    });
-
-    var nextPageLink = document.querySelector(".nextpage");
-    nextPageLink.addEventListener("click", function (event) {
-      event.preventDefault();
-      // Extract the page number from the aria-valuetext attribute
-      var pageNumber = parseInt(nextPageLink.getAttribute("aria-valuetext"));
-      updateFilters(pageNumber);
-    });
-    var lastPageLink = document.querySelector(".lastpage");
-    lastPageLink.addEventListener("click", function (event) {
-      event.preventDefault();
-      // Extract the page number from the aria-valuetext attribute
-      var pageNumber = parseInt(lastPageLink.getAttribute("aria-valuetext"));
-      updateFilters(pageNumber);
-    });
-
-    // Add an event listener for the sorting dropdown change
-    var sortSelect = document.getElementById("sortby");
-    sortSelect.addEventListener("change", function () {
-      updateFilters();
-    });
-
-    function updateFilters(pageNumber) {
-      const pricevalue = document.getElementById("filter-price-input");
-
-      const selectedPrices = pricevalue.value
-        .split("-")
-        .map((price) => parseInt(price));
-
-      var selectedCategories = Array.from(
-        document.querySelectorAll(".category-checkbox:checked")
-      ).map(function (checkbox) {
-        return encodeURIComponent(checkbox.getAttribute("data-category"));
-      });
-
-      var searchInputValue = document
-        .getElementById("searchInput")
-        .value.trim();
-
-      // Get the selected sorting value dynamically
-      var selectedSortValue = sortSelect.options[sortSelect.selectedIndex].value;
-
-      // Construct the URL with selected filters, search input, and sorting
-      const url =
-        "/allproducts?search=" +
-        encodeURIComponent(searchInputValue) +
-        "&categories=" +
-        selectedCategories.join(",") +
-        "&page=" + pageNumber +
-        "&prices=" +
-        selectedPrices.join(",") +
-        "&sort=" + encodeURIComponent(selectedSortValue);
-
-      // Redirect to the filtered URL
-      window.location.href = url;
-    }
-
-    // Read query parameters from the URL and set the checked status of checkboxes
-    function setCheckedStatus() {
-      var urlParams = new URLSearchParams(window.location.search);
-      var search = urlParams.get("search");
-      var categories = urlParams.get("categories");
-      var prices = urlParams.get("prices");
-      var sort = urlParams.get("sort");
-
-      // Set the value of the search input
-      var searchInput = document.getElementById("searchInput");
-      if (search) {
-        searchInput.value = decodeURIComponent(search);
-      }
-
-      // Set the checked status of category checkboxes
-      if (categories) {
-        categories.split(",").forEach(function (category) {
-          var checkbox = document.querySelector(
-            '.category-checkbox[data-category="' +
-            decodeURIComponent(category) +
-            '"]'
-          );
-          if (checkbox) {
-            checkbox.checked = true;
-          }
-        });
-      }
-
-      if (sort) {
-        var sortOption = document.querySelector(`#sortby option[value="${sort}"]`);
-        if (sortOption) {
-          sortOption.selected = true;
-        }
-      }
-    
-      
-
-      // Set the checked status of price checkboxes
-      // ...
-    }
-
-    // Call the setCheckedStatus function when the page loads
-    setCheckedStatus();
+  // Form for search input
+  var searchForm = document.getElementById("searchForm");
+  searchForm.addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    updateFilters();
   });
+
+  // Pagination links
+  var currentPageLinks = document.querySelectorAll(".currentpage");
+  currentPageLinks.forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      var pageNumber = parseInt(event.target.innerText);
+      updateFilters(pageNumber);
+    });
+  });
+
+  var nextPageLink = document.querySelector(".nextpage");
+  var lastPageLink = document.querySelector(".lastpage");
+
+  nextPageLink.addEventListener("click", handlePaginationClick);
+  lastPageLink.addEventListener("click", handlePaginationClick);
+
+  // Add an event listener for the sorting dropdown change
+  var sortSelect = document.getElementById("sortby");
+  sortSelect.addEventListener("change", function () {
+    updateFilters();
+  });
+
+  function handlePaginationClick(event) {
+    event.preventDefault();
+    var pageNumber = parseInt(event.target.getAttribute("aria-valuetext"));
+    updateFilters(pageNumber);
+  }
+
+  function updateFilters(pageNumber) {
+    pageNumber = pageNumber || 1;
+
+    const pricevalue = document.getElementById("filter-price-input");
+    const selectedPrices = pricevalue.value.split("-").map((price) => parseInt(price));
+
+    var selectedCategories = Array.from(
+      document.querySelectorAll(".category-checkbox:checked")
+    ).map(function (checkbox) {
+      return encodeURIComponent(checkbox.getAttribute("data-category"));
+    });
+
+    var searchInputValue = document.getElementById("searchInput").value.trim();
+
+    // Get the selected sorting value dynamically
+    var selectedSortValue = sortSelect.options[sortSelect.selectedIndex].value;
+
+    // Construct the URL with selected filters, search input, and sorting
+    const url =
+      "/allproducts?search=" +
+      encodeURIComponent(searchInputValue) +
+      "&categories=" +
+      selectedCategories.join(",") +
+      "&page=" +
+      pageNumber +
+      "&prices=" +
+      selectedPrices.join(",") +
+      "&sort=" +
+      encodeURIComponent(selectedSortValue);
+
+    // Redirect to the filtered URL
+    window.location.href = url;
+  }
+
+  // Read query parameters from the URL and set the checked status of checkboxes
+  function setCheckedStatus() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var search = urlParams.get("search");
+    var categories = urlParams.get("categories");
+    var prices = urlParams.get("prices");
+    var sort = urlParams.get("sort");
+
+    // Set the value of the search input
+    var searchInput = document.getElementById("searchInput");
+    if (search) {
+      searchInput.value = decodeURIComponent(search);
+    }
+
+    // Set the checked status of category checkboxes
+    if (categories) {
+      categories.split(",").forEach(function (category) {
+        var checkbox = document.querySelector(
+          '.category-checkbox[data-category="' + decodeURIComponent(category) + '"]'
+        );
+        if (checkbox) {
+          checkbox.checked = true;
+        }
+      });
+    }
+
+    if (sort) {
+      var sortOption = document.querySelector(`#sortby option[value="${sort}"]`);
+      if (sortOption) {
+        sortOption.selected = true;
+      }
+    }
+
+    // Set the checked status of price checkboxes
+    // ...
+  }
+
+  // Call the setCheckedStatus function when the page loads
+  setCheckedStatus();
+});
+
 </script>
 
 

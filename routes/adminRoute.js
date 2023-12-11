@@ -4,13 +4,14 @@ const adminController = require("../controller/adminController");
 const customersCrontroller = require("../controller/customersController");
 const productsCrontroller = require("../controller/productsController");
 const categoryCrontroller = require("../controller/categoryController");
+const salesController = require("../controller/salesController.js");
 const session = require("express-session");
 const user = require("../model/userModel");
 const path = require("path");
 const auth = require("../middleware/adminAuth");
 const config = require("../config/config");
 const multer=require("../controller/multerController")
-
+const offercontroller= require("../controller/offercontroller.js")
 
 
 admin_route.use(
@@ -58,5 +59,21 @@ admin_route.post("/addcategory", auth.islogin,multer.categoryimageupload.single(
 
 admin_route.get("/suspendcategory", auth.islogin,categoryCrontroller.suspendcategory)
 admin_route.get("/activecategory", auth.islogin,categoryCrontroller.activecategory)
+
+
+admin_route.get("/offers", auth.islogin,offercontroller.getoffers)
+admin_route.get("/addoffers", auth.islogin,offercontroller.addoffers)
+admin_route.post("/addoffers", auth.islogin,offercontroller.saveoffers)
+admin_route.post("/actionunlistOffer", auth.islogin,offercontroller.unlistoffers)
+admin_route.post("/applyoffercategory", auth.islogin,offercontroller.applyoffercategory)
+
+admin_route.post("/applyofferproduct", auth.islogin,offercontroller.applyOfferProduct)
+admin_route.get("/actioneditoffer", auth.islogin,offercontroller.edittoffers);
+admin_route.post("/actioneditoffer", auth.islogin,offercontroller.updateOffers);
+admin_route.post("/removeoffergategory", auth.islogin,offercontroller.removeOfferCategories)
+admin_route.post("/removeofferproduct", auth.islogin,offercontroller.removeOfferProduct)
+
+
+admin_route.get("/salesreport", auth.islogin,salesController.loadsales);
 
 module.exports = admin_route;

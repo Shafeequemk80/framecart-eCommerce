@@ -228,7 +228,7 @@
                             <!-- Use col-12 for full width on mobile -->
                             <img
                               class="w-100 h-auto w-75"
-                              src="/static/productsImages/<%= cart.products[i].product.images[0] %>"
+                              src="/static/productsImages/<%= cart.products[i].product.images.image1 %>"
                               alt=""
                             />
                           </div>
@@ -237,7 +237,7 @@
                             <!-- Use col-12 for full width on mobile -->
                             <h5><%= cart.products[i].product.productname %></h5>
                             <h6>
-                              ₹ <%= cart.products[i].product.price *
+                              ₹ <%=cart.products[i].product.discountprice==null?cart.products[i].product.price:cart.products[i].product.discountprice *
                               cart.products[i].count %>
                             </h6>
                             <p class="justify-content-start text-justify">
@@ -258,19 +258,19 @@
                             <tbody>
                               <tr>
                                 <td>Subtotal:</td>
-                                <td id="subAmount"><%=cart?.ammount%></td>
+                                <td id="subAmount"><%=totalAmount%>%></td>
                               </tr>
                               <!-- End .summary-subtotal -->
                               <tr class="summary-shipping">
-                                <td>discount:</td>
-                                <td>0:00</td>
+                                <td>Shipping:</td>
+                                <td>Free</td>
                               </tr>
 
                               <!-- End .summary-shipping-estimate -->
 
                               <tr class="summary-total">
                                 <td>Total:</td>
-                                <td id="totalAmount"><%=cart?.ammount%></td>
+                                <td id="totalAmount"><%=totalAmount%>%></td>
                               </tr>
                               <!-- End .summary-total -->
                             </tbody>
@@ -297,6 +297,7 @@
                 <!-- End .accordion -->
               </div>
               <!-- End .col-lg-9 -->
+              
               <aside class="col-lg-3">
                 <div class="summary">
                   <h3 class="summary-title">Your Order</h3>
@@ -311,22 +312,12 @@
                     </thead>
 
                     <tbody>
-                      <tr>
-                        <td>
-                          <a href="#">Beige knitted elastic runner shoes</a>
-                        </td>
-                        <td>$84.00</td>
-                      </tr>
+                      
 
-                      <tr>
-                        <td>
-                          <a href="#">Blue utility pinafore denimdress</a>
-                        </td>
-                        <td>$76,00</td>
-                      </tr>
+                      
                       <tr class="summary-subtotal">
                         <td>Subtotal:</td>
-                        <td>$160.00</td>
+                        <td><%=totalAmount%></td>
                       </tr>
                       <!-- End .summary-subtotal -->
                       <tr>
@@ -335,7 +326,7 @@
                       </tr>
                       <tr class="summary-total">
                         <td>Total:</td>
-                        <td>$160.00</td>
+                        <td><%=totalAmount%></td>
                       </tr>
                       <!-- End .summary-total -->
                     </tbody>

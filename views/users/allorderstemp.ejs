@@ -1,0 +1,164 @@
+<%- include("../layouts/header.ejs")%> 
+<div class="page-wrapper">
+  <%- include("../layouts/userNavbar.ejs")%>
+
+
+  <main class="main">
+    <div
+      class="page-header text-center"
+      style="background-image: url('/static/assets/images/page-header-bg.jpg')"
+    >
+      <div class="container">
+        <h1 class="page-title">All Orders<span>Order</span></h1>
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/allproducts">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">All Orders</li>
+        </ol>
+      </div>
+      <!-- End .container -->
+    </nav>
+    <!-- End .breadcrumb-nav -->
+
+
+    <%if(products){products.forEach((value,i)=>{%>
+    <div class="container d-flex justify-content-center mb-5">
+      <div
+        class=" bg-light col-sm-8 d-flex flex-column pt-5 pl-5 "
+      >
+      <div class="d-flex align-items-start flex-column mb-3">
+        <h6>Order Placed</h6>
+        <p><%= value.order.orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
+        <h6>
+          Delivery Expect On : <strong><%= value.order.deliveryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %> </strong>
+        </h6>
+        </div >
+        <div class="d-flex border-bottom w-100 row ">
+          <div class=" col-10 col-sm-3 m-5 m-sm-0">
+            <img class="w-100 h-auto "
+              src="/static/productsImages/<%=value.productDetails.images[0]%>"
+             
+              alt="Image Desc"
+            />
+          </div>
+          <div class="pl-sm-5 d-flex align-items-start flex-column col-12 col-sm-8">
+            <h5><%=value.productDetails.productname%></h5>
+            <p>Qty: <%=value.count%></p>
+            <p><%=value.paymentStatus%></p>
+            <h4><%=value.totalprice%></h4>
+
+            <%if(value.orderStatus!=="Cancelled"){%>
+
+              <div class="progress-track ">
+                <ul id="progressbar" >
+                  <li class="step0  <%= value.statusLevel >= 1 ? 'active track-bold' : '' %> w-25" id="step1">Order placed</li>
+                    <li class="step0 <%= value.statusLevel >= 2 ? 'active track-bold' : '' %> text-center w-25" id="step2">Shipped</li>
+                    <li class="step0  <%= value.statusLevel >= 3 ? 'active track-bold' : '' %> text-right w-25" id="step3">Out for Delivery</li>
+                    <li class="step0 <%= value.statusLevel >= 4 ? 'active track-bold' : '' %> text-right w-25" id="step4">Delivered</li>
+                </ul>
+            </div>
+            <button class="btn btn-primary mb-5" onclick="cancelOrder('<%= value.productDetails._id %>', '<%= value.order.orderId %>','<%= value.count%>')">Cancel</button>
+        
+         <%}else{%>
+          <a > <button class="btn btn-primary mb-5 ">Cancelled</button></a>
+
+          <div class="progress-track ">
+            <ul id="progressbar" >
+              <li class="step0 active track-bold  w-50" id="step1">Order placed</li>
+                <li class="step0  active text-right track-bold w-50" id="step4">Cancelled</li>
+             
+            </ul>
+        </div>
+          <%}%>
+          </div>
+        </div>
+
+     
+      </div>
+    </div>
+
+  <%})}%>
+
+    <!-- End .page-content -->
+  </main>
+</div>
+
+<!-- End .main -->
+<%- include("../layouts/userFooter.ejs")%>
+<%-include("../layouts/userFooter2.ejs")%>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/inputSpinnerPlugin.js"></script>
+
+<!-- ... (remaining HTML code) ... -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+async function cancelOrder(id,orderId,count) {
+  // Display a SweetAlert confirmation dialog
+  const isConfirmed = await Swal.fire({
+    title: 'Are you sure?',
+    text: 'You won\'t be able to revert this!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, cancel it!'
+  });
+  
+  if (isConfirmed.isConfirmed) {
+    try {
+      
+      const response = await fetch("/cancelorder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        
+        body: JSON.stringify({ id: id, orderId: orderId ,count:count}),
+        
+      });
+     
+      const data = await response.json();
+      
+      // Check if the cancellation was successful
+      if (data.success) {
+        // Show SweetAlert for successful cancellation
+       
+        Swal.fire({
+          icon: 'success',
+          title: 'Order Canceled!',
+          text: 'Your order has been successfully canceled.',
+        });
+        setTimeout(() =>window.location.reload(),1000)
+           
+        // Add additional logic if needed after a successful cancellation
+      } else {
+        // Handle the case where the cancellation was not successful
+        Swal.fire({
+          icon: 'error',
+          title: 'Cancellation Failed',
+          text: 'There was an issue canceling your order. Please try again later.',
+        });
+      }
+
+    } catch (error) {
+      console.error('Error canceling order:', error);
+      // Handle the error (e.g., show an error message)
+    }
+  }
+}
+</script>
+
+
+
+ 
+<%- include("../layouts/footer.ejs")%>

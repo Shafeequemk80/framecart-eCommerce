@@ -45,6 +45,7 @@
 
                                     <div class="intro-slide">
                                         <figure class="slide-image">
+                                            
                                             <picture>
                                                 <source media="(max-width: 480px)" srcset="/static/assets/images/slider/slide-2-480w.jpg">
                                                 <img src="/static/assets/images/slider/slide-2.jpg" alt="Image Desc">
@@ -224,6 +225,22 @@
                 <%product.forEach((value,i)=>{ if( i < 10){ %>
                 <div class="product product-11 text-center">
                     <figure class="product-media">
+                        <% 
+                        // Find the maximum offer percentage among all category offers
+                        const maxCategoryOffer = Math.max(...category
+                          .filter(category => category.categoryname === value.frameshape && category.offer && category.offer.action === 1)
+                          .map(category => category.offer.percentage || 0)
+                        );
+                
+                        // Determine the final offer percentage to display
+                        const finalOfferPercentage = Math.max(maxCategoryOffer, value.offer ? value.offer.percentage : 0);
+                        %>
+                        <% if (finalOfferPercentage !== 0) { %>
+                          <span class="product-label label-sale">
+                            <%= finalOfferPercentage %>% OFF
+                          </span>
+                        <% } %>
+                        
                         <a href="/product?id=<%=value._id%>">
                             <img src="/static/productsImages/<%=value.images.image1%>" alt="Product image" class="product-image">
                             <img src="/static/productsImages/<%=value.images.image2%>" alt="Product image" class="product-image-hover">
@@ -238,6 +255,7 @@
 
                     <div class="product-body">
                         <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
+                        <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.frameshape%></a></h3>
                         <div class="product-price">
                             $<%=value.price%>
                         </div><!-- End .product-price -->
@@ -283,6 +301,21 @@
                 <% product.filter(p => p.frameshape === value.frameshape).forEach((product, j) => {  if( j < 10){%>
                     <div class="product product-11 text-center">
                         <figure class="product-media">
+                            <% 
+                            // Find the maximum offer percentage among all category offers
+                            const maxCategoryOffer = Math.max(...category
+                              .filter(category => category.categoryname === product.frameshape && category.offer && category.offer.action === 1)
+                              .map(category => category.offer.percentage || 0)
+                            );
+                    
+                            // Determine the final offer percentage to display
+                            const finalOfferPercentage = Math.max(maxCategoryOffer, product.offer ? product.offer.percentage : 0);
+                            %>
+                            <% if (finalOfferPercentage !== 0) { %>
+                              <span class="product-label label-sale">
+                                <%= finalOfferPercentage %>% OFF
+                              </span>
+                            <% } %>
                             <a href="/product?id=<%=value._id%>">
                                 <img src="/static/productsImages/<%=product.images.image1%>" alt="Product image" class="product-image">
                                 <img src="/static/productsImages/<%=product.images.image2%>" alt="Product image" class="product-image-hover">
@@ -295,6 +328,7 @@
     
                         <div class="product-body">
                             <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.productname%></a></h3><!-- End .product-title -->
+                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.frameshape%></a></h3>
                             <div class="product-price">
                                 <%=product.price%>
                             </div><!-- End .product-price -->
@@ -404,6 +438,21 @@
                                     
                                     <div class="product product-11 mt-v3 text-center">
                                         <figure class="product-media">
+                                            <% 
+                                            // Find the maximum offer percentage among all category offers
+                                            const maxCategoryOffer = Math.max(...category
+                                              .filter(category => category.categoryname === value.frameshape && category.offer && category.offer.action === 1)
+                                              .map(category => category.offer.percentage || 0)
+                                            );
+                                    
+                                            // Determine the final offer percentage to display
+                                            const finalOfferPercentage = Math.max(maxCategoryOffer, value.offer ? value.offer.percentage : 0);
+                                            %>
+                                            <% if (finalOfferPercentage !== 0) { %>
+                                              <span class="product-label label-sale">
+                                                <%= finalOfferPercentage %>% OFF
+                                              </span>
+                                            <% } %>
                                             <a href="/product?id=<%=value._id%>">
                                                 <img src="/static/productsImages/<%=value.images.image1%>" alt="Product image" class="product-image">
                                                 <img src="/static/productsImages/<%=value.images.image2%>" alt="Product image" class="product-image-hover">
@@ -416,7 +465,8 @@
 
                                         <div class="product-body">
                                             <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
-                                            <div class="product-price">
+                                           
+                                           <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.frameshape%></a></h3> <div class="product-price">
                                                $ <%=value.price%>
                                             </div><!-- End .product-price -->
 
@@ -458,9 +508,25 @@
                                                 <a href="#" class="btn-product-icon btn-wishlist addTowishButton"  wish-id="<%=value._id%>"><span>add to wishlist</span></a>
                                             </div><!-- End .product-action-vertical -->
                                         </figure><!-- End .product-media -->
-
+                                        <% 
+                                        // Find the maximum offer percentage among all category offers
+                                        const maxCategoryOffer = Math.max(...category
+                                          .filter(category => category.categoryname === value.frameshape && category.offer && category.offer.action === 1)
+                                          .map(category => category.offer.percentage || 0)
+                                        );
+                                
+                                        // Determine the final offer percentage to display
+                                        const finalOfferPercentage = Math.max(maxCategoryOffer, product.offer ? product.offer.percentage : 0);
+                                        %>
+                                        <% if (finalOfferPercentage !== 0) { %>
+                                          <span class="product-label label-sale">
+                                            <%= finalOfferPercentage %>% OFF
+                                          </span>
+                                        <% } %>
+                                        
                                         <div class="product-body">
                                             <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
+                                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.frameshape%></a></h3>
                                             <div class="product-price">
                                                 $ <%=value.price%>
                                             </div><!-- End .product-price -->
@@ -661,61 +727,42 @@
                 </div><!-- End .container -->
             </div><!-- End .cta -->
         </main><!-- End .main -->
+
         <%- include("../layouts/userFooter.ejs")%>
-        <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form">
-            <div class="row justify-content-center">
-                <div class="col-10">
-                    <div class="row no-gutters bg-white newsletter-popup-content">
-                        <div class="col-xl-3-5col col-lg-7 banner-content-wrap">
-                            <div class="banner-content text-center">
-                                <img src="/static/assets/images/popup/newsletter/logo.png" class="logo" alt="logo" width="60" height="15">
-                                <h2 class="banner-title">get <span>25<light>%</light></span> off</h2>
-                                <p>Subscribe to the Molla eCommerce newsletter to receive timely updates from your favorite products.</p>
-                                <form action="#">
-                                    <div class="input-group input-group-round">
-                                        <input type="email" class="form-control form-control-white" placeholder="Your Email Address" aria-label="Email Adress" required>
-                                        <div class="input-group-append">
-                                            <button class="btn" type="submit"><span>go</span></button>
-                                        </div><!-- .End .input-group-append -->
-                                    </div><!-- .End .input-group -->
-                                </form>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
-                                    <label class="custom-control-label" for="register-policy-2">Do not show this popup again</label>
-                                </div><!-- End .custom-checkbox -->
-                            </div>
-                        </div>
-                        <div class="col-xl-2-5col col-lg-5 ">
-                            <img src="/static/assets/images/popup/newsletter/img-1.jpg" class="newsletter-img" alt="newsletter">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
-        <!-- Modal HTML -->
-        <div class="modal" id="addToCartModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Adding Item to Cart</h5>
-                        <!-- No close button here -->
-                    </div>
-                    <div class="modal-body text-center">
-                        <div id="loadingSection">
-                            <img src="path/to/your/loading.gif" alt="Loading GIF" class="loading-gif">
-                            <p>Loading...</p>
-                        </div>
-                        <div id="successSection" style="display: none;">
-                            <p id="addedToCartText">Your item has been successfully added to the cart.</p>
-                        </div>
-                    </div>
-                    <!-- No modal-footer section here -->
-                </div>
-            </div>
-        </div>
+
         
+    <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row no-gutters bg-white newsletter-popup-content">
+                    <div class="col-xl-3-5col col-lg-7 banner-content-wrap">
+                        <div class="banner-content text-center">
+                            <img src="/static/assets/images/popup/newsletter/logo.png" class="logo" alt="logo" width="60" height="15">
+                            <h2 class="banner-title">get <span>25<light>%</light></span> off</h2>
+                            <p>Subscribe to the Molla eCommerce newsletter to receive timely updates from your favorite products.</p>
+                            <form action="#">
+                                <div class="input-group input-group-round">
+                                    <input type="email" class="form-control form-control-white" placeholder="Your Email Address" aria-label="Email Adress" required>
+                                    <div class="input-group-append">
+                                        <button class="btn" type="submit"><span>go</span></button>
+                                    </div><!-- .End .input-group-append -->
+                                </div><!-- .End .input-group -->
+                            </form>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
+                                <label class="custom-control-label" for="register-policy-2">Do not show this popup again</label>
+                            </div><!-- End .custom-checkbox -->
+                        </div>
+                    </div>
+                    <div class="col-xl-2-5col col-lg-5 ">
+                        <img src="/static/assets/images/popup/newsletter/img-1.jpg" class="newsletter-img" alt="newsletter">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         
 
         

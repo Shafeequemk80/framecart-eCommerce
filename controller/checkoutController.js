@@ -64,9 +64,7 @@ const loadcheckout = async (req, res) => {
       message: "An error occurred during checkout.",
     });
   }
-};
-
-const getcheckout = async (req, res) => {
+};const getcheckout = async (req, res) => {
   try {
     const user_id = req.session.user_id;
     const address =
@@ -74,15 +72,29 @@ const getcheckout = async (req, res) => {
     const cartData = await Cart.findOne({ user: user_id }).populate(
       "products.product"
     );
+
+    // Calculate total amount directly in the function
+    let totalAmount = 0;
+
+    cartData.products.forEach((product) => {
+      const productPrice = product.product.discountprice==null? product.product.price:product.product.discountprice; // Assuming your product model has a 'price' field
+      const productCount = product.count;
+      totalAmount += productPrice * productCount;
+    });
+
+    console.log(totalAmount);
+
     res.render("checkout", {
       user: user_id,
       address: address.address,
       cart: cartData,
+      totalAmount: totalAmount,
     });
   } catch (error) {
     console.log(error);
   }
 };
+
 
 const verifycheckout = async (req, res) => {
   try {
@@ -147,16 +159,18 @@ const verifypayment = async (req, res) => {
 
         // Calculate the total amount based on the prices of products in the cart
         for (const price of cartData.products) {
-          totalamount += price.product.price * price.count;
+          totalamount += price.product.discountprice==null? price.product.price:price.product.discountprice * price.count;
         }
         const orderDate = new Date();
         const newOrderId = generateOrderId();
+        var deliveryDate = new Date(orderDate);
+deliveryDate.setDate(orderDate.getDate() + 7);
 
         // Create an array of product data for the order
         const productsData = cartData.products.map((productItem) => ({
           product: productItem.product,
           count: productItem.count,
-          totalprice: productItem.product.price * productItem.count,
+          totalprice:productItem.product.discountprice==null? productItem.product.price: productItem.product.discountprice * productItem.count,
           paymentStatus: "Pending",
           orderStatus: "Pending",
         }));
@@ -180,7 +194,7 @@ const verifypayment = async (req, res) => {
           paymentMethod: "pending",
           orderDate: orderDate,
           orderTime: new Timestamp(),
-          deliveryDate: new Date(orderDate.setDate(orderDate.getDate() + 7)),
+          deliveryDate:deliveryDate,
           amount: totalamount,
         });
 

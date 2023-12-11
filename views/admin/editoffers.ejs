@@ -1,0 +1,164 @@
+<%- include("../layouts/adminHeader.ejs")%> <%-
+include("../layouts/adminSideBar.ejs")%>
+<div class="nk-content">
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">
+                Offers <span class="text-grey">/ Edit Offers</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Your form starts here -->
+        <div class="container-fluid mt-3 col-12">
+          <div class="row">
+            <div class="mx-auto">
+              <div class="card">
+                <div class="card-body">
+                  <form action="" method="post" id="updateOfferForm" >
+                    <div class="row mt-2">
+                      <!-- Offer Name -->
+                      <div class="col-12">
+                        <input type="hidden" name="id" value="<%=offerData._id%>">
+                        <div class="form-group col-12">
+                          <label for="category-name" class="form-label">Offer Name</label>
+                          <input
+                            type="text"
+                            value="<%=offerData.offername%>"
+                            name="offername"
+                            id="category-name"
+                            class="form-control"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Datepickers -->
+                      <div class="col-12 d-flex justify-content-between mt-3">
+                        <div class="w-50 me-2">
+                        <div class="form-group ">
+                          <label class="form-label">Start Date</label>
+                          <div class="form-control-wrap">
+                            <input type="text" name="createdAt" value="<%= new Date(offerData.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %>
+                            " class="form-control date-picker" />
+                          </div>
+                          <div class="form-note">
+                            Date format <code>mm/dd/yyyy</code>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="w-50">
+                        <div class="form-group ">
+                          <label class="form-label">Expiry Date Date</label>
+                          <div class="form-control-wrap">
+                            <input type="text"  value="<%= new Date(offerData.expiryDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %>
+                            " name="updatedAt" class="form-control date-picker" />
+                          </div>
+                          <div class="form-note">
+                            Date format <code>mm/dd/yyyy</code>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group col-12">
+                          <label for="category-name" class="form-label">percentage</label>
+                          <input
+                            type="text"
+                            value="<%=offerData.percentage%>"
+                            name="percentage"
+                            id="category-name"
+                            class="form-control"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Checkbox Block (if needed) -->
+
+                      <!-- Submit Button -->
+                      <div class="col-12 mt-5">
+                        <button type="submit"  class="btn btn-primary">
+                          <em class="icon ni ni-plus"></em>
+                          <span>Update</span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display Error Message -->
+        <% if (typeof message !== "undefined") { %>
+          <div class="example-alert">
+            <div class="alert alert-danger alert-icon">
+              <em class="icon ni ni-cross-circle"></em>
+              <%= message %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <!-- Your script remains the same -->
+  <!-- ... -->
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the form element
+    const updateOfferForm = document.getElementById('updateOfferForm');
+  
+    // Add a submit event listener to the form
+    updateOfferForm.addEventListener('submit', function(event) {
+      // Prevent the default form submission
+      event.preventDefault();
+  
+      // Serialize the form data
+      const formData = new FormData(updateOfferForm);
+      const formObject = {};
+      formData.forEach((value, key) => {
+        formObject[key] = value;
+      });
+  
+      // Convert the form data to JSON
+      const jsonData = JSON.stringify(formObject);
+  
+      // Make a Fetch request to submit the form data
+      fetch('/admin/actioneditoffer', {
+        method: 'POST', // or 'PUT' if it's an update
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        Swal.fire({
+        icon: 'success',
+        title: 'Offer Updated',
+        text: 'Your offer has been updated successfully!',
+      })
+      // .then(() =>window.location.reload()); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  });
+  </script>
+
+
+<script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
+<script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>
+<!-- Mirrored from dashlite.net/demo2/ecommerce/products.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2023 14:33:03 GMT -->

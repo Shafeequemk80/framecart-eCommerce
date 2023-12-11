@@ -1,4 +1,4 @@
-<%- include("../layouts/header.ejs")%> 
+<%- include("../layouts/header.ejs")%>
 
 <!-- End .header -->
 
@@ -21,170 +21,219 @@
       background-image: url('/static/assets/images/backgrounds/login-bg.jpg');
     "
   >
-    
-      <div class="form-box container">
-        <div class="form-tab text-center">
-          <h3>Register</h3>
-        </div>
-        <div
-          class="tab-pane fade show active"
-          id="register-2"
-          role="tabpanel"
-          aria-labelledby="register-tab-2"
-        >
-          <form action="" method="post"  id="registration-form" onsubmit="return validationSignup()">
-            <!-- CSRF token for security -->
-            <input type="hidden" name="_csrf" value="your_csrf_token_here" />
-
-            <div class="form-group">
-              <label for="username">Username*</label>
+    <div class="form-box ">
+      <div class="form-tab text-center">
+        <h3>Register</h3>
+      </div>
+      <div
+        class="tab-pane fade show active"
+        id="register-2"
+        role="tabpanel"
+        aria-labelledby="register-tab-2"
+      >
+        <form id="registration-form">
+          <div class="form-group">
+            <label for="username">Username*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+            />
+            <p id="username-error" class="error-message"></p>
+          </div>
+          <div class="d-flex">
+            <div class="form-group w-100 w-lg-75">
+              <label for="firstname">First name*</label>
               <input
                 type="text"
                 class="form-control"
-                id="username"
-                name="username"
-                
+                id="firstname"
+                name="firstname"
               />
-              <p id="username-error" class="error-message"></p>
+              <p id="firstname-error" class="error-message"></p>
             </div>
-            <div class="d-flex">
-              <div class="form-group w-75">
-                <label for="firstname">First name*</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="firstname"
-                  name="firstname"/>
-                  <p id="firstname-error" class="error-message"></p>
-                
-              </div>
-              <div class="form-group w-25 ml-3">
-                <label for="lastname">Last name*</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="lastname"
-                  name="lastname"
-                 
-                />
-                <p id="lastname-error" class="error-message"></p>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="email">Your email address*</label>
+            <div class="form-group w-100 w-lg-25 ml-3">
+              <label for="lastname">Last name*</label>
               <input
-                type="email"
+                type="text"
                 class="form-control"
-                id="email"
-                name="email"
-               
+                id="lastname"
+                name="lastname"
               />
-
-                <p id="email-error" class="error-message"></p>
+              <p id="lastname-error" class="error-message"></p>
             </div>
-            <div class="form-group">
-              <label for="mobile">Your mobile*</label>
-              <input
-                type="tel"
-                class="form-control"
-                id="mobile"
-               
-                name="mobile"
-                
-              />
-              <p id="mobile-error" class="error-message"></p>
-            </div>
-            <div class="d-flex">
-              <div class="form-group w-50">
-                <label for="password">Password*</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  name="password"
-                
-                />
-                <p id="password-error" class="error-message"></p>
-              </div>
-              <div class="form-group w-50 ml-5">
-                <label for="password-2">Confirm Password*</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="cpassword"
-                  name="password_2"
-                 
-                />
-                <p id="cpassword-mismatch" class="error-message"></p>
-              </div>
-             
-            </div>
-            <small id="password-error" class="error-message text-danger" ></small> 
-            <div class="d-flex text-center">
-              <div class="form-group  ">
-                <button type="submit" class="btn btn-outline-primary-2 w-75 ">
-                  <span>SIGN UP</span>
-                  <i class="icon-long-arrow-right"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-          <% if (typeof message !== "undefined") { %>
-
-          <div class="alert alert-secondary" role="alert">
-            <!-- Replace the message with your dynamic message -->
-            <%= message %>
           </div>
-          <% } %>
 
-          <!-- End .form-choice -->
+          <div class="form-group">
+            <label for="email">Your email address*</label>
+            <input type="email" class="form-control" id="email" name="email" />
 
-          <!-- .End .tab-pane -->
+            <p id="email-error" class="error-message"></p>
+          </div>
+          <div class="form-group">
+            <label for="mobile">Your mobile*</label>
+            <input type="tel" class="form-control" id="mobile" name="mobile" />
+            <p id="mobile-error" class="error-message"></p>
+          </div>
+          <div class="d-flex">
+            <div class="form-group w-100 w-lg-50">
+              <label for="password">Password*</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+              />
+              <p id="password-error" class="error-message"></p>
+            </div>
+            <div class="form-group w-100 w-lg-50 ml-5">
+              <label for="password-2">Re Password*</label>
+              <input
+                type="password"
+                class="form-control"
+                id="cpassword"
+                name="password_2"
+              />
+              <p id="cpassword-mismatch" class="error-message"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="refferal">Refferal ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="refferal"
+              name="refferal"
+            />
+          </div>
+          <small id="password-error" class="error-message text-danger"></small>
+          <div class="d-flex text-center">
+            <div class="form-group">
+              <button
+                type="button"
+                id="signup-button"
+                class="btn btn-outline-primary-2 w-75"
+              >
+                <span>SIGN UP</span>
+                <i class="icon-long-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+        <% if (typeof message !== "undefined") { %>
+
+        <div class="alert alert-secondary" role="alert">
+          <!-- Replace the message with your dynamic message -->
+          <%= message %>
         </div>
-        <!-- End .tab-content -->
+        <% } %>
+
+        <!-- End .form-choice -->
+
+        <!-- .End .tab-pane -->
       </div>
-      <!-- End .form-tab -->
+      <!-- End .tab-content -->
+    </div>
+    <!-- End .form-tab -->
   </div>
   <!-- End .container -->
 </main>
 <!-- End .main -->
 
 <script src="/static/js/validation.js"></script>
-<%- include("../layouts/userFooter.ejs")%> 
+<%- include("../layouts/userFooter.ejs")%>
 
+<form id="registration-form">
+  <!-- (your existing form fields) -->
 
-<!-- 
+  <div class="d-flex text-center">
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-outline-primary-2 w-75"
+        id="signup-button"
+      >
+        <span>SIGN UP</span>
+        <i class="icon-long-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</form>
+
 <script>
-  const isStrongPassword = (password) => {
-    // Use a regular expression to check for a strong password:
-    // At least 8 characters, including at least one lowercase letter, one uppercase letter, one number, and one special character.
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-    return passwordRegex.test(password);
-  };
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("registration-form");
+    const signupButton = document.getElementById("signup-button");
 
-  document.getElementById("registration-form").addEventListener("submit", function (event) {
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const emailError = document.getElementById("email-error");
-    const passwordError = document.getElementById("password-error");
+    signupButton.addEventListener("click", function () {
+      if (validationSignup()) {
+        const formData = serialize(registrationForm);
+        console.log("Complete Form Data:", formData);
 
-    // Email validation
-    if (!emailInput.checkValidity()) {
-      emailError.textContent = "Please enter a valid email address.";
-      event.preventDefault();
-    } else {
-      emailError.textContent = "";
-    }
-
-    // Password validation
-    if (!isStrongPassword(passwordInput.value)) {
-      passwordError.textContent = "Password must be at least 8 characters and include lowercase, uppercase, numbers, and special characters.";
-      event.preventDefault();
-    } else {
-      passwordError.textContent = "";
-    }
+        fetch("/signup", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.notMatchemail) {
+              alert(
+                "This email is already in use. Please use a different email address."
+              );
+              Swal.fire({
+                title: "Existing User!",
+                text: "This email is already in use. Please use a different email address.",
+                icon: "error",
+              });
+            } else if (data.notMatcthrefferal) {
+              Swal.fire({
+                title: "Referral Code Not Available!",
+                text: "The referral code is not valid.",
+                icon: "error",
+              });
+            } else if (data.success) {
+              alert("0");
+              // Redirect to the verification page
+              window.location.href = "/verify";
+            }
+          })
+          .catch((error) => {
+            // Handle any unexpected errors
+            console.error("Error:", error);
+            // Show a generic error message to the user
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+            });
+          });
+      }
+    });
   });
-</script> -->
+
+  function serialize(form) {
+    const formData = new FormData(form);
+    const serialized = Array.from(formData)
+      .map((entry) => {
+        return (
+          encodeURIComponent(entry[0]) + "=" + encodeURIComponent(entry[1])
+        );
+      })
+      .join("&");
+
+    return serialized;
+  }
+
+  function handleResponse(data) {}
+</script>
 
 <%-include("../layouts/footer.ejs")%>

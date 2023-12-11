@@ -1,0 +1,216 @@
+<%- include("../layouts/header.ejs")%> 
+<div class="page-wrapper">
+  <%- include("../layouts/userNavbar.ejs")%>
+
+
+  <main class="main">
+    <div
+      class="page-header text-center"
+      style="background-image: url('/static/assets/images/page-header-bg.jpg')"
+    >
+      <div class="container ">
+        <h1 class="page-title">All Wallet<span>Wallet</span></h1>
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/allproducts">Profile</a></li>
+          <li class="breadcrumb-item active" aria-current="page">All Wallet</li>
+        </ol>
+      </div>
+      <!-- End .container -->
+    </nav>
+    <!-- End .breadcrumb-nav -->
+<div class="d-flex justify-content-center">
+    <div class="col-12 col-lg-7 d-flex">
+      <div class="w-100  mr-5 bg-primary  d-flex wallet-front align-items-end">
+          <div class="ml-5">
+              <h6>Total Amount</h6>
+            
+              <h1 ><%=walletData?.totalAmount%></h1>
+           
+          </div>
+      </div>
+      <div class="w-100  bg-success  wallet-back p-5">
+        <form id="change-email-form">
+          <input
+          type="number"
+          class="form-control"
+          id="walletamount"
+          name="walletamount"
+          placeholder="Add Amount in Wallet"
+          min="0" 
+          pattern="^\d+(\.\d{1,2})?$"  
+        />
+      
+         
+          <button
+              type="button"
+              id="change-email-submit"
+              class="btn btn-light mt-1"
+              onclick="addAmountToWallet()"
+          >
+              <span>Add Amount</span>
+              <i class="icon-long-arrow-right"></i>
+          </button>
+      </form>
+      </div>
+  </div>
+</div>
+  
+<style>llable-column {
+    max-height: 400px; /* Set the maximum height for scrollbars */
+    overflow-y: auto; /* Add vertical scrollbar if content exceeds max height */
+  }
+</style>
+
+<div class="row mt-5 scrollable-column m-5">
+  <div class="col-12 col-lg-6 mb-3 mb-lg-0 ">
+
+    <%if(walletData.walletHistory.length!==0){
+     walletDataCredit?.walletHistory?.forEach((transaction, index) => { %>
+      <div class="my-3 mx-2 mx-lg-5 wallet-history p-5">
+        <h6>Transaction Id: <%= transaction.transactionId %></h6>
+        <h6>Transaction Date: <%= new Date(transaction.transactionDate).toLocaleDateString() %></h6>
+        <h6 class="text-danger">Transaction Type: <%= transaction.transactionDetails %></h6>
+        <h6>Transaction Details: <%= transaction.transactionType %></h6>
+        <h4>Transaction Total: <%= transaction.transactionAmount %></h4>
+      </div>
+    <% }) %>
+  </div>
+
+  <div class="col-12 col-lg-6 ">
+    <% walletDataCredit.walletHistory.forEach((transaction, index) => { %>
+      <div class="my-3 mx-2 mx-lg-5 wallet-history p-5">
+        <h6>Transaction Id: <%= transaction.transactionId %></h6>
+        <h6>Transaction Date: <%= new Date(transaction.transactionDate).toLocaleDateString() %></h6>
+        <h6 class="text-success">Transaction Type: <%= transaction.transactionDetails %></h6>
+        <h6>Transaction Details: <%= transaction.transactionType %></h6>
+        <h4>Transaction Total: <%= transaction.transactionAmount %></h4>
+      </div>
+    <% }) }%>
+  </div>
+</div>
+
+    <!-- End .page-content -->
+  </main>
+</div>
+
+<!-- End .main -->
+<%- include("../layouts/userFooter.ejs")%>
+<%-include("../layouts/userFooter2.ejs")%>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/inputSpinnerPlugin.js"></script>
+
+<!-- ... (remaining HTML code) ... -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+  function addAmountToWallet() {
+      // Get the form data
+      const walletAmount = document.getElementById('walletamount').value;
+
+      // You can add additional validation here if needed
+
+      // Create an object with the form data
+      const formData = {
+          walletamount: walletAmount
+          // Add more fields if needed
+      };
+
+      // Perform a Fetch API request
+      fetch('/addtowallet', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+              // Add additional headers if needed
+          },
+          body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(response => {
+         if (response.online) {
+         alert(response.online)
+        var options = {
+          key: response.key_id,
+          amount: response.amount,
+          currency: "INR",
+          name: "Framefy",
+          description: "Test Transaction",
+          image: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fimg.freepik.com%2Ffree-vector%2Fbird-colorful-logo-gradient-vector_343694-1365.jpg&tbnid=qrn4zRugFoxeWM&vet=12ahUKEwitno_4k9-CAxU37DgGHUKQCCoQMygBegQIARBw..i&imgrefurl=https%3A%2F%2Fwww.freepik.com%2Fvectors%2Flogo-design&docid=MBTKclygwadmYM&w=626&h=626&q=logo&ved=2ahUKEwitno_4k9-CAxU37DgGHUKQCCoQMygBegQIARBw",
+          order_id: response.order_id,
+          handler: function (res) {
+            alert(res.razorpay_payment_id);
+            alert(res.razorpay_order_id);
+            alert(res.razorpay_signature);
+
+            fetch('/verifywalletonlinepayment', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ response:res,data:response }),
+              })
+
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // Parse the JSON in the response
+            })
+            .then(data => {
+             if (data.online) {
+              window.location.reload();
+             }
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+          },
+          prefill: {
+            name: response.name,
+            email: response.email,
+            contact: response.contact,
+          },
+          notes: {
+            address: "Razorpay Corporate Office",
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+
+        var rzp1 = new Razorpay(options);
+        
+        rzp1.on("payment.failed", function (response) {
+          alert(response.error.code);
+          alert(response.error.description);
+        });
+        rzp1.open();
+       
+      }else{
+        alert(err.message);
+      }
+    
+      })
+      .catch(error => {
+          // Handle errors
+          console.error('Error:', error);
+      });
+  }
+</script>
+
+
+
+ 
+<%- include("../layouts/footer.ejs")%>

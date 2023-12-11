@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productsModel");
-const Category = require("../model/category");
+const Category = require("../model/categoryModel");
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
 const randomstring = require("randomstring");
@@ -12,6 +12,14 @@ const user_route = require("../routes/userRoute");
 const { token } = require("morgan");
 const e = require("express");
 const { Long } = require("mongodb");
+const Wallet = require("../model/walletModel");
+
+function generateRefferalId() {
+  // Generate a random identifier (6 characters)
+  const randomId = Math.random().toString(36).substring(2, 12).toUpperCase();
+
+  return randomId;
+}
 
 function generateAndStoreOTP(req) {
   const otp = otpGenerator.generate(6, {
@@ -126,10 +134,24 @@ const loadregister = async (req, res) => {
 
 const insestUser = async (req, res) => {
   try {
+    console.log(req.body, "dfdf");
     const existingUser = await User.findOne({ email: req.body.email });
+    const referral = req.body.refferal;
+    if (referral) {
+      const existingReferrals = await User.findOne({ refferalId: referral });
 
+      console.log(existingReferrals,"email");
+    
+      if (!existingReferrals) {
+        // If there's no existing referral, render the signup page with an appropriate message.
+        return res.json({ notMatcthrefferal: true });
+      }
+      // Optionally, you can add additional logic here if needed.
+    }
+ 
     if (existingUser) {
-      res.render("signup", { message: "this mail already exising" });
+ 
+      return res.json({ notMatchemail: true });
     } else {
       req.session.username = req.body.username;
       req.session.firstname = req.body.firstname;
@@ -137,18 +159,16 @@ const insestUser = async (req, res) => {
       req.session.email = req.body.email;
       req.session.mobile = req.body.mobile;
       req.session.password = req.body.password;
+      req.session.refferal = req.body.refferal;
       req.session.fullname = `${req.body.firstname} ${req.body.lastname}`;
       if (req.body.password === req.body.password_2) {
         const generatedOTP = generateAndStoreOTP(req);
 
         sendVerifyMail(req.session.email, req.session.firstname, generatedOTP);
         console.log(generatedOTP);
-        res.render("verify", {
-          name: "Please enter the one-time password to verify your account",
-          mail: req.session.email,
-        });
+        return res.status(200).json({ success: true });
       } else {
-        res.render("signup", { message: "Enter same password" });
+        return res.status(400).json({ samepassword: true });
       }
     }
   } catch (error) {
@@ -167,11 +187,11 @@ const checkotp = async (req, res) => {
   try {
     const verifyotp = req.body.otp;
     const currTime = Math.floor(Date.now() / 1000);
-      console.log(verifyotp);
+    console.log(verifyotp);
     if (currTime <= req.session.otp.expiry) {
       if (req.session.otp.code === verifyotp) {
         const hashedPassword = await securePassword(req.session.password);
-        
+        const refferalId = generateRefferalId();
         const newUser = new User({
           username: req.session.username,
           firstname: req.session.firstname,
@@ -181,44 +201,71 @@ const checkotp = async (req, res) => {
           mobile: req.session.mobile,
           fullname: req.session.fullname,
           is_Verified: 1,
+          refferalId: refferalId,
+        });
+        const savedUser = await newUser.save();
+        const refferal = req.session.refferal;
+        const userData = await User.findOne({ email: req.session.email });
+        const reffrerData = await User.findOne({ refferalId: refferal });
+        const walletData = await Wallet.findOne({ user: reffrerData._id });
+
+        const transactionDetails = {
+          transactionId: refferalId,
+          transactionDate: new Date(),
+          transactionDetails: "Credit",
+          transactionType: "Refferal COde",
+          transactionAmount: 100,
+        };
+
+        if (walletData) {
+          walletData.totalAmount += 100;
+          walletData.walletHistory.push(transactionDetails);
+          await walletData.save();
+        }
+
+        const newWalletEntry = new Wallet({
+          user: userData._id,
+          totalAmount: 0,
         });
 
-        const savedUser = await newUser.save();
+        await newWalletEntry.save();
+        console.log(newWalletEntry);
 
         if (savedUser) {
           req.session.user_id = savedUser._id;
           res.json({ success: true });
         } else {
-          res.status(500).json({ success: false, message: 'Error creating user' });
+          res
+            .status(500)
+            .json({ success: false, message: "Error creating user" });
         }
       } else {
-        console.log('Invalid OTP');
-        res.json({ invalid: true, message: 'Invalid OTP' });
+        console.log("Invalid OTP");
+        res.json({ invalid: true, message: "Invalid OTP" });
       }
     } else {
-      res.json({ expired: true, message: 'OTP has expired' });
+      res.json({ expired: true, message: "OTP has expired" });
     }
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 const resend = async (req, res) => {
   try {
-
     const generatedOTP = generateAndStoreOTP(req);
     const email = req.session.email;
-    console.log(email,"email");
-   const name=req.session.firstname||'';
+    console.log(email, "email");
+    const name = req.session.firstname || "";
     // Assuming sendVerifyMail is correctly implemented
     sendVerifyMail(email, name, generatedOTP);
 
     console.log(`Resent OTP to ${email} for user ${name}`);
-    
+
     res.json({ resendsuccess: true });
   } catch (error) {
     console.error("Error:", error.message);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -273,13 +320,17 @@ const loadHome = async (req, res) => {
 
     const userData = await User.findById(id);
     console.log(userData);
-    const categorydata = await Category.find({ active: 0 }).sort({
-      createdAt: -1,
-    });
+    const categorydata = await Category.find({ active: 0 })
+      .sort({
+        createdAt: -1,
+      })
+      .populate("offer");
 
-    const prodactdata = await Product.find({ active: 0 }).sort({
-      createdAt: -1,
-    });
+    const prodactdata = await Product.find({ active: 0 })
+      .sort({
+        createdAt: -1,
+      })
+      .populate("offer");
 
     res.render("home", {
       product: prodactdata,
@@ -348,7 +399,7 @@ const resetpassword = async (req, res) => {
 };
 const logout = async (req, res) => {
   try {
-    req.session.user_id=null
+    req.session.user_id = null;
     res.redirect("/");
   } catch (error) {
     console.log(error.message);
@@ -359,27 +410,31 @@ const getallproducts = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    const categorytData = await Category.find({});
-    let sortObject={}
-   
-    let sort = req.query.sort ? req.query.sort : '';  
-    if(sort=='lh'){
-      sortObject.price=1;
-    }  else if(sort=='hl'){
-      sortObject.price=-1;
+    const categorytData = await Category.find({}).populate("offer");
+    let sortObject = {};
+
+    let sort = req.query.sort ? req.query.sort : "";
+    if (sort == "lh") {
+      sortObject.price = 1;
+    } else if (sort == "hl") {
+      sortObject.price = -1;
       console.log(sort);
-    }else if(sort=='latest'){
-      sortObject.createdAt=-1;
+    } else if (sort == "latest") {
+      sortObject.createdAt = -1;
     }
 
     // Search parameters
-    const search = req.query.search || '';
+    const search = req.query.search || "";
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
 
     // MongoDB queries
-    const nameRegex = { productname: { $regex: ".*" + search + ".*", $options: "i" } };
-    const shapeRegex = { frameshape: { $regex: ".*" + search + ".*", $options: "i" } };
+    const nameRegex = {
+      productname: { $regex: ".*" + search + ".*", $options: "i" },
+    };
+    const shapeRegex = {
+      frameshape: { $regex: ".*" + search + ".*", $options: "i" },
+    };
 
     const query = {
       $or: [nameRegex, shapeRegex],
@@ -387,19 +442,20 @@ const getallproducts = async (req, res) => {
 
     // Apply category filter
     if (req.query.categories) {
-      const categoriesFilter = { frameshape: { $in: req.query.categories } };
+      const categoriesArray = req.query.categories.split(",");
+      const trimmedCategories = categoriesArray.map((category) =>
+        category.trim()
+      );
+      const categoriesFilter = { frameshape: { $in: trimmedCategories } };
       Object.assign(query, categoriesFilter);
     }
-
+    console.log(req.query.categories);
     // Apply price filter
     if (req.query.prices) {
-
-      const value=req.query.prices.split(",")
+      const value = req.query.prices.split(",");
 
       const minPrice = parseInt(value[0]);
       const maxPrice = parseInt(value[1]);
-    
-
 
       if (!isNaN(minPrice) && !isNaN(maxPrice)) {
         const priceFilter = {
@@ -411,18 +467,18 @@ const getallproducts = async (req, res) => {
         Object.assign(query, priceFilter);
       } else {
         // Handle invalid price values (e.g., log an error or provide default values)
-        console.error('Invalid price values:', req.query.prices);
+        console.error("Invalid price values:", req.query.prices);
       }
     }
-   
 
     // Fetch products based on search and pagination
     const productData = await Product.find(query)
       .limit(limit)
       .sort(sortObject)
       .skip((page - 1) * limit)
+      .populate("offer")
       .exec();
-
+    console.log(productData);
     // Count total products for pagination
     const count = await Product.countDocuments(query);
 
@@ -444,7 +500,6 @@ const getallproducts = async (req, res) => {
   }
 };
 
-
 const getoneproduct = async (req, res) => {
   try {
     const id = req.query.id;
@@ -453,11 +508,17 @@ const getoneproduct = async (req, res) => {
     const userData = await User.findById(user_id);
 
     const productData = await Product.findById(id);
-   
-      const categoryData = await Product.find({frameshape:productData.frameshape});
-      console.log(categoryData);
 
-    res.render("product", { product: productData, user: userData,categoryData:categoryData });
+    const categoryData = await Product.find({
+      frameshape: productData.frameshape,
+    });
+    console.log(categoryData);
+
+    res.render("product", {
+      product: productData,
+      user: userData,
+      categoryData: categoryData,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -469,23 +530,24 @@ const loadcart = async (req, res) => {
 
     const cartData = await Cart.findOne({ user: id }).populate(
       "products.product"
-    )
+    );
     let totalAmount = 0;
-if (cartData) {
-  
-    
-
-    for (const cartItem of cartData.products) {
-      const productPrice = cartItem.product.price;
-      const productCount = cartItem.count;
-      totalAmount += productPrice * productCount;
+    if (cartData) {
+      for (const cartItem of cartData.products) {
+        const productPrice =
+          cartItem.product.discountprice == null
+            ? cartItem.product.price
+            : cartItem.product.discountprice;
+        const productCount = cartItem.count;
+        totalAmount += productPrice * productCount;
+      }
     }
 
-  }
-
-    
-    res.render("cart", { user: userData, cartData: cartData,totalAmount:totalAmount });
-  
+    res.render("cart", {
+      user: userData,
+      cartData: cartData,
+      totalAmount: totalAmount,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -493,7 +555,6 @@ if (cartData) {
 
 const profile = async (req, res) => {
   try {
-    
     const id = req.session.user_id;
     const userData = await User.findById(id);
 
@@ -528,7 +589,6 @@ const changeemail = async (req, res) => {
   try {
     const user_id = req.session.user_id;
     const email = req.body.email;
-    
 
     // Check if the email already exists
     const existingEmail = await User.findOne({ email: email });
@@ -537,15 +597,13 @@ const changeemail = async (req, res) => {
       // Email already exists
       res.json({ exists: true });
     } else {
-  
-const generatedOTP = generateAndStoreOTP(req);
-console.log(generatedOTP);
-req.session.email = email;
+      const generatedOTP = generateAndStoreOTP(req);
+      console.log(generatedOTP);
+      req.session.email = email;
 
+      sendVerifyMail(email, user_id.firstname, generatedOTP);
 
-sendVerifyMail(email, user_id.firstname, generatedOTP);
-
-return res.json({ mailsent: true})
+      return res.json({ mailsent: true });
     }
   } catch (error) {
     console.log(error.message);
@@ -554,49 +612,49 @@ return res.json({ mailsent: true})
 };
 const verify_email_change = async (req, res) => {
   try {
-const email = req.session.email
+    const email = req.session.email;
 
-    res.render("verifyemailchange",{ email: email});
+    res.render("verifyemailchange", { email: email });
   } catch (error) {
     console.log(error.message);
   }
 };
 
 const check_verifyemail_change = async (req, res) => {
-
   try {
     const verifyotp = req.body.otp;
     const currTime = Math.floor(Date.now() / 1000);
-      console.log(verifyotp);
+    console.log(verifyotp);
     if (currTime <= req.session.otp.expiry) {
       if (req.session.otp.code === verifyotp) {
-        const email = req.session.email
+        const email = req.session.email;
         const user_id = req.session.user_id;
 
-console.log(email,"df")
+        console.log(email, "df");
 
-        const updateEmail = await User.updateOne({ _id: user_id }, { $set: { email: email } });
-
-      
+        const updateEmail = await User.updateOne(
+          { _id: user_id },
+          { $set: { email: email } }
+        );
 
         if (updateEmail.modifiedCount === 1) {
-         
           res.json({ success: true });
         } else {
-          res.status(500).json({ success: false, message: 'Error creating user' });
+          res
+            .status(500)
+            .json({ success: false, message: "Error creating user" });
         }
       } else {
-        console.log('Invalid OTP');
-        res.json({ invalid: true, message: 'Invalid OTP' });
+        console.log("Invalid OTP");
+        res.json({ invalid: true, message: "Invalid OTP" });
       }
     } else {
-      res.json({ expired: true, message: 'OTP has expired' });
+      res.json({ expired: true, message: "OTP has expired" });
     }
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
-
 };
 
 const changepassword = async (req, res) => {
@@ -606,29 +664,42 @@ const changepassword = async (req, res) => {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
     const user_id = req.session.user_id;
 
-
     const userData = await User.findById(user_id);
 
-
-    const passwordMatch = await bcrypt.compare(currentPassword, userData.password);
+    const passwordMatch = await bcrypt.compare(
+      currentPassword,
+      userData.password
+    );
 
     if (passwordMatch) {
-      
       if (newPassword === confirmNewPassword) {
         const spassword = await securePassword(newPassword);
 
-        await User.updateOne({ _id: user_id }, { $set: { password: spassword } });
+        await User.updateOne(
+          { _id: user_id },
+          { $set: { password: spassword } }
+        );
 
-        return res.json({ updatePassword: true, message: 'Password updated successfully.' });
+        return res.json({
+          updatePassword: true,
+          message: "Password updated successfully.",
+        });
       } else {
-        return res.status(400).json({ notMatch: true, error: 'New password and confirm password do not match.' });
+        return res
+          .status(400)
+          .json({
+            notMatch: true,
+            error: "New password and confirm password do not match.",
+          });
       }
     } else {
-      return res.status(400).json({ oldNotMatch: true, error: 'Current password does not match.' });
+      return res
+        .status(400)
+        .json({ oldNotMatch: true, error: "Current password does not match." });
     }
   } catch (error) {
     console.error(error.message);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -637,10 +708,6 @@ const validateNewPassword = (password) => {
   const passwordRegex = /^(?=.*[!@#$%^&*]).{6,}$/;
   return passwordRegex.test(password);
 };
-
-
-
-
 
 module.exports = {
   loadregister,
@@ -666,5 +733,5 @@ module.exports = {
   changeemail,
   verify_email_change,
   check_verifyemail_change,
-  changepassword
+  changepassword,
 };

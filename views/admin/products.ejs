@@ -23,7 +23,11 @@ include("../layouts/adminSideBar.ejs")%>
                       <form id="searchForm" action="" method="get">
                         <div class="form-control-wrap">
                           <div class="form-icon form-icon-right">
-                            <em id="searchIcon" class="icon ni ni-search" onclick="submitForm()"></em>
+                            <em
+                              id="searchIcon"
+                              class="icon ni ni-search"
+                              onclick="submitForm()"
+                            ></em>
                           </div>
                           <input
                             type="text"
@@ -34,7 +38,6 @@ include("../layouts/adminSideBar.ejs")%>
                           />
                         </div>
                       </form>
-                      
                     </li>
                     <li>
                       <div class="drodown">
@@ -59,7 +62,7 @@ include("../layouts/adminSideBar.ejs")%>
                         </div>
                       </div>
                     </li>
-                   
+
                     <li class="nk-block-tools-opt">
                       <a href="addproducts" class="btn btn-primary">
                         <em class="icon ni ni-plus"></em>
@@ -91,12 +94,8 @@ include("../layouts/adminSideBar.ejs")%>
               <div class="nk-tb-col"><span>Status</span></div>
               <div class="nk-tb-col"><span>Price</span></div>
               <div class="nk-tb-col"><span>Stock</span></div>
-              <div class="nk-tb-col tb-col-md">
-                <span>Category</span>
-              </div>
-              <div class="nk-tb-col tb-col-md">
-                <em class="tb-asterisk icon ni ni-star-round"></em>
-              </div>
+              <div class="nk-tb-col tb-col-md"><span>Category</span></div>
+              <div class="nk-tb-col tb-col-md"><span>Offer</span></div>
               <div class="nk-tb-col nk-tb-col-tools">
                 <ul class="nk-tb-actions gx-1 my-n1">
                   <li class="me-n1">
@@ -168,7 +167,13 @@ include("../layouts/adminSideBar.ejs")%>
                 >
               </div>
               <div class="nk-tb-col">
-                <span class="tb-sub"> <% if (value.active == 0) { %><p class="text-success">active</p><% } else { %><p class="text-danger">Blocked</p><% } %></span>
+                <span class="tb-sub">
+                  <% if (value.active == 0) { %>
+                  <p class="text-success">active</p>
+                  <% } else { %>
+                  <p class="text-danger">Blocked</p>
+                  <% } %></span
+                >
               </div>
               <div class="nk-tb-col">
                 <span class="tb-lead"> <%=value.price%></span>
@@ -180,12 +185,16 @@ include("../layouts/adminSideBar.ejs")%>
                 <span class="tb-sub"><%=value.frameshape%></span>
               </div>
               <div class="nk-tb-col tb-col-md">
-                <div class="asterisk tb-asterisk">
-                  <a href="#"
-                    ><em class="asterisk-off icon ni ni-star"></em
-                    ><em class="asterisk-on icon ni ni-star-fill"></em
-                  ></a>
-                </div>
+                <% if (value.offer&& value.offer.action==1 ) { %>
+                <p>
+                  <span class="tb-sub"
+                    ><%=value.offer.offername%>,
+                    <%=value.offer.percentage%>%</span
+                  >
+                </p>
+                <% } else { %>
+                <span class="tb-sub text-center">Not available</span>
+                <% } %>
               </div>
               <div class="nk-tb-col nk-tb-col-tools">
                 <ul class="nk-tb-actions gx-1 my-n1">
@@ -206,36 +215,40 @@ include("../layouts/adminSideBar.ejs")%>
                             >
                           </li>
                           <li>
-                            <a href="#"
-                              ><em class="icon ni ni-eye"></em
-                              ><span>View Product</span></a
+                            <a
+                              href="#"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalDefault<%=value._id%>"
+                              ><em class="icon ni ni-offer-fill"></em
+                              ><span>Apply New Offer</span></a
                             >
                           </li>
+                          <% if (value.offer!=null ) { %>
                           <li>
-                            <a href="#"
-                              ><em class="icon ni ni-activity-round"></em
-                              ><span>Product Orders</span></a
+                            <a
+                              onclick="actionOfferproduct('<%=value._id%>','<%=value.offername%>')"
+                            >
+                              <em class="icon ni ni-eye-off-fill"></em>
+                              <span>Remove Offer</span>
+                            </a>
+                          </li>
+                          <% } %> <% if (value.active== 0) { %>
+                          <li>
+                            <a href="/admin/suspendproduct?id=<%=value._id %>"
+                              ><em class="icon ni ni-na"></em
+                              ><span>Suspend</span></a
                             >
                           </li>
-                          <% if (value.active== 0) { %>
-                            <li>
-                              <a href="/admin/suspendproduct?id=<%=value._id %>"
-                                ><em class="icon ni ni-na"></em
-                                ><span>Suspend</span></a
-                              >
-                            </li>
-                            
+
                           <% } else { %>
-                            <li>
-                              <a href="/admin/activeproduct?id=<%=value._id %>"
-                                ><em class="icon ni ni-eye-alt-fill"></em>
-                                 
-                                <span>active</span></a
-                              >
-                            </li>
+                          <li>
+                            <a href="/admin/activeproduct?id=<%=value._id %>"
+                              ><em class="icon ni ni-eye-alt-fill"></em>
+
+                              <span>active</span></a
+                            >
+                          </li>
                           <% } %>
-                          
-                        
                         </ul>
                       </div>
                     </div>
@@ -244,9 +257,59 @@ include("../layouts/adminSideBar.ejs")%>
               </div>
             </div>
 
+            <!-- Modal Content Code -->
+            <div
+              class="modal modal-lg modal-dialog-top fade"
+              tabindex="-1"
+              id="modalDefault<%=value._id%>"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <a
+                    href="#"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <em class="icon ni ni-cross"></em>
+                  </a>
+                  <div class="modal-header">
+                    <h3 class="modal-title">Offers</h3>
+                  </div>
+                  <div
+                    class="modal-body container ro d-flex justify-content-center"
+                  >
+                    <div class="row justify-content-center">
+                      <% offerData.forEach((offer) => { %>
+                      <div
+                        class="col-md-5 col-sm-12 m-3 size"
+                        onclick="sendOfferId('<%= offer._id %>','<%= value._id %>')"
+                      >
+                        <div class="coupon-card">
+                          <h3><%= offer.offername %></h3>
+                          <h3><%= offer.percentage %>% OFF</h3>
+                          <p>
+                            Valid Till: <%= new
+                            Date(offer.expiryDate).toLocaleDateString('en-US', {
+                            month: '2-digit', day: '2-digit', year: 'numeric' })
+                            %>
+                          </p>
+                          <div class="circle1"></div>
+                          <div class="circle2"></div>
+                        </div>
+                      </div>
+                      <% }) %>
+                    </div>
+                  </div>
+                  <div class="modal-footer bg-light">
+                    <span class="sub-text">Modal Footer Text</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <%})%>
           </div>
-          
+
           <div class="card">
             <div class="card-inner">
               <div class="nk-block-between-md g-3">
@@ -254,44 +317,46 @@ include("../layouts/adminSideBar.ejs")%>
                   <ul
                     class="pagination justify-content-center justify-content-md-start"
                   >
-                  <% if (previospage > 0) { %>
+                    <% if (previospage > 0) { %>
                     <li class="page-item">
-                      <a class="page-link" href="?page=<%= previospage %>&search=<%=search%>"
-                        ><em   class="icon ni ni-chevrons-left"></em
+                      <a
+                        class="page-link"
+                        href="?page=<%= previospage %>&search=<%=search%>"
+                        ><em class="icon ni ni-chevrons-left"></em
                       ></a>
                     </li>
-                    <% } %>
-                    <% let page=0;
-                    if(totalPages< 10){
-                      page= Math.ceil(totalPages/3);
-                    }else{
-                      page= Math.floor(totalPages/5);
-                    }
-                    
-                    for (let i=1;i<=page;i++){%>
+                    <% } %> <% let page=0; if(totalPages< 10){ page=
+                    Math.ceil(totalPages/3); }else{ page=
+                    Math.floor(totalPages/5); } for (let i=1;i<=page;i++){%>
                     <li class="page-item">
-                      <a class="page-link" href="?page=<%= i %>&search=<%=search%>"><%=i%></a>
-
+                      <a
+                        class="page-link"
+                        href="?page=<%= i %>&search=<%=search%>"
+                        ><%=i%></a
+                      >
                     </li>
                     <%}%>
-                   
-                    
+
                     <li class="page-item">
                       <span class="page-link"
                         ><em class="icon ni ni-more-h"></em
                       ></span>
                     </li>
-                    <% 
-                    
-                    for (let i=totalPages-1 ;i<=totalPages ;i++){%>
+                    <% for (let i=totalPages-1 ;i<=totalPages ;i++){%>
                     <li class="page-item">
-                      <a  class="page-link" href="?page=<%=i %>&search=<%=search%>"><%=i%></a>
+                      <a
+                        class="page-link"
+                        href="?page=<%=i %>&search=<%=search%>"
+                        ><%=i%></a
+                      >
                     </li>
-                    
+
                     <% } %> <% if (currentPage < totalPages) { %>
                     <li class="page-item">
-                      <a class="page-link" href="?page=<%= nextpage %>&search=<%=search%>"
-                        ><em  class="icon ni ni-chevrons-right"></em
+                      <a
+                        class="page-link"
+                        href="?page=<%= nextpage %>&search=<%=search%>"
+                        ><em class="icon ni ni-chevrons-right"></em
                       ></a>
                     </li>
                     <% } %>
@@ -301,23 +366,18 @@ include("../layouts/adminSideBar.ejs")%>
                   <div
                     class="pagination-goto d-flex justify-content-center justify-content-md-start gx-3"
                   >
-              
                     <div>Page</div>
                     <div>
                       <select
-              
-                      class="form-select js-select2"
-                      data-search="on"
-                      onchange="window.location.href='?page=' + this.value"
-                      
-                      data-dropdown="xs center"
-                    >
-                      <% for (let i = 1; i <= totalPages; i++) { %>
-                        <option value="<%= i %>" <% if (i === currentPage ) { %>selected<% } %>>
-                          <%= i %>
-                        </option>
-                      <% } %>
-                    </select>
+                        class="form-select js-select2"
+                        data-search="on"
+                        onchange="window.location.href='?page=' + this.value"
+                        data-dropdown="xs center"
+                      >
+                        <% for (let i = 1; i <= totalPages; i++) { %> <option
+                        value="<%= i %>" <% if (i === currentPage ) {
+                        %>selected<% } %>> <%= i %> <% } %>
+                      </select>
                     </div>
                     <div><%=totalPages%></div>
                   </div>
@@ -326,216 +386,97 @@ include("../layouts/adminSideBar.ejs")%>
             </div>
           </div>
         </div>
-        <!-- <div
-          class="nk-add-product toggle-slide toggle-slide-right"
-          data-content="addProduct"
-          data-toggle-screen="any"
-          data-toggle-overlay="true"
-          data-toggle-body="true"
-          data-simplebar
-        >
-          <div class="nk-block-head">
-            <div class="nk-block-head-content">
-              <h5 class="nk-block-title">New Product</h5>
-              <div class="nk-block-des">
-                <p>Add information and add new product.</p>
-              </div>
-            </div>
-          </div>
-          <form
-            action="/admin/addproducts"
-            method="post"
-            enctype="multipart/form-data"
-          >
-            <div class="nk-block">
-              <div class="row g-3">
-                <div class="col-12">
-                  <div class="form-group">
-                    <label class="form-label" for="product-title"
-                      >Product name</label
-                    >
-                    <div class="form-control-wrap">
-                      <input
-                        name="productname"
-                        type="text"
-                        required
-                        class="form-control"
-                        id="product-title"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-mb-6">
-                  <div class="form-group">
-                    <label class="form-label" for="frameshape"
-                      >Frame Shape</label
-                    >
-                    <div class="form-control-wrap">
-                      <input
-                        name="frameshape"
-                        type="text"
-                        required
-                        class="form-control"
-                        id="frameshape"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <div class="form-group">
-                    <label class="form-label" for="category">Category</label>
-                    <div class="form-control-wrap">
-                      <input
-                        name="category"
-                        type="text"
-                        required
-                        class="form-control"
-                        id="category"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="brand">Brand</label>
-                    <div class "form-control-wrap">
-                    <input
-                      name="brand"
-                      type="text"
-                      required
-                      class="form-control"
-                      id="brand"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-mb-6">
-                <div class="form-group">
-                  <label class="form-label" for="stock">Stock</label>
-                  <div class="form-control-wrap">
-                    <input
-                      type="number"
-                      name="stock"
-                      required
-                      class="form-control"
-                      id="stock"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-mb-6">
-                <div class="form-group">
-                  <label class="form-label" for="price">Price</label>
-                  <div class="form-control-wrap">
-                    <input
-                      name="price"
-                      type="number"
-                      required
-                      class="form-control"
-                      id="price"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-group">
-                  <label class="form-label" for="description"
-                    >Description</label
-                  >
-                  <div class="form-control-wrap">
-                    <textarea
-                      class="form-control"
-                      id="description"
-                      required
-                      name="description"
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="form-group">
-                  <label class="form-label" for="images">Upload Images</label>
-                  <div class="form-control-wrap">
-                    <div class="upload-zone">
-                      <div class="dz-message" data-dz-message>
-                        <span class="dz-message-text">Drag and drop file</span>
-                        <span class="dz-message-or">or</span>
-                        <button class="btn btn-primary">SELECT</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-group">
-                  <label class="form-label" for="images">Upload Images</label>
-                  <div class="form-control-wrap">
-                    <div class="upload-zone">
-                      <div class="dz-message" data-dz-message>
-                        <span class="dz-message-text">Drag and drop file</span>
-                        <span class="dz-message-or">or</span>
-                        <button class="btn btn-primary">SELECT</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-group">
-                  <label class="form-label" for="images">Upload Images</label>
-                  <div class="form-control-wrap">
-                    <div class="upload-zone">
-                      <div class="dz-message" data-dz-message>
-                        <span class="dz-message-text">Drag and drop file</span>
-                        <span class="dz-message-or">or</span>
-                        <button class="btn btn-primary">SELECT</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-group">
-                  <label class="form-label" for="images">Upload Images</label>
-                  <div class="form-control-wrap">
-                    <div class="upload-zone">
-                      <div class="dz-message" data-dz-message>
-                        <span class="dz-message-text">Drag and drop file</span>
-                        <span class="dz-message-or">or</span>
-                        <button class="btn btn-primary">SELECT</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- <div class="col-12">
-                  <div class="upload-zone small bg-lighter my-2">
-                    <div class="dz-message">
-                      <span class="dz-message-text">Drag and drop file</span>
-                    </div>
-                  </div>
-                </div> -->
-              <!-- <div class="col-12">
-                <button type="submit" class="btn btn-primary">
-                  <em class="icon ni ni-plus"></em>
-                  <span>Add New</span>
-                </button>
-              </div> -->
-            </div>
-          </form>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
-
 <script>
   function submitForm() {
     // Get the form element by its ID
-    var form = document.getElementById('searchForm');
-    
+    var form = document.getElementById("searchForm");
+
     // Submit the form
     form.submit();
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function sendOfferId(offerId, product_id) {
+    // Use the Fetch API to send the offerId to the server
+    fetch("/admin/applyofferproduct", {
+      method: "POST", // or 'GET' depending on your server route
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ offerId: offerId, product_id: product_id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // alert("Success"); // You can remove the regular alert
+          Swal.fire({
+            title: "Offer Added",
+            text: "The offer has been added to the product.",
+            icon: "success",
+          }).then(() => window.location.reload());
+        } else {
+          Swal.fire({
+            title: "Offer Not Added",
+
+            text: "Already have a big offer.",
+            icon: "error",
+          }).then(() => window.location.reload());
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+</script>
+
+<script>
+  function actionOfferproduct(product_id) {
+    const url = "/admin/removeofferproduct";
+
+    // Example data to be sent in the request body
+    const requestData = {
+      product_id: product_id,
+
+      // Add more data as needed
+    };
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any additional headers if needed
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          // Call swal after ensuring that SweetAlert is loaded
+          Swal.fire({
+            title: "Success!",
+            text: "Offer successfully Removed",
+            icon: "success",
+          }).then(() => window.location.reload());
+        } else {
+          // Handle unsuccessful response if needed
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+        // Handle errors that occurred during the fetch
+      });
   }
 </script>
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>

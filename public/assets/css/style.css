@@ -5,6 +5,11 @@ html {
   -ms-text-size-adjust: 100%;
   font-size-adjust: 100%;
 }
+@font-face {
+  font-family: 'SourceCodePro';
+  src: url('/static/fonts/SourceCodePro-Medium.ttf') format('truetype');
+  /* Add more font formats (e.g., woff, woff2) for better compatibility */
+}
 html,
 body {
   height: 100%;
@@ -15641,6 +15646,9 @@ margin-right: 20px;
   content: "\f2fa";
   font-size: 10rem;
 }
+.fa-wallet{
+  font-size: 8rem;
+}
 .icon-shopping-incart:before {
   content: "\f2fa";
   font-size: 10rem;
@@ -16763,4 +16771,89 @@ align-items: center;
     background-color: white;
     border-radius: 1rem;
   }
+  .wallet-front {
+    background: url("/static/logo/wallet_front.jpg");
+    margin: 0px;
+    border-radius: 10px;
+    height: 225px;
+}
   
+.wallet-front h1,
+.wallet-front h6,
+.wallet-front h4 {
+  color: #fff;
+  font-weight: bold;
+}
+.wallet-back{
+    margin: 0px;
+    background: url("/static/logo/wallet_bac.jpg");
+    border-radius: 10px;
+    height: 225px;
+  }
+  .wallet-history{
+    background-color: #F4E869;
+    border: 5px solid;
+    border-radius: 10px;
+    border-color:#3b3b3b;
+
+  }
+  .wallet-history h6,h4{
+ font-family: 'SourceCodePro', sans-serif;
+  }
+  .copy-text {
+    position: relative;
+    padding: 2px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+  }
+  .copy-text input.text {
+    
+    padding: 2px;
+    font-size: 18px;
+    color: #555;
+    border: none;
+    outline: none;
+  }
+  .copy-text button {
+padding-left: 5px;
+padding-right: 5px;
+    background: #5784f5;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .copy-text button:active {
+    background: #809ce2;
+  }
+  .copy-text button:before {
+    content: "Copied";
+    position: absolute;
+    top: -45px;
+    right: 0px;
+    background: #5c81dc;
+    padding: 8px 15px;
+    
+    font-size: 15px;
+    display: none;
+  }
+  .copy-text button:after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: 25px;
+    width: 10px;
+    height: 5px;
+    background: #5c81dc;
+    transform: rotate(45deg);
+    display: none;
+  }
+  .copy-text.active button:before,
+  .copy-text.active button:after {
+    display: block;
+  }

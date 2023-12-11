@@ -1,6 +1,6 @@
-const category = require("../model/category");
-const Category = require("../model/category");
-
+const category = require("../model/categoryModel");
+const Category = require("../model/categoryModel");
+const Offer = require("../model/offerModel");
 const loadcatergory = async (req, res) => {
   try {
     res.render("addcategory");
@@ -59,6 +59,7 @@ const loadcategorypage = async (req, res) => {
 
       .limit(limit * 1)
       .skip((page - 1) * limit)
+      .populate('offer')
       .exec();
 
     const count = await Category.find({
@@ -68,6 +69,7 @@ const loadcategorypage = async (req, res) => {
     }).countDocuments();
 
 
+    const offerData = await Offer.find({ action: 1 });
 
    
     res.render("category", 
@@ -77,6 +79,7 @@ const loadcategorypage = async (req, res) => {
       previospage: page - 1,
       nextpage: parseInt(page) + 1,
       count: count,
+      offerData:offerData,
       search: search, });
   } catch (error) {
     console.log(error.message);

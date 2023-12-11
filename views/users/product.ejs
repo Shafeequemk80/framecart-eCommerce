@@ -35,7 +35,7 @@
                                 <div class="product-gallery product-gallery-vertical">
                                     <div class="row">
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src="/static/productsImages/<%=product.images.image1%>" data-zoom-image="/static/productsImages/<%=product.images[0]%>" alt="product image">
+                                            <img id="product-zoom" src="/static/productsImages/<%=product.images.image1%>" data-zoom-image="/static/productsImages/<%=product.images.image1%>" alt="product image">
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
@@ -43,19 +43,19 @@
                                         </figure><!-- End .product-main-image -->
 
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item active" href="#" data-image="/static/productsImages/<%=product.images[0]%>" data-zoom-image="/static/productsImages/<%=product.images[0]%>">
+                                            <a class="product-gallery-item active" href="#" data-image="/static/productsImages/<%=product.images.image1%>" data-zoom-image="/static/productsImages/<%=product.images.image1%>">
                                                 <img src="/static/productsImages/<%=product.images.image1%>" alt="product side">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="//static/productsImages/<%=product.images[1]%>" data-zoom-image="/static/productsImages/<%=product.images[1]%>">
+                                            <a class="product-gallery-item" href="#" data-image="//static/productsImages/<%=product.images.image2%>" data-zoom-image="/static/productsImages/<%=product.images.image2%>">
                                                 <img src="/static/productsImages/<%=product.images.image2%>" alt="product cross">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/static/productsImages/<%=product.images[2]%>" data-zoom-image="/static/productsImages/<%=product.images[2]%>">
+                                            <a class="product-gallery-item" href="#" data-image="/static/productsImages/<%=product.images.image3%>" data-zoom-image="/static/productsImages/<%=product.images.image3%>">
                                                 <img src="/static/productsImages/<%=product.images.image3%>" alt="product with model">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/static/productsImages/<%=product.images[3]%>" data-zoom-image="/static/productsImages/<%=product.images[3]%>">
+                                            <a class="product-gallery-item" href="#" data-image="/static/productsImages/<%=product.images.image4%>" data-zoom-image="/static/productsImages/<%=product.images.image4%>">
                                                 <img src="/static/productsImages/<%=product.images.image4%>" alt="product back">
                                             </a>
                                         </div><!-- End .product-image-gallery -->
@@ -436,11 +436,10 @@
         });
     });
 </script>
-   
+ 
         <%- include("../layouts/userFooter2.ejs")%>
         
-   
-    <%- include("../layouts/footer.ejs")%>
+        <%-include("../layouts/footer.ejs")%>
 
 
         

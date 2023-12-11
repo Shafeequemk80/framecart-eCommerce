@@ -11,6 +11,7 @@ const addressController=require("../controller/addressController")
 const checkoutController=require("../controller/checkoutController")
 const orderController=require("../controller/orderController")
 const wishlistController = require("../controller/wishlistController");
+const walletController = require("../controller/walletController");
 user_route.use(
   session({
     secret: config.sessionSecret,
@@ -78,5 +79,9 @@ user_route.get("/whishlist",auth.islogin,wishlistController.getwishlist)
 user_route.get("/deletefromwishlist",auth.islogin,wishlistController.deletefromwishlist)
 
 user_route.post("/changeemail",auth.islogin,userController.changeemail)
+
+user_route.get("/wallet",auth.islogin,walletController.loadwallet)
+user_route.post("/addtowallet",auth.islogin,walletController.addtowallet)
+user_route.post("/verifywalletonlinepayment",auth.islogin,walletController.verifyonlinepayment)
 
 module.exports = user_route;

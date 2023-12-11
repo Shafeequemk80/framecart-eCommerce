@@ -1,4 +1,5 @@
 <%-include("../layouts/header.ejs")%>
+
 <div class="page-wrapper">
   <%-include("../layouts/userNavbar.ejs")%>
   <main class="main">
@@ -66,7 +67,7 @@
                     role="tab"
                     aria-controls="tab-downloads"
                     aria-selected="false"
-                    >Downloads</a
+                    >Wallet</a
                   >
                 </li>
 
@@ -97,8 +98,21 @@
                   role="tabpanel"
                   aria-labelledby="tab-dashboard-link"
                 >
-                  <div class="d-flex justify-content-center mt-3">
+                  <div class="d-flex justify-content-center mt-3  ">
                     <h3>User Profile</h3>
+                   
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    
+                    <img src="/static/assets/images/icons/user.jpg" alt="" width="100px" height="100px">
+                    
+                  </div>
+                  <div class="d-flex justify-content-center mt-1 js-shareUrl">
+                    <div class="copy-text">
+                      <input type="text" class="text" value="<%=user.refferalId%>" />
+                      <button><i class="fa fa-clone"></i></button>
+                    </div>
+                   
                   </div>
                   <form
                     action="/editproduct"
@@ -109,7 +123,7 @@
                     <input
                       type="hidden"
                       name="user_id"
-                      value="<=user._id%"
+                      value="<=user._id%>"
                      />
 
                     <div class="form-group">
@@ -267,10 +281,34 @@
                   role="tabpanel"
                   aria-labelledby="tab-downloads-link"
                 >
-                  <p>No downloads available yet.</p>
-                  <a href="category.html" class="btn btn-outline-primary-2"
-                    ><span>GO SHOP</span><i class="icon-long-arrow-right"></i
-                  ></a>
+               
+                <div class="col-lg-6">
+                  <a href="/wallet">
+                    <div class="card card-dashboard">
+                      <div
+                        class="card-body d-flex align-items-center justify-content-center"
+                      >
+                        <div class="card-title-container">
+                       
+                          <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div class="d-flex flex-column ml-4">
+                          <h3 class="card-title">All Orders</h3>
+                          <!-- End .card-title-container -->
+
+                          <p>
+                            You have not set up this type of address yet.
+                          </p>
+                        </div>
+                      </div>
+                      <!-- End .card-body -->
+                    </div>
+                    <!-- End .card-dashboard -->
+                  </a>
+                </div>
+                <!-- End .col-lg-6 -->
+
+              
                 </div>
                 <!-- .End .tab-pane -->
 
@@ -335,6 +373,7 @@
     <!-- End .page-content -->
   </main>
   <!-- End .main -->
+ 
 
   <script src="/static/js/validation.js"></script>
 
@@ -497,6 +536,42 @@ function showErrorAndRemove(errorId, errorMessage) {
       });
     });
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll('[data-toggle="tab"]');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener("click", function (event) {
+                const tabId = event.target.getAttribute("href");
+                sessionStorage.setItem("activeTab", tabId);
+            });
+        });
+
+        // Check if there's a previously active tab in session storage
+        const activeTab = sessionStorage.getItem("activeTab");
+
+        if (activeTab) {
+            // Show the previously active tab
+            const tab = document.querySelector(`[href="${activeTab}"]`); // Fix here
+            tab && tab.click();
+        }
+    });
+</script>
+
+<script>
+ let copyText = document.querySelector(".copy-text");
+copyText.querySelector("button").addEventListener("click", function () {
+	let input = copyText.querySelector("input.text");
+	input.select();
+	document.execCommand("copy");
+	copyText.classList.add("active");
+	window.getSelection().removeAllRanges();
+	setTimeout(function () {
+		copyText.classList.remove("active");
+	}, 2500);
+});
+
+</script>
 
   <%- include("../layouts/footer.ejs")%>
 </div>

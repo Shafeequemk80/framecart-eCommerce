@@ -17,7 +17,7 @@ const addtocart = async (req, res) => {
 
 
       if (existingProduct ) {
-        if (product.stock>existingProduct.count && 10 < existingProduct.count) {
+        if (product.stock > existingProduct.count && existingProduct.count < 10) {
         existingProduct.count += 1;
          
         res.status(200).json({ message:true});
@@ -88,11 +88,15 @@ const actionincart = async (req, res) => {
     
           
      
+        const updatedAmount = product.discountprice ?? product.price;
+        const totalAmount = updatedAmount * existingProduct.count;
+        
         res.status(200).json({
           count: existingProduct.count,
-          amount: product.price*existingProduct.count,
+          amount: totalAmount,
           message: "Cart updated successfully",
         });
+        
       } else {
         res.status(404).json({ error: "Product not found in the cart" });
       }

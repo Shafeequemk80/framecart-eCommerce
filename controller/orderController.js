@@ -1,4 +1,4 @@
-const Category = require("../model/category");
+const Category = require("../model/categoryModel");
 const Products = require("../model/productsModel");
 const user_route = require("../routes/userRoute");
 const Order = require("../model/orderModel");
@@ -14,31 +14,31 @@ const allorders = async (req, res) => {
         "products.product")
         .sort({ _id: -1 });
         
-  
-      // Extracting product details from the orders
-      const products = userOrders.reduce((allProducts, order) => {
-        const orderProducts = order.products.map(product => {
-          return {
-            order: order,
-            productDetails: product.product, // Extract the populated product details
-            count: product.count,
-            totalprice: product.totalprice,
-            paymentStatus: product.paymentStatus,
-            orderStatus: product.orderStatus,
-            statusLevel: product.statusLevel,
-          };
-        });
-        return [...allProducts, ...orderProducts];
-      }, []);
-      console.log(products,"1");
+  console.log(userOrders);
 
-      res.render('allorders', { user: user_id, products: products });
+      res.render('allorders', { user: user_id, products: userOrders });
     } catch (error) {
       console.log(error);
     }
   };
   
-  
+      //  // Extracting product details from the orders
+      //  const products = userOrders.reduce((allProducts, order) => {
+      //   const orderProducts = order.products.map(product => {
+      //     return {
+      //       order: order,
+      //       productDetails: product.product, // Extract the populated product details
+      //       count: product.count,
+      //       totalprice: product.totalprice,
+      //       paymentStatus: product.paymentStatus,
+      //       orderStatus: product.orderStatus,
+      //       statusLevel: product.statusLevel,
+      //     };
+      //   });
+      //   return [...allProducts, ...orderProducts];
+      // }, []);
+      // console.log(products,"1");
+
   
 
 

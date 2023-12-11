@@ -796,6 +796,7 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
+
     if(document.getElementById('newsletter-popup-form')) {
         setTimeout(function() {
             var mpInstance = $.magnificPopup.instance;

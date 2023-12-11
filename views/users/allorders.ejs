@@ -28,55 +28,22 @@
 
 
     <%if(products){products.forEach((value,i)=>{%>
-    <div class="container d-flex justify-content-center mb-5">
+    <div class="container d-flex justify-content-center mb-5 ">
       <div
-        class=" bg-light col-sm-8 d-flex flex-column pt-5 pl-5 "
+        class=" bg-light col-sm-8 d-flex  pt-5 pl-5 "
       >
       <div class="d-flex align-items-start flex-column mb-3">
-        <h6>Order Placed</h6>
-        <p><%= value.order.orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
+        <h6 >Order Placed</h6>
+        <p>Order Id: <%=value.orderId%></p>
+        <p >Order Date: <%= value.orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
         <h6>
-          Delivery Expect On : <strong><%= value.order.deliveryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %> </strong>
+          Delivery Expect On : <strong><%= value.deliveryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %> </strong>
         </h6>
+        <p>Qty:<%=value.products.length%></p>
         </div >
-        <div class="d-flex border-bottom w-100 row ">
-          <div class=" col-10 col-sm-3 m-5 m-sm-0">
-            <img class="w-100 h-auto "
-              src="/static/productsImages/<%=value.productDetails.images[0]%>"
-             
-              alt="Image Desc"
-            />
-          </div>
-          <div class="pl-sm-5 d-flex align-items-start flex-column col-12 col-sm-8">
-            <h5><%=value.productDetails.productname%></h5>
-            <p>Qty: <%=value.count%></p>
-            <p><%=value.paymentStatus%></p>
-            <h4><%=value.totalprice%></h4>
-
-            <%if(value.orderStatus!=="Cancelled"){%>
-
-              <div class="progress-track ">
-                <ul id="progressbar" >
-                  <li class="step0  <%= value.statusLevel >= 1 ? 'active track-bold' : '' %> w-25" id="step1">Order placed</li>
-                    <li class="step0 <%= value.statusLevel >= 2 ? 'active track-bold' : '' %> text-center w-25" id="step2">Shipped</li>
-                    <li class="step0  <%= value.statusLevel >= 3 ? 'active track-bold' : '' %> text-right w-25" id="step3">Out for Delivery</li>
-                    <li class="step0 <%= value.statusLevel >= 4 ? 'active track-bold' : '' %> text-right w-25" id="step4">Delivered</li>
-                </ul>
-            </div>
-            <button class="btn btn-primary mb-5" onclick="cancelOrder('<%= value.productDetails._id %>', '<%= value.order.orderId %>','<%= value.count%>')">Cancel</button>
-        
-         <%}else{%>
-          <a > <button class="btn btn-primary mb-5 ">Cancelled</button></a>
-
-          <div class="progress-track ">
-            <ul id="progressbar" >
-              <li class="step0 active track-bold  w-50" id="step1">Order placed</li>
-                <li class="step0  active text-right track-bold w-50" id="step4">Cancelled</li>
-             
-            </ul>
-        </div>
-          <%}%>
-          </div>
+       
+       
+          
         </div>
 
      

@@ -1,0 +1,296 @@
+<%- include("../layouts/adminHeader.ejs") %>
+<%- include("../layouts/adminSideBar.ejs") %>
+
+<div class="nk-content">
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <!-- Block Head -->
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">Offers</h3>
+            </div>
+            <div class="nk-block-head-content">
+              <!-- Toggle Wrap -->
+              <div class="toggle-wrap nk-block-tools-toggle">
+                <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu">
+                  <em class="icon ni ni-more-v"></em>
+                </a>
+                <div class="toggle-expand-content" data-content="pageMenu">
+                  <!-- Block Tools -->
+                  <ul class="nk-block-tools g-3">
+                    <li>
+                      <form id="searchForm" action="" method="get">
+                        <div class="form-control-wrap">
+                          <div class="form-icon form-icon-right">
+                            <em id="searchIcon" class="icon ni ni-search" onclick="submitForm()"></em>
+                          </div>
+                          <input type="text" class="form-control" id="default-04" placeholder="Search by name" name="search" />
+                        </div>
+                      </form>
+                    </li>
+                    <!-- Dropdown -->
+                    <li>
+                      <div class="drodown">
+                        <a href="#" class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white" data-bs-toggle="dropdown">Status</a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <ul class="link-list-opt no-bdr">
+                            <li><a href="#"><span>New Items</span></a></li>
+                            <li><a href="#"><span>Featured</span></a></li>
+                            <li><a href="#"><span>Out of Stock</span></a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Add Offers Button -->
+                    <li class="nk-block-tools-opt">
+                      <a href="addoffers" class="btn btn-primary">
+                        <em class="icon ni ni-plus"></em>
+                        <span>Add Offers</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+     
+        <!-- Content Body -->
+        <div class="nk-block text-center">
+          <!-- Table List -->
+          <div class="nk-tb-list is-separate mb-3">
+            <!-- Table Head -->
+            <div class="nk-tb-item nk-tb-head">
+              <div class="nk-tb-col nk-tb-col-check">
+                <div class="custom-control custom-control-sm custom-checkbox notext">
+                  <input type="checkbox" class="custom-control-input" id="pid" />
+                  <label class="custom-control-label" for="pid"></label>
+                </div>
+              </div>
+              <div class="nk-tb-col tb-col-sm"><span>Offers Name</span></div>
+              <div class="nk-tb-col tb-col-sm"><span>percentage%</span></div>
+              <div class="nk-tb-col"><span>Start Date</span></div>
+              <div class="nk-tb-col"><span>Expiry Date</span></div>
+              <div class="nk-tb-col"><span>Status</span></div>
+              <div class="nk-tb-col"><span>Action</span></div>
+            </div>
+            <%offerData.forEach((value)=>{%>
+            <!-- Table Item -->
+            <div class="nk-tb-item text-center">
+              <!-- Checkbox Column -->
+              <div class="nk-tb-col nk-tb-col-check">
+                <div class="custom-control custom-control-sm custom-checkbox notext">
+                  <input type="checkbox" class="custom-control-input" id="pid" />
+                  <label class="custom-control-label" for="pid"></label>
+                </div>
+              </div>
+              <!-- Offers Name Column -->
+              <div class="nk-tb-col tb-col-sm">
+                <span class="tb-product">
+                  <img src="/static/productsImages/icons/" alt="" class="thumb" />
+                  <span class="title"><%=value.offername%></span>
+                </span>
+              </div>
+              <div class="nk-tb-col tb-col-sm">
+                <span class="tb-product">
+                  <img src="/static/productsImages/icons/" alt="" class="thumb" />
+                  <span class="title text-danger"><%=value.percentage%>%</span>
+                </span>
+              </div>
+              <div class="nk-tb-col tb-col-sm">
+                <p class="tb-product">
+                  <img src="/static/productsImages/icons/" alt="" class="thumb" />
+                  <p class="title"><%= new Date(value.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %></p>
+                </p>
+              </div>
+              <div class="nk-tb-col tb-col-sm">
+                <p class="tb-product">
+                  <img src="/static/productsImages/icons/" alt="" class="thumb" />
+                  <p class="title"><%= new Date(value.expiryDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %></p>
+                </p>
+              </div>
+              <!-- Status Column -->
+              <div class="nk-tb-col">
+                <span class="tb-sub">
+                  <%if(value.action==1){%>
+                  <p class="text-success">Listed</p>
+                  <%}else if(value.action==0){%>
+                    <p class="text-danger">unlisted</p>
+                  <%}%>
+                </span>
+              </div>
+              <!-- Action Column -->
+              <div class="nk-tb-col nk-tb-col-tools">
+                <ul class="nk-tb-actions gx-1 my-n1">
+                  <li>
+                    <div class="drodown">
+                      <a
+                        href="#"
+                        class="dropdown-toggle btn btn-icon btn-trigger me-n1"
+                        data-bs-toggle="dropdown"
+                        ><em class="icon ni ni-more-h"></em
+                      ></a>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <ul class="link-list-opt no-bdr">
+                          <%if(value.action==1){%>
+                          <li>
+                            <a onclick="actionOffer('<%=value._id%>',0)"><em class="icon ni ni-eye-off-fill"></em>
+                              <span>Unlist</span></a
+                            >
+
+                          </li>
+                         
+                          <%}else{%>
+                            <li>
+                              <a onclick="actionOffer('<%=value._id%>',1)"><em class="icon ni ni-eye-fill"></em>
+                                <span>list</span></a
+                              >
+  
+                            </li>
+                            <%}%>
+                          <li>
+                            <li>
+                              <a href="/admin/actioneditoffer?id=<%=value._id%>">
+                                <em class="icon ni ni-pen2"></em>
+                                <span>Edit</span>
+                              </a>
+                            </li>
+                            
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <%})%>
+
+            <!-- ... More Table Items ... -->
+
+          </div>
+          <!-- Pagination -->
+          <div class="card">
+            <div class="card-inner">
+              <!-- Pagination Controls -->
+              <div class="nk-block-between-md g-3">
+                <div class="g">
+                  <ul class="pagination justify-content-center justify-content-md-start">
+                    <!-- Previous Page Link -->
+                    <% if (previospage > 0) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= previospage %>&search=<%=search%>">
+                          <em class="icon ni ni-chevrons-left"></em>
+                        </a>
+                      </li>
+                    <% } %>
+                    <!-- Page Links -->
+                    <% let page = 0;
+                    if (totalPages < 10) {
+                      page = Math.ceil(totalPages / 3);
+                    } else {
+                      page = Math.floor(totalPages / 5);
+                    }
+
+                    for (let i = 1; i <= page; i++) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= i %>&search=<%=search%>"><%= i %></a>
+                      </li>
+                    <% } %>
+                    <!-- ... More Page Links ... -->
+                    <!-- Next Page Link -->
+                    <% if (currentPage < totalPages) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= nextpage %>&search=<%=search%>">
+                          <em class="icon ni ni-chevrons-right"></em>
+                        </a>
+                      </li>
+                    <% } %>
+                  </ul>
+                </div>
+                <!-- Page Selector -->
+                <div class="g">
+                  <div class="pagination-goto d-flex justify-content-center justify-content-md-start gx-3">
+                    <div>Page</div>
+                    <div>
+                      <select class="form-select js-select2" data-search="on" onchange="window.location.href='?page=' + this.value" data-dropdown="xs center">
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                          <option value="<%= i %>" <% if (i === currentPage ) { %>selected<% } %>>
+                            <%= i %>
+                          </option>
+                        <% } %>
+                      </select>
+                    </div>
+                    <div><%= totalPages %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  function submitForm() {
+    var form = document.getElementById('searchForm');
+    form.submit();
+  }
+</script>
+<!-- Include SweetAlert script first -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function actionOffer(offerId,action) {
+    const url = '/admin/actionunlistOffer';
+   
+    // Example data to be sent in the request body
+    const requestData = {
+      offerId: offerId,
+      action:action
+      // Add more data as needed
+    };
+  
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any additional headers if needed
+      },
+      body: JSON.stringify(requestData),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+      
+        // Call swal after ensuring that SweetAlert is loaded
+        Swal.fire({
+          title: "Success!",
+          text: "Offer successfully unlisted",
+          icon: "success",
+        }).then(()=>window.location.reload())
+      } else {
+        // Handle unsuccessful response if needed
+      }
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+      // Handle errors that occurred during the fetch
+    });
+  }
+</script>
+
+<script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
+<script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>

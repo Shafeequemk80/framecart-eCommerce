@@ -1,7 +1,7 @@
 const bctypt = require("bcrypt");
 const User = require("../model/userModel");
 const Order = require("../model/orderModel");
-const Category = require("../model/category");
+const Category = require("../model/categoryModel");
 const Products = require("../model/productsModel");
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
@@ -10,7 +10,7 @@ const otpGenerator = require("otp-generator");
 const Mail = require("nodemailer/lib/mailer");
 const user_route = require("../routes/userRoute");
 const { token } = require("morgan");
-
+const Offer = require("../model/offerModel");
 const securePassword = async (password) => {
   try {
     const passwordHash = bctypt.hash(password, 10);
@@ -244,6 +244,7 @@ const loadproducts = async (req, res) => {
 
     .limit(limit * 1)
     .skip((page - 1) * limit)
+    .populate("offer")
     .exec();
 
   const count = await Products.find({
@@ -253,8 +254,10 @@ const loadproducts = async (req, res) => {
     ],
   }).countDocuments();
 
+  const offerData = await Offer.find({ action: 1 });
   res.render("products", {
     products: productData,
+    offerData:offerData,
     totalPages: Math.ceil(count / limit),
     currentPage: page,
     previospage: page - 1,
@@ -318,7 +321,6 @@ const loadorders = async (req, res) => {
     console.log(error.message);
   }
 };
-
 const allorderitems = async (req, res) => {
   try {
     const orderId = req.query.orderId;
@@ -329,22 +331,24 @@ const allorderitems = async (req, res) => {
 
     // Extracting product details from the orders
     const products = userOrders.reduce((allProducts, order) => {
-      const orderProducts = order.products.map((product) => {
-        return {
-          order: order,
-          productDetails: product.product, // Extract the populated product details
-          count: product.count,
-          totalprice: product.totalprice,
-          paymentStatus: product.paymentStatus,
-          orderStatus: product.orderStatus,
-        };
-      });
+      const orderProducts = order.products.map((product) => ({
+        order: order,
+        productDetails: product.product, // Fix the reference to product.productDetails
+        count: product.count,
+        totalprice: product.totalprice,
+        paymentStatus: product.paymentStatus,
+        orderStatus: product.orderStatus,
+      }));
       return [...allProducts, ...orderProducts];
     }, []);
+
+    console.log(products.map(product => product.productDetails)); // Log product details
 
     res.render("allorderitems", { orders: products });
   } catch (error) {
     console.log(error);
+    // Handle the error appropriately (e.g., send an error response)
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -354,7 +358,7 @@ const updateOrderStatus = async (req, res) => {
     const orderId = req.body.orderId;
     const id = req.body.id;
     let statusLevel = 0;
-
+console.log(req.body);
     switch (orderStatus) {
       case "Shipped":
         statusLevel = 2;
@@ -371,7 +375,7 @@ const updateOrderStatus = async (req, res) => {
       orderId: orderId,
       "products.product": id,
     });
-    console.log("Order:", order);
+    
 
     const updateOrderStatus = await Order.updateOne(
       {
@@ -386,8 +390,8 @@ const updateOrderStatus = async (req, res) => {
       }
     );
     console.log(updateOrderStatus);
-    if (updateOrderStatus) {
-      return res.status(200).json({ success: true });
+    if (updateOrderStatus.modifiedCount==1) {
+      return res.status(200).json({ success: true,message:orderStatus });
     } else {
       return res.status(400).json({ success: false });
     }

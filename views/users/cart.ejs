@@ -55,7 +55,7 @@
                             href="/product?id=<%= cartData.products[i].product._id %>"
                           >
                             <img
-                              src="/static/productsImages/<%= cartData.products[i].product.images[0] %>"
+                              src="/static/productsImages/<%= cartData.products[i].product.images.image1 %>"
                               alt="Product image"
                             />
                           </a>
@@ -85,7 +85,7 @@
                       class="price-col .product-price"
                       id="priceColumn_<%= cartData.products[i].product._id %>"
                     >
-                      <%= cartData.products[i].product.price %>
+                      <%=cartData.products[i].product.discountprice==null? cartData.products[i].product.price: cartData.products[i].product.discountprice %>
                     </td>
                     <td class="quantity-col">
                       <div class="cart-product-quantity">
@@ -123,7 +123,7 @@
                       <!-- End .cart-product-quantity -->
                     </td>
                     <td class="total-price">
-                      <%= (cartData.products[i].product.price * cartData.products[i].count).toFixed(2) %>
+                      <%= (cartData.products[i].product.discountprice==null? cartData.products[i].product.price: cartData.products[i].product.discountprice * cartData.products[i].count).toFixed(2) %>
 
                     </td>
 
@@ -169,8 +169,8 @@
                     </tr>
                     <!-- End .summary-subtotal -->
                     <tr class="summary-shipping">
-                      <td>discount:</td>
-                      <td>0:00</td>
+                      <td>Shopping Charge:</td>
+                      <td>free</td>
                     </tr>
 
                     <!-- End .summary-shipping-estimate -->

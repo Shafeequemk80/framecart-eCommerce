@@ -1,6 +1,6 @@
 const Products = require("../model/productsModel");
 
-const Category = require("../model/category");
+const Category = require("../model/categoryModel");
 const saveproduct = async (req, res) => {
   try {
     const imagesArray = [];

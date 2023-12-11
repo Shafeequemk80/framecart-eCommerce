@@ -59,7 +59,7 @@ include("../layouts/adminSideBar.ejs")%>
                             </div>
                           </div>
                         </div>
-                        
+                        <div class="form-group">    <label class="form-label">Datepicker</label>    <div class="form-control-wrap">        <input type="text" class="form-control date-picker">    </div>    <div class="form-note">Date format <code>mm/dd/yyyy</code></div></div>
                             <!-- Checkbox Block -->
 
                             <!-- Submit Button -->
@@ -78,15 +78,7 @@ include("../layouts/adminSideBar.ejs")%>
               </div>
             </div>
           </div>
-          <% if (typeof message !== "undefined") { %>
-            <div class="example-alert">
-                <div class="alert alert-danger alert-icon">
-                    <em class="icon ni ni-cross-circle"></em>
-                    <%= message %>
-                </div>
-            </div>
-        
-        <% } %>
+   
         
         </div>
       </div>
