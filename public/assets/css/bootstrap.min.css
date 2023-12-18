@@ -9213,3 +9213,9 @@ a.text-dark:hover {
   }
 }
 /*# sourceMappingURL=bootstrap.min.css.map */
+
+.table-footer td,
+.table-footer th,
+.table-footer thead th {
+  border:none;
+}

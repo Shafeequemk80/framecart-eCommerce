@@ -16857,3 +16857,36 @@ padding-right: 5px;
   .copy-text.active button:after {
     display: block;
   }
+
+  .invoice-bills .table {
+    margin-bottom: 3rem;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.5;
+  }
+  
+  .invoice-bills .table th,
+  .invoice-bills .table thead th,
+  .invoice-bills .table td {
+    border-top: none;
+    border-bottom: 0.1rem solid #ebebeb;
+  }
+  
+  .invoice-bills .table th,
+  .invoice-bills .table td {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 1.4rem;
+    padding-bottom: 1.4rem;
+  }
+  
+  .invoice-bills .table tfoot tr {
+    border: none; /* Remove border on tfoot rows */
+  }
+  
+  .invoice-bills.table td {
+    vertical-align: middle;
+  }
+  .print-color{
+    color: #fff;
+  }

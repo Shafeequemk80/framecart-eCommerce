@@ -55,7 +55,7 @@ user_route.post("/addtocart", auth.islogin, cartController.addtocart);
 user_route.post("/actionincart", auth.islogin, cartController.actionincart);
 user_route.get("/deletefromcart", auth.islogin, cartController.deletefromcart);
 user_route.get("/profile", auth.islogin, userController.profile);
-user_route.post("/editproduct", auth.islogin, userController.editprofile);
+user_route.post("/editprofile", auth.islogin, userController.editprofile);
 user_route.get("/address",auth.islogin,addressController.address)
 user_route.post("/newaddress",auth.islogin,addressController.addnewaddress)
 user_route.post("/editaddress",auth.islogin,addressController.editaddress)
@@ -72,7 +72,10 @@ user_route.post("/verifyonlinepayment",auth.islogin,checkoutController.verifyonl
 
 
 user_route.get("/allorders",auth.islogin,orderController.allorders)
+user_route.get("/vieworder",auth.islogin,orderController.vieworder)
 user_route.post("/cancelorder",auth.islogin,orderController.cancelorder)
+user_route.post("/returnorder",auth.islogin,orderController.returnorder)
+user_route.get("/invoiceprint",auth.islogin,orderController.invoiceprint)
 
 user_route.post("/addtowishlist",auth.islogin,wishlistController.addtowishlist)
 user_route.get("/whishlist",auth.islogin,wishlistController.getwishlist)

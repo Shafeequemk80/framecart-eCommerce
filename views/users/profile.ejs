@@ -114,12 +114,10 @@
                     </div>
                    
                   </div>
-                  <form
-                    action="/editproduct"
-                    method="post"
-                    id="user-profile-form"
-                  >
-                    <!-- CSRF token for security -->
+                  <form id="updation-form" >
+                    <!-- Your form fields go here -->
+                  
+                  
                     <input
                       type="hidden"
                       name="user_id"
@@ -135,6 +133,7 @@
                         id="username"
                         name="username"
                       />
+                      <P class="error-message" id="username-error"></P>
                     </div>
 
                     <div class="d-flex">
@@ -147,6 +146,7 @@
                           id="firstname"
                           name="firstname"
                         />
+                        <P class="error-message" id="firstname-error"></P>
                       </div>
                       <div class="form-group w-50 ml-3">
                         <label for="lastname">Last name</label>
@@ -157,6 +157,7 @@
                           id="lastname"
                           name="lastname"
                         />
+                        <P id="lastname-error" class="lastname-error"></P>
                       </div>
                     </div>
 
@@ -166,10 +167,10 @@
                         type="email"
                         class="form-control"
                         value="<%=user.email%>"
-                        id="email"
-                        name="email"
+                       
+                         readonly
                       />
-                      <span id="email-error" class="error-message"></span>
+              
                     </div>
 
                     <div class="form-group">
@@ -179,27 +180,22 @@
                         class="form-control"
                         value="<%=user.mobile%>"
                         id="mobile"
-                        pattern="[0-9]{10}"
                         name="mobile"
                       />
+                      <p id="mobile-error" class="error-message"></p>
                     </div>
 
                     <!-- Additional profile inputs go here -->
 
-                    <small
-                      id="password-error"
-                      class="error-message text-danger"
-                    ></small>
+                  
 
                     <div class="d-flex text-center">
                       <div class="form-group">
-                        <button
-                          type="submit"
-                          class="btn btn-outline-primary-2 w-100"
-                        >
-                          <span>Upadate Profile</span>
+                        <button id="update-profile" type="button" class="btn btn-outline-primary-2 w-100">
+                          <span>Update Profile</span>
+                        
                           <i class="icon-long-arrow-right"></i>
-                        </button>
+                      </button>
                       </div>
                     </div>
                   </form>
@@ -293,7 +289,7 @@
                           <i class="fa-solid fa-wallet"></i>
                         </div>
                         <div class="d-flex flex-column ml-4">
-                          <h3 class="card-title">All Orders</h3>
+                          <h3 class="card-title">All Wallet</h3>
                           <!-- End .card-title-container -->
 
                           <p>
@@ -572,6 +568,81 @@ copyText.querySelector("button").addEventListener("click", function () {
 });
 
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("updation-form");
+    const signupButton = document.getElementById("update-profile");
+
+    signupButton.addEventListener("click", function () {
+      if (validationprofile()) {
+        const formData = serialize(registrationForm);
+        console.log("Complete Form Data:", formData);
+
+        fetch("/editprofile", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+             
+              Swal.fire({
+              title: "Profile Updated",
+              text: "Your profile has been successfully updated.",
+              icon: "success"
+            })
+            .then (() =>  window.location.href = "/profile")
+            } else if (data) {
+              Swal.fire({
+                title: "Referral Code Not Available!",
+                text: "The referral code is not valid.",
+                icon: "error",
+              });
+            } else if (data.success) {
+              alert("0");
+              // Redirect to the verification page
+             
+            }
+          })
+          .catch((error) => {
+            // Handle any unexpected errors
+            console.error("Error:", error);
+            // Show a generic error message to the user
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  });
+
+  function serialize(form) {
+    const formData = new FormData(form);
+    const serialized = Array.from(formData)
+      .map((entry) => {
+        return (
+          encodeURIComponent(entry[0]) + "=" + encodeURIComponent(entry[1])
+        );
+      })
+      .join("&");
+
+    return serialized;
+  }
+
+  function handleResponse(data) {}
+</script>
+
 
   <%- include("../layouts/footer.ejs")%>
 </div>

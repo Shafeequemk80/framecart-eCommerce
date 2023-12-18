@@ -39,7 +39,7 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
-  address: [
+  address: 
     {
       fullname: {
         type: String,
@@ -70,7 +70,7 @@ const orderSchema = new mongoose.Schema({
         required: true,
       },
     },
-  ],
+  
   paymentMethod: {
     type: String,
     required: true,

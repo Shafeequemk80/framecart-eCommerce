@@ -35698,14 +35698,14 @@ button.close {
   padding-right: 20px;
 }
 .nk-ecwg1-ck {
-  height: 110px;
+  height: 206px;
   margin: -6px;
 }
 .nk-ecwg2-ck {
-  height: 182px;
+  height: 206px;
 }
 .nk-ecwg3-ck {
-  height: 66px;
+  height: 206px;
   margin: -6px;
 }
 .nk-ecwg4 {
@@ -35713,7 +35713,7 @@ button.close {
   flex-direction: column;
 }
 .nk-ecwg4-ck {
-  height: 180px;
+  height: 206px;
   width: 180px;
   margin-right: 1.5rem;
 }
@@ -35734,7 +35734,7 @@ button.close {
   margin-right: 0.5rem;
 }
 .nk-ecwg5-ck {
-  height: 140px;
+  height: 206px;
 }
 .nk-ecwg5 .data-group {
   margin-bottom: 30px;

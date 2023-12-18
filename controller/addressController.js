@@ -55,7 +55,7 @@ const address =async (req,res)=>{
         const addedAddress = await newAddress.save();
         console.log('New address added successfully:', addedAddress);
       }
-      res.redirect("/address")
+      res.json({success: true})
       // Handle success or send a response to the client
   
      
@@ -69,7 +69,8 @@ const address =async (req,res)=>{
   const editaddress = async (req, res) => {
     try {
       const user_id = req.session.user_id;
-      const id = req.query.id;
+      const id = req.body.id;
+      console.log(id);
       const existingAddress = await Address.findOne({ user: user_id, "address._id": id });
       
       console.log(existingAddress);
@@ -95,7 +96,7 @@ const address =async (req,res)=>{
           console.log('Address not found for the given ID');
         }
       }
-      res.redirect("/address")
+      res.json({success: true});
     } catch (error) {
       // Handle errors appropriately
       console.error(error);

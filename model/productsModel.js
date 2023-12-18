@@ -51,7 +51,7 @@ const productsSchema = new mongoose.Schema({
     ref: "Offer",
   },
   discountprice: {
-    type: Number,
+    type: Number,  
     default: null,
   },
   active: {

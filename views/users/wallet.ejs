@@ -43,9 +43,9 @@
           id="walletamount"
           name="walletamount"
           placeholder="Add Amount in Wallet"
-          min="0" 
-          pattern="^\d+(\.\d{1,2})?$"  
+          
         />
+      
       
          
           <button
@@ -119,10 +119,17 @@
   function addAmountToWallet() {
       // Get the form data
       const walletAmount = document.getElementById('walletamount').value;
+const walletAmountRegex = /^[1-9]\d*(\.\d+)?$/;
 
-      // You can add additional validation here if needed
+if (!walletAmount || !walletAmountRegex.test(walletAmount)) {
+  
+  Swal.fire({
+    title: 'Invalid Amount',
+    text: 'Enter a valid amount',
+    icon: 'error',
+  });
+}
 
-      // Create an object with the form data
       const formData = {
           walletamount: walletAmount
           // Add more fields if needed
@@ -140,19 +147,17 @@
       .then(response => response.json())
       .then(response => {
          if (response.online) {
-         alert(response.online)
+       
         var options = {
           key: response.key_id,
           amount: response.amount,
           currency: "INR",
           name: "Framefy",
           description: "Test Transaction",
-          image: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fimg.freepik.com%2Ffree-vector%2Fbird-colorful-logo-gradient-vector_343694-1365.jpg&tbnid=qrn4zRugFoxeWM&vet=12ahUKEwitno_4k9-CAxU37DgGHUKQCCoQMygBegQIARBw..i&imgrefurl=https%3A%2F%2Fwww.freepik.com%2Fvectors%2Flogo-design&docid=MBTKclygwadmYM&w=626&h=626&q=logo&ved=2ahUKEwitno_4k9-CAxU37DgGHUKQCCoQMygBegQIARBw",
+          image: "/static/logo/favicon.png",
           order_id: response.order_id,
           handler: function (res) {
-            alert(res.razorpay_payment_id);
-            alert(res.razorpay_order_id);
-            alert(res.razorpay_signature);
+           
 
             fetch('/verifywalletonlinepayment', {
                   method: 'POST',

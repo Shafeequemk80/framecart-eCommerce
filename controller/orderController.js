@@ -3,6 +3,7 @@ const Products = require("../model/productsModel");
 const user_route = require("../routes/userRoute");
 const Order = require("../model/orderModel");
 const { logout } = require("./userController");
+const moment = require('moment')
 
 
 
@@ -16,11 +17,33 @@ const allorders = async (req, res) => {
         
   console.log(userOrders);
 
-      res.render('allorders', { user: user_id, products: userOrders });
+      res.render('allorders', { user: user_id, products: userOrders,moment:moment });
     } catch (error) {
       console.log(error);
     }
   };
+
+const vieworder = async (req, res) => {
+  try {
+    const user_id= req.session.user_id
+    const orderId = req.query.id;
+console.log(orderId);1
+
+
+    const userOrders = await Order.findOne({ _id: orderId })
+    .populate("products.product")
+    .exec();
+      
+console.log(userOrders);
+
+    res.render("vieworder", { orders: userOrders,user:user_id,moment:moment});
+  } catch (error) {
+    console.log(error);
+    // Handle the error appropriately (e.g., send an error response)
+    res.status(500).send("Internal Server Error");
+  }
+}
+
   
       //  // Extracting product details from the orders
       //  const products = userOrders.reduce((allProducts, order) => {
@@ -85,8 +108,62 @@ const cancelorder = async (req, res) => {
   }
 };
 
+const returnorder = async (req, res) => {
+
+
+  try {
+
+    const user_id = req.session.user_id;
+    const id = req.body.id;
+    const orderId= req.body.orderId
+    const count =req.body.count
+    
+    const orderUpdate = await Order.findOneAndUpdate(
+      { user: user_id, "products.product": id ,orderId:orderId},
+      { $set: { "products.$.orderStatus": "Returned" } }
+    );orderUpdate
+
+    const updatestock = await Products.findByIdAndUpdate(
+      id,
+      { $inc: { stock: count } }
+    );
+
+    if (orderUpdate&&updatestock) {
+     
+      return res.status(200).json({ success: true  });
+    } else {
+    
+      return res.status(404).json({ success: false });
+    }
+    
+  } catch (error) {
+  
+    console.error('Error cancelling order:', error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+}
+
+const invoiceprint= async (req, res) => {
+try {
+
+  const id = req.query.id
+  const user_id= req.session.user_id
+  const orderData = await Order.findOne({ $and: [{ orderId: id },{ user: user_id }]}).populate('products.product')
+  
+  console.log(orderData);
+
+res.render("invoice-print",{orderData:orderData,moment:moment})
+
+} catch (error) {
+  console.log(error.message);
+}
+
+}
   
 module.exports ={
     allorders,
-    cancelorder
+    cancelorder,
+    vieworder,
+    returnorder,
+    invoiceprint
 }

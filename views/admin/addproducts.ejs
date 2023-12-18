@@ -16,10 +16,10 @@ include("../layouts/adminSideBar.ejs")%>
                   <div class="col-md-12 mx-auto">
                     <div class="card">
                       <div class="card-body">
-                        <form
-                          action="addproducts"
-                          method="post"
-                          enctype="multipart/form-data"
+                        <form  
+                        id="addproduct-form" "
+                        enctype="multipart/form-data"
+                      
                         >
                           <div class="row g-3 mt-2">
                             <div class="col-md-12">
@@ -32,22 +32,25 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="productname"
                                   id="product-title"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="product-title-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
                               <div>
                                 <label for="frameshape" class="form-label">Frame Shape</label>
-                                <select name="frameshape" id="frameshape" class="form-control" required>
-
-                                  <%category.forEach((value)=>{%>
-                                  <option value="<%=value.categoryname%>"><%=value.categoryname%></option>
-                                  <%})%>
+                                <select name="frameshape" id="frameshape" class="form-control" >
+                                  <option value="" disabled selected>Select Category</option>
+                                  <% category.forEach((value) => { %>
+                                    <option value="<%= value.categoryname %>"><%= value.categoryname %></option>
+                                  <% }) %>
                                   <!-- Add more options as needed -->
                                 </select>
+                                <p class="text-danger" id="frameshape-error"> </p>
                               </div>
                             </div>
+                            
                             
                           
                             <div class="col-md-6">
@@ -60,8 +63,9 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="brand"
                                   id="brand"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="brand-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -74,8 +78,9 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="stock"
                                   id="stock"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="stock-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -88,8 +93,9 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="price"
                                   id="price"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="price-error"> </p>
                               </div>
                             </div>
                             <div class="col-12">
@@ -101,39 +107,41 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="description"
                                   id="description"
                                   class="form-control"
-                                  required
+                                  
                                 ></textarea>
+                                <p class="text-danger" id="description-error"> </p>
                               </div>
                             </div>
                             
                             <div class="col-12 row mt-4">
                               <% for (let i = 1; i <= 4; i++) { %>
                                 <div class="col-6 col-md-3 mb-3 rounded-image-preview">
-                                  <label class="image-label" for="imageInput<%= i %>">Image Slot <%= i %>
-                                    <div class="rounded-image-preview">
-                                      <img
-                                        id="imagePreview<%= i %>"
-                                        src="/static/admin/assets/images/dummy/dummyimage.jpg"
-                                        alt="Preview"
-                                        name="images"
-                                      />
-                                    </div>
-                                    <input
-                                      type="file"
-                                      name="image<%= i %>"
-                                      class="imageInput"
-                                      id="imageInput<%= i %>"
-                                      accept="image/*"
-                                    />
-                                  </label>
+                                    <label class="image-label" for="imageInput<%= i %>">Image Slot <%= i %>
+                                        <div class="rounded-image-preview">
+                                            <img
+                                                id="imagePreview<%= i %>"
+                                                src="/static/admin/assets/images/dummy/dummyimage.jpg"
+                                                alt="Preview"
+                                                name="images"
+                                            />
+                                        </div>
+                                        <input
+                                            type="file"
+                                            name="image<%= i %>"
+                                            class="imageInput"
+                                            id="imageInput<%= i %>"
+                                            accept="image/*"
+                                        />
+                                    </label>
                                 </div>
-                              <% } %>
+                            <% } %>
+                            
                           
                               <!-- Include other form fields if any -->
                             </div>
 
                             <div class="col-12">
-                              <button type="submit" class="btn btn-primary">
+                              <button type="button" id="addproduct-address" class="btn btn-primary">
                                 <em class="icon ni ni-plus"></em>
                                 <span>Add New</span>
                               </button>
@@ -151,9 +159,10 @@ include("../layouts/adminSideBar.ejs")%>
       </div>
     </div>
   </div>
-  
+  <script src="/static/js/adminValidation.js"></script>
 
-  <script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- <script>
     $(document).ready(function () {
       $(".imageInput").change(function () {
         var input = this;
@@ -171,9 +180,9 @@ include("../layouts/adminSideBar.ejs")%>
         }
       });
     });
-  </script>
+  </script> -->
 
-  <!-- <script>
+  <script>
   $(document).ready(function() {
     $(".imageInput").change(function() {
       var input = this;
@@ -189,7 +198,57 @@ include("../layouts/adminSideBar.ejs")%>
 
         reader.readAsDataURL(input.files[0]);
 }});});
-  </script> -->
+  </script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("addproduct-form");
+    const signupButton = document.getElementById("addproduct-address");
+
+    signupButton.addEventListener("click", function () {
+      if (addproduct()) {
+        const formData = new FormData(registrationForm);
+
+  
+
+        console.log("Complete Form Data:", formData);
+
+        fetch("/admin/addproducts", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              Swal.fire({
+                title: "Added Successfully",
+                text: "Your new address has been added successfully.",
+                icon: "success",
+              }).then(() => (window.location.href = "/admin/addproducts"));
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  });
+
+  
+</script>
+
+
   <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>

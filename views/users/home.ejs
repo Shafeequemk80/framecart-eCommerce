@@ -316,25 +316,25 @@
                                 <%= finalOfferPercentage %>% OFF
                               </span>
                             <% } %>
-                            <a href="/product?id=<%=value._id%>">
+                            <a href="/product?id=<%=product._id%>">
                                 <img src="/static/productsImages/<%=product.images.image1%>" alt="Product image" class="product-image">
                                 <img src="/static/productsImages/<%=product.images.image2%>" alt="Product image" class="product-image-hover">
                             </a>
     
                             <div class="product-action-vertical">
-                                <a  class="btn-product-icon btn-wishlist addTowishButton "  wish-id="<%=value._id%>" ><span>add to wishlist</span></a>
+                                <a  class="btn-product-icon btn-wishlist addTowishButton "  wish-id="<%=product._id%>" ><span>add to wishlist</span></a>
                             </div><!-- End .product-action-vertical -->
                         </figure><!-- End .product-media -->
     
                         <div class="product-body">
-                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.productname%></a></h3><!-- End .product-title -->
-                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.frameshape%></a></h3>
+                            <h3 class="product-title"><a href="/product?id=<%=product._id%>"><%=product.productname%></a></h3><!-- End .product-title -->
+                            <h3 class="product-title"><a href="/product?id=<%=product._id%>"><%=product.frameshape%></a></h3>
                             <div class="product-price">
                                 <%=product.price%>
                             </div><!-- End .product-price -->
                         </div><!-- End .product-body -->
                         <div class="product-action">
-                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= product._id %>">
                                 <span>add to cart</span>
                             </button>
                         </div><!-- End .product-action -->
@@ -499,13 +499,13 @@
                                     <div class="product product-11 mt-v3 text-center">
                                         <figure class="product-media">
                                             <span class="product-label label-new">NEW</span>
-                                            <a href="/product?id=<%=value._id%>">
+                                            <a href="/product?id=<%=product._id%>">
                                                 <img src="/static/productsImages/<%=product.images.image1%>" alt="Product image" class="product-image">
                                                 <img src="/static/productsImages/<%=product.images.image2%>" alt="Product image" class="product-image-hover">
                                             </a>
 
                                             <div class="product-action-vertical">
-                                                <a href="#" class="btn-product-icon btn-wishlist addTowishButton"  wish-id="<%=value._id%>"><span>add to wishlist</span></a>
+                                                <a href="#" class="btn-product-icon btn-wishlist addTowishButton"  wish-id="<%=product._id%>"><span>add to wishlist</span></a>
                                             </div><!-- End .product-action-vertical -->
                                         </figure><!-- End .product-media -->
                                         <% 
@@ -525,15 +525,15 @@
                                         <% } %>
                                         
                                         <div class="product-body">
-                                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
-                                            <h3 class="product-title"><a href="/product?id=<%=value._id%>"><%=product.frameshape%></a></h3>
+                                            <h3 class="product-title"><a href="/product?id=<%=product._id%>"><%=value.productname%></a></h3><!-- End .product-title -->
+                                            <h3 class="product-title"><a href="/product?id=<%=product._id%>"><%=product.frameshape%></a></h3>
                                             <div class="product-price">
                                                 $ <%=value.price%>
                                             </div><!-- End .product-price -->
                                         </div><!-- End .product-body -->
                                         
                                         <div class="product-action">
-                                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= value._id %>">
+                                            <button class="btn-product btn-cart addToCartButton" data-product-id="<%= product._id %>">
                                                 <span>add to cart</span>
                                             </button>
                                         </div>
@@ -727,12 +727,7 @@
                 </div><!-- End .container -->
             </div><!-- End .cta -->
         </main><!-- End .main -->
-
-        <%- include("../layouts/userFooter.ejs")%>
-
-
-
-        
+             
     <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form">
         <div class="row justify-content-center">
             <div class="col-10">
@@ -764,6 +759,12 @@
         </div>
     </div>
         
+
+        <%- include("../layouts/userFooter.ejs")%>
+
+
+
+   
 
         
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

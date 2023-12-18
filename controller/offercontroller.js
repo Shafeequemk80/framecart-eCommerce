@@ -112,8 +112,8 @@ const applyoffercategory = async (req, res) => {
     const offerId = req.body.offerId;
     const category_id = req.body.category_id;
 
-    const productData = await Products.find({ frameshape: category_id });
-    console.log(productData);
+    
+    
     const offerData = await Offer.findOne({ _id: offerId });
 
     const categoryData = await Category.findOne({ _id: category_id });
@@ -128,7 +128,7 @@ const applyoffercategory = async (req, res) => {
 
       // Update discount prices for products in the category
       for (const product of productData) {
-        if (product.frameshape === categoryData.categoryname) {
+        if (product.offer==null) {
           product.discountprice =
             product.price - (offerData.percentage * product.price) / 100;
           await product.save(); // Save the first product that matches the condition

@@ -278,13 +278,13 @@
                                 </a>
 
                                 <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                    <a wish-id="<%=value._id%>" class="btn-product-icon addTowishButton text-light btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                     <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                     <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                                 </div><!-- End .product-action-vertical -->
 
                                 <div class="product-action">
-                                    <a href="#"  categorywise-id="<%= value._id %>" class="btn-product btn-cart addToCartButton"><span>add to cart</span></a>
+                                    <a data-product-id="<%= value._id %>" class="btn-product btn-cart addToCartButton"><span>add to cart</span></a>
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->
 
@@ -343,7 +343,7 @@
                     button.addEventListener('click', function () {
                        
                         var productId = this.getAttribute('data-product-id');
-                        var productId = this.getAttribute('categorywise-id');
+                       
         
                         // Use fetch to send a POST request with the product ID in the request body
                         fetch('/addtocart', {

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Softnio" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="A powerful and conceptual apps base dashboard template that is built especially for developers and programmers."
+    />
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <title>Framefy Sales Report</title>
+    <link
+      rel="stylesheet"
+      href="/static/admin/assets/css/dashlitee5ca.css?ver=3.2.3"
+    />
+    <link
+      id="skin-default"
+      rel="stylesheet"
+      href="/static/admin/assets/css/themee5ca.css?ver=3.2.3"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Lato", sans-serif;
+        color: #202020;
+      }
+
+      p {
+        display: none;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        overflow: hidden;
+      }
+
+      td,
+      th {
+        border-top: 1px solid #ecf0f1;
+        padding: 10px;
+      }
+
+      td {
+        border-left: 1px solid #ecf0f1;
+        border-right: 1px solid #ecf0f1;
+      }
+
+      th {
+        background-color: #4ecdc4;
+      }
+
+      tr:nth-of-type(even) td {
+        background-color: #e0f2f1;
+      }
+
+      .total th {
+        background-color: white;
+      }
+
+      .total td {
+        text-align: right;
+        font-weight: 700;
+      }
+
+      .mobile-header {
+        display: none;
+      }
+
+      @media only screen and (max-width: 1200px) {
+        p {
+          display: block;
+          font-weight: bold;
+        }
+
+        table tr {
+          td:not(:first-child),
+          th:not(:first-child),
+          td:not(.total-val) {
+            display: none;
+          }
+
+          &:nth-of-type(even) td:first-child {
+            background-color: #e0f2f1;
+          }
+
+          &:nth-of-type(odd) td:first-child {
+            background-color: white;
+          }
+
+          &:nth-of-type(even) td:not(:first-child) {
+            background-color: white;
+          }
+
+          th:first-child {
+            width: 100%;
+            display: block;
+          }
+
+          th:not(:first-child) {
+            width: 40%;
+            transition: transform 0.4s ease-out;
+            transform: translateY(-9999px);
+            position: relative;
+            z-index: -1;
+          }
+
+          td:not(:first-child) {
+            transition: transform 0.4s ease-out;
+            transform: translateY(-9999px);
+            width: 60%;
+            position: relative;
+            z-index: -1;
+          }
+
+          td:first-child {
+            display: block;
+            cursor: pointer;
+          }
+
+          &.total th {
+            width: 25%;
+            display: inline-block;
+          }
+
+          td.total-val {
+            display: inline-block;
+            transform: translateY(0);
+            width: 75%;
+          }
+        }
+      }
+
+      @media only screen and (max-width: 300px) {
+        table tr th:not(:first-child),
+        table tr td:not(:first-child) {
+          width: 50%;
+          font-size: 14px;
+        }
+      }
+    </style>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-91615293-4"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+      gtag("config", "UA-91615293-4");
+    </script>
+  </head>
+  <body class="bg-white" onload="printPromot()">
+    <div class="nk-block">
+      <div>
+        <div class="invoice-wrap">
+          <div class="invoice-brand text-center">
+            <img
+              src="images/logo-dark.png"
+              srcset="/demo2/images/logo-dark2x.png 2x"
+              alt=""
+            />
+          </div>
+
+          <div class="invoic">
+            <div class="table-responsive">
+              <p>Click the names to see more data.</p>
+              <table>
+                <thead>
+                  <tr class="table-headers">
+                    <th>Sl No</th>
+                    <th>Order Id</th>
+                    <th>Email</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+
+                    <th>Payment Method</th>
+                    <th>Order Date</th>
+                    <th>Delivery Date</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% orderData.forEach((value, i) => { %>
+                    <tr>
+                      <td><%= i + 1 %></td>
+                      <td><%= value.orderId %></td>
+                      <td><%= value.user.email %></td>
+                      <td>
+                        <!-- Display each product name on a new line -->
+                        <% value.products.forEach((product, index) => { %>
+                          <%= product.product.productname %><br>
+                        <% }) %>
+                      </td>
+                      <td>
+                        <!-- Display each product count on a new line -->
+                        <% value.products.forEach((product, index) => { %>
+                          <%= product.count %><br>
+                        <% }) %>
+                      </td>
+                      <td><%= value.paymentMethod %></td>
+                      <td><%= moment(value.orderDate).format('DD/MM/YYYY') %></td>
+                      <td><%= moment(value.deliveryDate).format('DD/MM/YYYY') %></td>
+                      <td> ₹ <%= value.amount %></td>
+                    </tr>
+                  <% }) %>
+                  
+                  
+                  <tr class="total">
+                    <th>Total</th>
+                    <td class="total-val" colspan="13">₹ <%=totalamount%></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function printPromot() {
+        window.print();
+      }
+    </script>
+  </body>
+</html>

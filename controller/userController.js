@@ -522,27 +522,26 @@ const getoneproduct = async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }
-};
-const loadcart = async (req, res) => {
+};const loadcart = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
 
-    const cartData = await Cart.findOne({ user: id }).populate(
-      "products.product"
-    );
+    const cartData = await Cart.findOne({ user: id }).populate("products.product");
     let totalAmount = 0;
     if (cartData) {
       for (const cartItem of cartData.products) {
-        const productPrice =
-          cartItem.product.discountprice == null
-            ? cartItem.product.price
-            : cartItem.product.discountprice;
-        const productCount = cartItem.count;
-        totalAmount += productPrice * productCount;
+        if (cartItem.product) { // Check if cartItem.product is not null
+          const productPrice =
+            cartItem.product.discountprice == null
+              ? cartItem.product.price
+              : cartItem.product.discountprice;
+          const productCount = cartItem.count;
+          totalAmount += productPrice * productCount;
+        }
       }
     }
-
+console.log(cartData);
     res.render("cart", {
       user: userData,
       cartData: cartData,
@@ -566,6 +565,7 @@ const profile = async (req, res) => {
 
 const editprofile = async (req, res) => {
   try {
+    console.log("hello");
     const user_id = req.session.user_id;
 
     const updateData = await User.findByIdAndUpdate(
@@ -580,7 +580,7 @@ const editprofile = async (req, res) => {
         },
       }
     );
-    res.redirect("/profile");
+    res.json({success:true});
   } catch (error) {
     console.log(error.message);
   }

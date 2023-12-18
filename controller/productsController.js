@@ -3,6 +3,8 @@ const Products = require("../model/productsModel");
 const Category = require("../model/categoryModel");
 const saveproduct = async (req, res) => {
   try {
+    console.log(req.files); // Log the files received by Multer
+
     const imagesArray = [];
 
     for (let i = 1; i <= 4; i++) {
@@ -30,12 +32,13 @@ const saveproduct = async (req, res) => {
 
     const productadded = await product.save();
 
-    res.redirect("products");
+    res.json({ success: true });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 const addproduct = async (req, res) => {
   try {
@@ -66,7 +69,8 @@ const editproducts = async (req, res) => {
 
 const saveditproducts = async (req, res) => {
   try {
-    const id = req.query.id;
+    console.log(req.body)
+    const id = req.body.user_id;
     const existingProduct = await Products.findById(id);
 
     // Update existing product with new data
@@ -90,7 +94,7 @@ const saveditproducts = async (req, res) => {
     await existingProduct.save();
 
     // Redirect or send a response indicating success
-    res.redirect('products'); // Change this based on your application flow
+    res.json({success: true}) // Change this based on your application flow
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

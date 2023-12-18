@@ -11,17 +11,18 @@ include("../layouts/adminSideBar.ejs")%>
               <h3 class="nk-block-title page-title">
                 Products <span class="text-grey">/ edit Product</span>
               </h3>
-              <input type="hidden" name="user_id" value="<%=products._id %>" />
+              <input type="hidden" name="user_id" id="id" value="<%=products._id %>" />
               <div class="container-fluid mt-3">
                 <div class="row">
                   <div class="col-md-12 mx-auto">
                     <div class="card">
                       <div class="card-body">
                         <form
-                          action=""
-                          method="post"
+                          
+                         id="saveeditproduct"
                           enctype="multipart/form-data"
                         >
+                        <input type="hidden" name="user_id" id="id" value="<%=products._id %>" />
                           <div class="row g-3 mt-2">
                             <div class="col-md-12">
                               <div class="">
@@ -34,28 +35,22 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="productname"
                                   id="product-title"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="product-title-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
                               <div>
-                                <label for="frameshape" class="form-label"
-                                  >Frame Shape</label
-                                >
-                                <select
-                                  name="frameshape"
-                                  id="frameshape"
-                                  class="form-control"
-                                  required
-                                >
-                                  <%category.forEach((value)=>{%>
-                                  <option value="<%=value.categoryname%>">
-                                    <%=value.categoryname%>
-                                  </option>
-                                  <%})%>
+                                <label for="frameshape" class="form-label">Frame Shape</label>
+                                <select name="frameshape" id="frameshape" class="form-control" >
+                                  <option value="<%=products.frameshape%>"  selected><%=products.frameshape%></option>
+                                  <% category.forEach((value) => { %>
+                                    <option value="<%= value.categoryname %>"><%= value.categoryname %></option>
+                                  <% }) %>
                                   <!-- Add more options as needed -->
                                 </select>
+                                <p class="text-danger" id="frameshape-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -69,8 +64,9 @@ include("../layouts/adminSideBar.ejs")%>
                                   value="<%=products.brand%>"
                                   id="brand"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="brand-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -84,8 +80,9 @@ include("../layouts/adminSideBar.ejs")%>
                                   id="stock"
                                   value="<%=products.stock%>"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="stock-error"> </p>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -99,8 +96,9 @@ include("../layouts/adminSideBar.ejs")%>
                                   id="price"
                                   value="<%=products.price%>"
                                   class="form-control"
-                                  required
+                                  
                                 />
+                                <p class="text-danger" id="price-error"> </p>
                               </div>
                             </div>
                             <div class="col-12">
@@ -112,11 +110,12 @@ include("../layouts/adminSideBar.ejs")%>
                                   name="description"
                                   id="description"
                                   class="form-control"
-                                  required
+                                  
                                 >
                                     "<%=products.description%>"
                                     </textarea
                                 >
+                                <p class="text-danger" id="description-error"> </p>
                               </div>
                             </div>
 
@@ -139,7 +138,7 @@ include("../layouts/adminSideBar.ejs")%>
                             </div>
                             
                             <div class="col-12">
-                              <button type="submit" class="btn btn-primary">
+                              <button type="button" id="editsave-button" class="btn btn-primary">
                                 <em class="icon ni ni-plus"></em>
                                 <span>Update</span>
                               </button>
@@ -179,6 +178,56 @@ include("../layouts/adminSideBar.ejs")%>
     });
   </script>
 
+
+<script src="/static/js/adminValidation.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("saveeditproduct");
+    const signupButton = document.getElementById("editsave-button");
+
+    signupButton.addEventListener("click", function () {
+      
+      if (editproduct()) {
+        const formData = new FormData(registrationForm);
+
+  const id =document.getElementById("id");
+
+        console.log("Complete Form Data:", formData);
+
+        fetch(`/admin/editproducts`, {
+          method: "POST",
+          body: formData,id,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              Swal.fire({
+                title: "Edit  Successfully",
+                text: "Your edited product has been added successfully.",
+                icon: "success",
+              }).then(() => (window.location.href = "/admin/products"));
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  });
+
+  
+</script>
 
   <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
   <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>

@@ -1,7 +1,6 @@
-<%- include("../layouts/header.ejs")%> 
+<%- include("../layouts/header.ejs")%>
 <div class="page-wrapper">
   <%- include("../layouts/userNavbar.ejs")%>
-
 
   <main class="main">
     <div
@@ -26,31 +25,46 @@
     </nav>
     <!-- End .breadcrumb-nav -->
 
-
     <%if(products){products.forEach((value,i)=>{%>
-    <div class="container d-flex justify-content-center mb-5 ">
-      <div
-        class=" bg-light col-sm-8 d-flex  pt-5 pl-5 "
-      >
-      <div class="d-flex align-items-start flex-column mb-3">
-        <h6 >Order Placed</h6>
-        <p>Order Id: <%=value.orderId%></p>
-        <p >Order Date: <%= value.orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
-        <h6>
-          Delivery Expect On : <strong><%= value.deliveryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %> </strong>
-        </h6>
-        <p>Qty:<%=value.products.length%></p>
-        </div >
-       
-       
-          
-        </div>
-
-     
+      <div class="container my-5">
+        <div class="row bg-light p-5">
+       <div class="d-flex justify-content-end col-12">
+       <a href="/invoiceprint?id=<%=value.orderId%>">
+        <div class="btn btn-primary px-3 print-color rounded"> 
+          <i class="far fa-print"></i> Invoice
       </div>
-    </div>
+       </a>
+       </div>
+          <div class="col-12 text-center pb-3 border-bottom mb-lg-3 mb-2">
+            <h4>Order Placed</h4>
+          </div>
+          <div class="col-lg-3 col-md-6 col-12 mb-lg-3 mb-2">
+            <p>Order Id: <%=value.orderId%></p>
+            <p>
+              Order Date: <%=  moment(value.orderDate).format('DD-MM-YYYY')%>
+            </p>
+          </div>
+          <div class="col-lg-3 col-md-6 col-12 mb-lg-3">
+            <h6>
+              Delivery Expect On :
+              <strong><br><br>
+                <%=moment(value.deliveryDate).format('DD-MM-YYYY') %>
+              </strong>
+            </h6>
+          </div>
+          <div class="col-lg-3 col-md-6 col-12 mb-3">
+            <p><strong>Items: <%=value.products.length%></strong></p>
+            <p><strong>Payment Method: <%=value.paymentMethod%></strong></p>
+          </div>
+          <div class="col-lg-3 col-md-6 col-12 mb-3 d-flex align-items-center">
+            <a href="/vieworder?id=<%=value._id%>" type="button" class="btn btn-outline-primary-2 btn-block">View Order</a>
+            
+          </div>
+        </div>
+      </div>
+      
 
-  <%})}%>
+    <%})}%>
 
     <!-- End .page-content -->
   </main>
@@ -65,67 +79,60 @@
 
 <!-- ... (remaining HTML code) ... -->
 
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-async function cancelOrder(id,orderId,count) {
-  // Display a SweetAlert confirmation dialog
-  const isConfirmed = await Swal.fire({
-    title: 'Are you sure?',
-    text: 'You won\'t be able to revert this!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, cancel it!'
-  });
-  
-  if (isConfirmed.isConfirmed) {
-    try {
-      
-      const response = await fetch("/cancelorder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        
-        body: JSON.stringify({ id: id, orderId: orderId ,count:count}),
-        
-      });
-     
-      const data = await response.json();
-      
-      // Check if the cancellation was successful
-      if (data.success) {
-        // Show SweetAlert for successful cancellation
-       
-        Swal.fire({
-          icon: 'success',
-          title: 'Order Canceled!',
-          text: 'Your order has been successfully canceled.',
-        });
-        setTimeout(() =>window.location.reload(),1000)
-           
-        // Add additional logic if needed after a successful cancellation
-      } else {
-        // Handle the case where the cancellation was not successful
-        Swal.fire({
-          icon: 'error',
-          title: 'Cancellation Failed',
-          text: 'There was an issue canceling your order. Please try again later.',
-        });
-      }
+  async function cancelOrder(id, orderId, count) {
+    // Display a SweetAlert confirmation dialog
+    const isConfirmed = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, cancel it!",
+    });
 
-    } catch (error) {
-      console.error('Error canceling order:', error);
-      // Handle the error (e.g., show an error message)
+    if (isConfirmed.isConfirmed) {
+      try {
+        const response = await fetch("/cancelorder", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({ id: id, orderId: orderId, count: count }),
+        });
+
+        const data = await response.json();
+
+        // Check if the cancellation was successful
+        if (data.success) {
+          // Show SweetAlert for successful cancellation
+
+          Swal.fire({
+            icon: "success",
+            title: "Order Canceled!",
+            text: "Your order has been successfully canceled.",
+          });
+          setTimeout(() => window.location.reload(), 1000);
+
+          // Add additional logic if needed after a successful cancellation
+        } else {
+          // Handle the case where the cancellation was not successful
+          Swal.fire({
+            icon: "error",
+            title: "Cancellation Failed",
+            text: "There was an issue canceling your order. Please try again later.",
+          });
+        }
+      } catch (error) {
+        console.error("Error canceling order:", error);
+        // Handle the error (e.g., show an error message)
+      }
     }
   }
-}
 </script>
 
-
-
- 
 <%- include("../layouts/footer.ejs")%>

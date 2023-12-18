@@ -30,7 +30,7 @@ admin_route.use(express.static(path.join(__dirname, "public")));
 
 admin_route.get("/", auth.isLogout, adminController.loadLogin);
 admin_route.post("/", adminController.verifylogin);
-admin_route.get("/dashboard", auth.islogin, adminController.loaddashboard);
+admin_route.get("/dashboard", salesController.loaddashboard);
 admin_route.get("/forgetpassword", adminController.loadforget);
 admin_route.post("/forgetpassword", adminController.verifyforget);
 admin_route.get("/resetpassword", adminController.loadreset);
@@ -74,6 +74,9 @@ admin_route.post("/removeoffergategory", auth.islogin,offercontroller.removeOffe
 admin_route.post("/removeofferproduct", auth.islogin,offercontroller.removeOfferProduct)
 
 
-admin_route.get("/salesreport", auth.islogin,salesController.loadsales);
+admin_route.get("/loadchart", auth.islogin,salesController.loadchart);
 
+admin_route.get("/salesreport",salesController.loadsales);
+admin_route.get("/salesexportexcel",salesController.exportexcel);
+admin_route.get("/salesexportpdf",salesController.exportpdf);
 module.exports = admin_route;

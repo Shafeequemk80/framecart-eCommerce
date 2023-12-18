@@ -1,10 +1,11 @@
 const Cart = require("../model/cartModel");
 const Product = require("../model/productsModel");
 const Address = require("../model/addressModel");
+const Wallet = require("../model/walletModel");
 const Order = require("../model/orderModel");
 const User = require("../model/userModel");
 const { Timestamp } = require("mongodb");
-const { response } = require("../routes/userRoute");
+
 const Razorpay = require("razorpay");
 const Crypto = require("crypto");
 
@@ -159,8 +160,10 @@ const verifypayment = async (req, res) => {
 
         // Calculate the total amount based on the prices of products in the cart
         for (const price of cartData.products) {
-          totalamount += price.product.discountprice==null? price.product.price:price.product.discountprice * price.count;
+          totalamount += price.product.discountprice==null? price.product.price * price.count:price.product.discountprice * price.count;
+          console.log(totalamount,price.count,"totalamount");
         }
+        console.log(totalamount,"totalamount");
         const orderDate = new Date();
         const newOrderId = generateOrderId();
         var deliveryDate = new Date(orderDate);
@@ -170,7 +173,7 @@ deliveryDate.setDate(orderDate.getDate() + 7);
         const productsData = cartData.products.map((productItem) => ({
           product: productItem.product,
           count: productItem.count,
-          totalprice:productItem.product.discountprice==null? productItem.product.price: productItem.product.discountprice * productItem.count,
+          totalprice:productItem.product.discountprice==null? productItem.product.price* productItem.count: productItem.product.discountprice * productItem.count,
           paymentStatus: "Pending",
           orderStatus: "Pending",
         }));
@@ -180,7 +183,7 @@ deliveryDate.setDate(orderDate.getDate() + 7);
           orderId: newOrderId,
           user: user_id,
           products: productsData,
-          address: [
+          address: 
             {
               fullname: selectedAddress.fullname,
               mobile: selectedAddress.mobile,
@@ -190,8 +193,8 @@ deliveryDate.setDate(orderDate.getDate() + 7);
               city: selectedAddress.city,
               state: selectedAddress.state,
             },
-          ],
-          paymentMethod: "pending",
+          
+          paymentMethod: "Cash on Delivery",
           orderDate: orderDate,
           orderTime: new Timestamp(),
           deliveryDate:deliveryDate,
@@ -202,14 +205,15 @@ deliveryDate.setDate(orderDate.getDate() + 7);
         await addorder.save();
 
         if (paymentType === "COD") {
-          for (const product of cartData.products) {
+          const orderData= await Order.findOne({orderId:newOrderId})
+          for (const product of orderData.products) {
             const updateStock = await Product.updateMany(
               { _id: product.product },
               { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
             );
           }
           
-          await Cart.deleteOne({ user: user_id });
+          await Cart.updateOne({ user: user_id }, { $set: { products: [] } });
 
           return res.json({ cod: true, newOrderId: newOrderId });
         } else if (paymentType === "OnlinePayment") {
@@ -239,7 +243,60 @@ deliveryDate.setDate(orderDate.getDate() + 7);
                 .send({ success: false, msg: "Something went wrong!" });
             }
           });
+        }else if (paymentType === "Wallet") {
+          const orderData = await Order.findOne({ orderId: newOrderId });
+        
+          if (!orderData) {
+            // Handle the case where the order data is not found
+            return res.status(404).json({ error: "Order not found" });
+          }
+        
+          const updateData = await Order.updateOne(
+            { orderId: newOrderId },
+            {
+              $set: {
+                paymentMethod: "Wallet",
+                "products.$[].paymentStatus": "success",
+              },
+            }
+          );
+        
+          
+          
+          const walletUpdate = await Wallet.updateOne(
+            { user: user_id },
+            {
+              $inc: { totalAmount: -orderData.amount },
+              $push: {
+                walletHistory: {
+                  transactionId: newOrderId,
+                  transactionDate: new Date(),
+                  transactionDetails: "Debit",
+                  transactionType: "Purchase",
+                  transactionAmount: orderData.amount,
+                },
+              },
+            }
+          );
+          
+
+          for (const product of orderData.products) {
+            const updateStock = await Product.updateMany(
+              { _id: product.product },
+              { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
+            );
+          }
+        
+          const updateCart = await Cart.updateOne({ user: user_id }, { $set: { products: [] } });
+        
+          if (updateCart && updateData.modifiedCount > 0 && walletUpdate.modifiedCount > 0) {
+            return res.json({ Wallet: true, newOrderId: newOrderId });
+          } else {
+            // Handle the case where one of the updates failed
+            return res.status(500).json({ error: "Failed to update one or more records" });
+          }
         }
+        
 
         // Delete the user's cart after processing the order
       }
@@ -269,7 +326,8 @@ const verifyonlinepayment = async (req, res) => {
     );
     console.log(generated_signature);
     if (generated_signature == razorpay_signature) {
-      await Cart.deleteOne({ user: user_id });
+      await Cart.updateOne({ user: user_id }, { $set: { products: [] } });
+
       const orderData = await Order.findOne({ orderId: newOrderId });
       const updateData = await Order.updateOne(
         { orderId: newOrderId },
@@ -280,7 +338,13 @@ const verifyonlinepayment = async (req, res) => {
           },
         }
       );
-
+      for (const product of orderData.products) {
+        const updateStock = await Product.updateMany(
+          { _id: product.product },
+          { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
+        );
+      }
+      
       console.log(orderData);
       if (orderData) {
       }

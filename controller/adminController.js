@@ -90,13 +90,7 @@ const verifylogin = async (req, res) => {
   }
 };
 
-const loaddashboard = async (req, res) => {
-  try {
-    res.render("dashboard");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+
 
 const loadforget = async (req, res) => {
   try {
@@ -386,6 +380,7 @@ console.log(req.body);
         $set: {
           "products.$.orderStatus": orderStatus,
           "products.$.statusLevel": statusLevel,
+          "products.paymentStatus":"success"
         },
       }
     );
@@ -406,7 +401,6 @@ console.log(req.body);
 module.exports = {
   loadLogin,
   verifylogin,
-  loaddashboard,
   loadforget,
   verifyforget,
   loadreset,
