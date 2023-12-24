@@ -180,22 +180,15 @@
                 <div class="g">
                   <ul class="pagination justify-content-center justify-content-md-start">
                     <!-- Previous Page Link -->
-                    <% if (previospage > 0) { %>
+                    <% if (previouspage > 0) { %>
                       <li class="page-item">
-                        <a class="page-link" href="?page=<%= previospage %>&search=<%=search%>">
+                        <a class="page-link" href="?page=<%= previouspage %>&search=<%=search%>">
                           <em class="icon ni ni-chevrons-left"></em>
                         </a>
                       </li>
                     <% } %>
                     <!-- Page Links -->
-                    <% let page = 0;
-                    if (totalPages < 10) {
-                      page = Math.ceil(totalPages / 3);
-                    } else {
-                      page = Math.floor(totalPages / 5);
-                    }
-
-                    for (let i = 1; i <= page; i++) { %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
                       <li class="page-item">
                         <a class="page-link" href="?page=<%= i %>&search=<%=search%>"><%= i %></a>
                       </li>

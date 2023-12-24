@@ -3,6 +3,7 @@ const Product = require("../model/productsModel");
 
 const addtocart = async (req, res) => {
   try {
+   
     const user_id = req.session.user_id;
     const product_id = req.body.id;
     const count = 1; // Set the initial count to 1 or adjust it as needed

@@ -73,23 +73,27 @@
                                         </div><!-- End .ratings -->
                                         <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
                                     </div><!-- End .rating-container -->
-
+                                    <%if(product.offer!==null){%>
+                                    <div>
+                                        <h5 class="text-danger"><strong><%=product.offer.percentage%>% OFF</strong></h5>
+                                    </div>
+                                    <%}%>
+                                    <%if(product.discountprice==null){%>
                                     <div class="product-price">
                                         ₹<%=product.price%>
                                     </div><!-- End .product-price -->
-
+                                    <%}else{%>
+                                        <div class="product-price">
+                                            <del>₹<%= product.price %></del>   &#160 <strong class="text-success">₹<%= product.discountprice %></strong> 
+                                        </div>
+                                        <%}%>  
                                     <div class="product-content">
                                         <p> <%=product.description%></p>
                                     </div><!-- End .product-content -->
 
                                 
                                    
-                                    <div class="details-filter-row details-row-size">
-                                        <label for="qty">Qty:</label>
-                                        <div class="product-details-quantity">
-                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                        </div><!-- End .product-details-quantity -->
-                                    </div><!-- End .details-filter-row -->
+                                 
 
                                     <div class="product-details-action">
                                       
@@ -360,13 +364,22 @@
                                 return response.json();
                             })
                             .then(data => {
-                                console.log(data);
+                                if(data.message==true){
 
                         Swal.fire({
                                 title: "Item Added in Cart!",
                                 text: "You clicked the button!",
                                 icon: "success"
                                 });
+
+                            }else{
+                                Swal.fire({
+                                title: "no stock availible!",
+                                text: "You clicked the button!",
+                                icon: "error"
+                                });
+
+                            }
                                  })
                             .catch(error => {
                                 console.error('There was a problem with the fetch operation:', error);

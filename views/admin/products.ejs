@@ -39,30 +39,7 @@ include("../layouts/adminSideBar.ejs")%>
                         </div>
                       </form>
                     </li>
-                    <li>
-                      <div class="drodown">
-                        <a
-                          href="#"
-                          class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white"
-                          data-bs-toggle="dropdown"
-                          >Status</a
-                        >
-                        <div class="dropdown-menu dropdown-menu-end">
-                          <ul class="link-list-opt no-bdr">
-                            <li>
-                              <a href="#"><span>New Items</span></a>
-                            </li>
-                            <li>
-                              <a href="#"><span>Featured</span></a>
-                            </li>
-                            <li>
-                              <a href="#"><span>Out of Stock</span></a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </li>
-
+                   
                     <li class="nk-block-tools-opt">
                       <a href="addproducts" class="btn btn-primary">
                         <em class="icon ni ni-plus"></em>
@@ -79,17 +56,7 @@ include("../layouts/adminSideBar.ejs")%>
         <div class="nk-block">
           <div class="nk-tb-list is-separate mb-3">
             <div class="nk-tb-item nk-tb-head">
-              <div class="nk-tb-col nk-tb-col-check">
-                <div
-                  class="custom-control custom-control-sm custom-checkbox notext"
-                >
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="pid"
-                  /><label class="custom-control-label" for="pid"></label>
-                </div>
-              </div>
+             
               <div class="nk-tb-col tb-col-sm"><span>Name</span></div>
               <div class="nk-tb-col"><span>Status</span></div>
               <div class="nk-tb-col"><span>Price</span></div>
@@ -99,41 +66,9 @@ include("../layouts/adminSideBar.ejs")%>
               <div class="nk-tb-col nk-tb-col-tools">
                 <ul class="nk-tb-actions gx-1 my-n1">
                   <li class="me-n1">
-                    <div class="dropdown">
-                      <a
-                        href="#"
-                        class="dropdown-toggle btn btn-icon btn-trigger"
-                        data-bs-toggle="dropdown"
-                        ><em class="icon ni ni-more-h"></em
-                      ></a>
-                      <div class="dropdown-menu dropdown-menu-end">
-                        <ul class="link-list-opt no-bdr">
-                          <li>
-                            <a href="#"
-                              ><em class="icon ni ni-edit"></em
-                              ><span>Edit Selected</span></a
-                            >
-                          </li>
-                          <li>
-                            <a href="#"
-                              ><em class="icon ni ni-trash"></em
-                              ><span>Remove Selected</span></a
-                            >
-                          </li>
-                          <li>
-                            <a href="#"
-                              ><em class="icon ni ni-bar-c"></em
-                              ><span>Update Stock</span></a
-                            >
-                          </li>
-                          <li>
-                            <a href="#"
-                              ><em class="icon ni ni-invest"></em
-                              ><span>Update Price</span></a
-                            >
-                          </li>
-                        </ul>
-                      </div>
+                    <div class="">
+                     
+                      
                     </div>
                   </li>
                 </ul>
@@ -143,20 +78,7 @@ include("../layouts/adminSideBar.ejs")%>
             <%products.forEach((value,index)=>{%>
 
             <div class="nk-tb-item">
-              <div class="nk-tb-col nk-tb-col-check">
-                <div
-                  class="custom-control custom-control-sm custom-checkbox notext"
-                >
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="pid<%=index+1%>"
-                  /><label
-                    class="custom-control-label"
-                    for="pid<%=index+1%>"
-                  ></label>
-                </div>
-              </div>
+            
               <div class="nk-tb-col tb-col-sm">
                 <span class="tb-product"
                   ><img

@@ -25,16 +25,18 @@
     </nav>
     <!-- End .breadcrumb-nav -->
 
-    <%if(products){products.forEach((value,i)=>{%>
+    <%if(products.length>0){products.forEach((value,i)=>{%>
       <div class="container my-5">
-        <div class="row bg-light p-5">
-       <div class="d-flex justify-content-end col-12">
-       <a href="/invoiceprint?id=<%=value.orderId%>">
-        <div class="btn btn-primary px-3 print-color rounded"> 
-          <i class="far fa-print"></i> Invoice
-      </div>
-       </a>
-       </div>
+        <div class="row bg-light p-2 p-md-5">
+          <div class="d-flex justify-content-end col-12">
+            <a href="/invoiceprint?id=<%=value.orderId%>">
+              <div class="btn-md btn-primary px-3 px-md-5 print-color rounded">
+                <i class="far fa-print"></i>
+                <span class="d-none d-md-inline">Invoice</span>
+              </div>
+            </a>
+          </div>
+          
           <div class="col-12 text-center pb-3 border-bottom mb-lg-3 mb-2">
             <h4>Order Placed</h4>
           </div>
@@ -64,7 +66,17 @@
       </div>
       
 
-    <%})}%>
+    <%})}else{%>
+      
+        <div
+          class="d-flex flex-column align-items-center justify-content-center"
+        >
+        <i class="fa-light order-not-available fa-bag-shopping"></i>
+          <p class="text-center mt-2">No wallet history available</p>
+        </div>
+      
+
+      <%}%>
 
     <!-- End .page-content -->
   </main>

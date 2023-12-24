@@ -16,8 +16,8 @@
     <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
       <div class="container">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item"><a href="#">Shop</a></li>
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/allproducts">Shop</a></li>
           <li class="breadcrumb-item active" aria-current="page">My Account</li>
         </ol>
       </div>
@@ -84,7 +84,7 @@
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Sign Out</a>
+                  <a class="nav-link" href="#" onclick="confirmSignOut()">Sign Out</a>
                 </li>
               </ul>
             </aside>
@@ -223,7 +223,7 @@
                               <!-- End .card-title-container -->
 
                               <p>
-                                You have not set up this type of address yet.
+                                You can view  new Orders yet
                               </p>
                             </div>
                           </div>
@@ -253,7 +253,7 @@
                               <!-- End .card-title-container -->
 
                               <p>
-                                You have not set up this type of address yet.
+                                You can add new Address and view yet.
                               </p>
                             </div>
                           </div>
@@ -265,9 +265,7 @@
                     <!-- End .col-lg-6 -->
                   </div>
                   <!-- End .row -->
-                  <a href="category.html" class="btn btn-outline-primary-2"
-                    ><span>GO SHOP</span><i class="icon-long-arrow-right"></i
-                  ></a>
+              
                 </div>
                 <!-- .End .tab-pane -->
 
@@ -293,7 +291,7 @@
                           <!-- End .card-title-container -->
 
                           <p>
-                            You have not set up this type of address yet.
+                         You can view your wallet
                           </p>
                         </div>
                       </div>
@@ -314,6 +312,7 @@
                   role="tabpanel"
                   aria-labelledby="tab-account-link"
                 >
+                <%if(user.google!==1){%>
                   <div class="border p-5 account-deatails-change mb-2">
                     <h6>Change Email</h6>
                     <form id="change-email-form">
@@ -336,6 +335,8 @@
                       </button>
                     </form>
                   </div>
+
+                  <%}%>
                   <h6>Change password</h6>
 
 				  <form id="passwordChangeForm">
@@ -643,6 +644,23 @@ copyText.querySelector("button").addEventListener("click", function () {
   function handleResponse(data) {}
 </script>
 
+<script>
+  function confirmSignOut() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, log me out!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/logout";
+      }
+    });
+  }
+</script>
 
-  <%- include("../layouts/footer.ejs")%>
 </div>
+<%- include("../layouts/footer.ejs")%>

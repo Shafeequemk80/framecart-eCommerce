@@ -12,9 +12,11 @@ const checkoutController=require("../controller/checkoutController")
 const orderController=require("../controller/orderController")
 const wishlistController = require("../controller/wishlistController");
 const walletController = require("../controller/walletController");
+const googleauthController= require("../controller/authController")
+const passport = require('passport');
 user_route.use(
   session({
-    secret: config.sessionSecret,
+    secret: process.env.sessionSecret,
     resave: false,
     saveUninitialized: true,
   })
@@ -27,8 +29,8 @@ user_route.use("/static", express.static(path.join(__dirname, "./public")));
 user_route.get("/login", auth.isLogout, userController.loadlogin),
   user_route.get("/", userController.loadHome),
   user_route.post("/login", auth.isLogout, userController.verifylogin),
-  user_route.get("/signup", auth.isLogout, userController.loadregister);
-user_route.post("/signup", auth.isLogout, userController.insestUser);
+  user_route.get("/signup", userController.loadregister);
+user_route.post("/signup", userController.insestUser);
 
 user_route.get("/verify", userController.loadverifyotp);
 user_route.post("/verify", userController.checkotp);
@@ -86,5 +88,32 @@ user_route.post("/changeemail",auth.islogin,userController.changeemail)
 user_route.get("/wallet",auth.islogin,walletController.loadwallet)
 user_route.post("/addtowallet",auth.islogin,walletController.addtowallet)
 user_route.post("/verifywalletonlinepayment",auth.islogin,walletController.verifyonlinepayment)
+
+
+user_route.use(passport.initialize());
+user_route.use(passport.session());
+
+
+user_route.get('/auth/google',
+  passport.authenticate('google', { scope:
+      [ 'email', 'profile' ] }
+));
+
+user_route.get( '/auth/google/callback',
+    passport.authenticate( 'google', {
+        successRedirect: '/auth/google/success',
+        failureRedirect: '/auth/google/failure'
+}));
+user_route.get('/auth/google/success',auth.isLogout,googleauthController.success);
+
+
+user_route.get('/auth/google/failure', (req, res) => {
+  res.send('something failed');
+});
+
+
+
+
+
 
 module.exports = user_route;

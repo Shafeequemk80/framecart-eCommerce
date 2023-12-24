@@ -1,23 +1,47 @@
 const Offer = require("../model/offerModel");
 const Category = require("../model/categoryModel");
 const Products = require("../model/productsModel");
-
 const getoffers = async (req, res) => {
-  const offerData = await Offer.find();
-
   try {
+    var search = "";
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    console.log(search, "search value ");
+    var page = 1;
+    if (req.query.page) {
+      page = req.query.page;
+    }
+
+    var limit = 5;
+
+    const offerData = await Offer.find({
+      offername: { $regex: ".*" + search + ".*", $options: "i" },
+    })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+
+    const count = await Offer.find({
+      offername: { $regex: ".*" + search + ".*", $options: "i" },
+    }).countDocuments();
+
     res.render("offers", {
       offerData: offerData,
-      totalPages: Math.ceil(0 / 0),
-      currentPage: 0,
-      previospage: 0,
-      nextpage: parseInt(0) + 1,
-      search: 0,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      previouspage: page - 1, // Corrected property name
+      nextpage: parseInt(page) + 1,
+      search: search,
     });
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const addoffers = async (req, res) => {
   try {
@@ -29,6 +53,7 @@ const addoffers = async (req, res) => {
 
 const saveoffers = async (req, res) => {
   try {
+    console.log(req.body);
     const offername = req.body.offername;
     const createdAt = req.body.createdAt;
     const updatedAt = req.body.updatedAt;
@@ -37,16 +62,19 @@ const saveoffers = async (req, res) => {
     const updateData = new Offer({
       offername: offername,
       createdAt: createdAt,
-      expiryDate: updatedAt,
+      expiryDate: updatedAt, // Fix potential typo here
       percentage: percentage,
       action: 1,
     });
+
     const updated = await updateData.save();
-    res.redirect("offers");
+    res.json({ success: true });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
+
 const unlistoffers = async (req, res) => {
   try {
     const action = req.body.action;

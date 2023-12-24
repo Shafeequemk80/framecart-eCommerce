@@ -25,79 +25,138 @@
       <!-- End .container -->
     </nav>
     <!-- End .breadcrumb-nav -->
-<div class="d-flex justify-content-center">
-    <div class="col-12 col-lg-7 d-flex">
-      <div class="w-100  mr-5 bg-primary  d-flex wallet-front align-items-end">
-          <div class="ml-5">
+    <div class="container">
+      <div class="row justify-content-center">
+    
+        <div class="col-12 d-flex justify-content-center flex-lg-row flex-column">
+          <!-- First Div -->
+          <div class="mr-lg-4 mb-3 col-lg-4 mb-lg-0 bg-primary d-flex wallet-front align-items-end">
+            <div class="ml-lg-5 ml-3">
+              <p type="button" class="" data-toggle="modal" data-target="#scrollableModal">
+                Referred Users
+              </p>
               <h6>Total Amount</h6>
-            
-              <h1 ><%=walletData?.totalAmount%></h1>
-           
+              <h1><%=walletData?.totalAmount%></h1>
+            </div>
           </div>
-      </div>
-      <div class="w-100  bg-success  wallet-back p-5">
-        <form id="change-email-form">
-          <input
-          type="number"
-          class="form-control"
-          id="walletamount"
-          name="walletamount"
-          placeholder="Add Amount in Wallet"
+    
+          <!-- Second Div -->
+          <div class=" wallet-back col-lg-4 p-3 p-lg-5 mt-1 mt-lg-0 pt-3">
+            <form id="change-email-form">
+              <input
+                type="number"
+                class="form-control mb-3"
+                id="walletamount"
+                name="walletamount"
+                placeholder="Add Amount in Wallet"
+              />
           
-        />
-      
-      
-         
-          <button
-              type="button"
-              id="change-email-submit"
-              class="btn btn-light mt-1"
-              onclick="addAmountToWallet()"
-          >
-              <span>Add Amount</span>
-              <i class="icon-long-arrow-right"></i>
-          </button>
-      </form>
+              <button
+                type="button"
+                id="change-email-submit"
+                class="btn btn-light"
+                onclick="addAmountToWallet()"
+              >
+                <span>Add Amount</span>
+                <i class="icon-long-arrow-right"></i>
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-  </div>
-</div>
-  
-<style>llable-column {
+    </div>
+    
+      
+<style>
+  .scrollable-column {
     max-height: 400px; /* Set the maximum height for scrollbars */
     overflow-y: auto; /* Add vertical scrollbar if content exceeds max height */
   }
 </style>
 
-<div class="row mt-5 scrollable-column m-5">
-  <div class="col-12 col-lg-6 mb-3 mb-lg-0 ">
-
-    <%if(walletData.walletHistory.length!==0){
-     walletDataCredit?.walletHistory?.forEach((transaction, index) => { %>
-      <div class="my-3 mx-2 mx-lg-5 wallet-history p-5">
-        <h6>Transaction Id: <%= transaction.transactionId %></h6>
-        <h6>Transaction Date: <%= new Date(transaction.transactionDate).toLocaleDateString() %></h6>
-        <h6 class="text-danger">Transaction Type: <%= transaction.transactionDetails %></h6>
-        <h6>Transaction Details: <%= transaction.transactionType %></h6>
-        <h4>Transaction Total: <%= transaction.transactionAmount %></h4>
-      </div>
-    <% }) %>
-  </div>
-
-  <div class="col-12 col-lg-6 ">
-    <% walletDataCredit.walletHistory.forEach((transaction, index) => { %>
-      <div class="my-3 mx-2 mx-lg-5 wallet-history p-5">
-        <h6>Transaction Id: <%= transaction.transactionId %></h6>
-        <h6>Transaction Date: <%= new Date(transaction.transactionDate).toLocaleDateString() %></h6>
-        <h6 class="text-success">Transaction Type: <%= transaction.transactionDetails %></h6>
-        <h6>Transaction Details: <%= transaction.transactionType %></h6>
-        <h4>Transaction Total: <%= transaction.transactionAmount %></h4>
-      </div>
-    <% }) }%>
+<div class="row mt-5 scrollable-column m-5 justify-content-center">
+  <div class="col-12 col-lg-8 mb-3 mb-lg-0">
+    <table class="table wallet-table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="d-none d-lg-table-cell"></th>
+          <th scope="col"><span class="d-none d-md-inline">TXN</span> Id</th>
+          <th scope="col"><span class="d-none d-md-inline">TXN</span>Date</th>
+          <th scope="col"><span class="d-none d-md-inline">TXN</span> Type</th>
+          <th scope="col"> <span class="d-none d-md-inline">TXN</span> Details</th>
+          <th scope="col"><span class="d-none d-md-inline">TXN</span> Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (walletData?.walletHistory?.length !== 0) {
+          // Sort transactions in descending order based on transactionDate
+          const sortedTransactions = walletData.walletHistory.sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
+      
+          sortedTransactions.forEach((transaction, index) => { %>
+            <tr>
+              <td class="d-none d-lg-table-cell d-flex justify-content-center">
+                <img width="40px" src="/static/assets/alert/<%= transaction.transactionDetails === 'Debit' ? 'DEBIT-02.png' : 'CREDIT-02.png' %>" alt="">
+              </td>
+              <td><%= transaction.transactionId %></td>
+              <td><%= new Date(transaction.transactionDate).toLocaleDateString() %></td>
+              <td class="<%= transaction.transactionDetails === 'Debit' ? 'text-danger' : 'text-success' %>">
+                <%= transaction.transactionDetails %>
+              </td>
+              <td><%= transaction.transactionType %></td>
+              <td class="text-center"><strong class="text-primary"><%= transaction.transactionAmount %></strong></td>
+            </tr>
+          <% })
+        } else { %>
+          <td colspan="6">
+            <div
+              class="d-flex flex-column align-items-center justify-content-center"
+            >
+              <i class="fa-regular fa-wallet"></i>
+              <p class="text-center mt-2">No wallet history available</p>
+            </div>
+          </td>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 </div>
 
+
+
+
     <!-- End .page-content -->
   </main>
+</div>
+
+<!-- Scrollable modal -->
+
+<!-- Scrollable Modal -->
+<div class="modal fade" id="scrollableModal" tabindex="-1" role="dialog" aria-labelledby="scrollableModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h5 class="modal-title " id="scrollableModalLabel">Reffered Users</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <% if (walletData?.ireffered){ walletData?.ireffered?.forEach((value, index) => {%>
+          <div class="my-3 mx-5 mx-lg-5   wallet-history p-2 px-3">
+            <h4 ><%=value.clientname%></h4>
+          <h6><%= moment(value.createdAt).format('DD/MM/YYYY') %></h6>
+          
+          
+          </div>
+        <% })} %>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- Add more buttons or controls as needed -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- End .main -->
@@ -177,7 +236,7 @@ if (!walletAmount || !walletAmountRegex.test(walletAmount)) {
              if (data.online) {
               window.location.reload();
              }
-            })
+             } )
             .catch(error => {
               console.error('There was a problem with the fetch operation:', error);
             });
@@ -203,9 +262,17 @@ if (!walletAmount || !walletAmountRegex.test(walletAmount)) {
         });
         rzp1.open();
        
-      }else{
-        alert(err.message);
-      }
+      } if (response.noteligible) {
+         
+                Swal.fire({
+                  title: "Error",
+                  text: `Cannot add ${response.amount}. Exceeds wallet limit.`,
+                  icon: "error",
+               });
+        } else {
+          alert(err.message);
+        }
+
     
       })
       .catch(error => {

@@ -2,17 +2,20 @@ const Wallet = require("../model/walletModel");
 const User = require("../model/userModel");
 const Razorpay = require("razorpay");
 const Crypto = require("crypto");
-
+const { log } = require("console");
+const moment = require('moment');
 function hmac_sha256(data, secret) {
   const hmac = Crypto.createHmac("sha256", secret);
   hmac.update(data);
   return hmac.digest("hex");
 }
 
-const instance = new Razorpay({
-  key_id: "rzp_test_X95zcCjqK3bbAQ",
-  key_secret: "WHrgT4zUIFZEkYq97HfNQTO6",
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+var instance = new Razorpay({
+  key_id: RAZORPAY_ID_KEY,
+  key_secret: RAZORPAY_SECRET_KEY,
 });
+
 
 function generateOrderId() {
   // Generate a random identifier (14 characters)
@@ -20,21 +23,28 @@ function generateOrderId() {
 
   return randomId;
 }
-
 const loadwallet = async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const userData = await User.findById(user_id);
-    const walletData = await Wallet.findOne({ user: user_id });
-    const walletDataCredit = await Wallet.findOne({ user: user_id, "walletHistory.transactionDetails": "Credit" },{walletHistory: 1 });
-    const walletDataDebit = await Wallet.findOne({ user: user_id,"walletHistory.transactionDetails":"Debit" });
-    console.log(walletDataCredit);
 
-    res.render("wallet", { user: userData, walletData: walletData,walletDataCredit:walletDataCredit,walletDataDebit });
+  
+      const userData = await User.findById(user_id);
+      const walletData = await Wallet.findOne({ user: user_id })
+
+    
+      
+    // You may want to check if userData and walletData are found before proceeding
+  
+
+ 
+
+    res.render("wallet", { user: userData, walletData ,moment});
   } catch (error) {
-    console.log(error.message);
+    console.error('Error loading wallet data:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
+
 
 const addtowallet = async (req, res) => {
   try {
@@ -43,7 +53,7 @@ const addtowallet = async (req, res) => {
     const walletamount = req.body.walletamount;
     const newWalletId = generateOrderId();
 
-    if (walletamount < 5000) {
+    if (walletamount <=5000) {
       const amount = walletamount*100;
       const options = {
         amount: amount,
@@ -58,7 +68,7 @@ const addtowallet = async (req, res) => {
             online: true,
             order_id: order.id,
             amount: amount,
-            key_id: "rzp_test_X95zcCjqK3bbAQ",
+            key_id: RAZORPAY_ID_KEY,
             receipt: options.receipt,
             contact: userData.mobile,
             name: userData.firstname,
@@ -72,7 +82,10 @@ const addtowallet = async (req, res) => {
         }
       });
     } else {
-      res.json({ noteligible: true });
+     
+      res.json({
+        noteligible: true,amount: walletamount});
+   console.log('Not eligible to add funds to the wallet.');
     }
   } catch (error) {
     console.error(error.message);
@@ -86,7 +99,7 @@ const verifyonlinepayment = async (req, res) => {
     const razorpay_signature = req.body.response.razorpay_signature;
     const order_id = req.body.response.razorpay_order_id;
     const razorpay_payment_id = req.body.response.razorpay_payment_id;
-    const secret = "WHrgT4zUIFZEkYq97HfNQTO6";
+    const secret = RAZORPAY_SECRET_KEY;
     const walletamount = req.body.data.amount/100;
 
     console.log(req.body);

@@ -84,33 +84,7 @@
                                 <div class="card-title">
                                   <h6 class="title"> Order</h6>
                                 </div>
-                                <div class="card-tools me-n1">
-                                  <div class="dropdown">
-                                    <a
-                                      href="#"
-                                      class="dropdown-toggle btn btn-icon btn-trigger"
-                                      data-bs-toggle="dropdown"
-                                      ><em class="icon ni ni-more-h"></em
-                                    ></a>
-                                    <div
-                                      class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
-                                    >
-                                      <ul class="link-list-opt no-bdr">
-                                        <li>
-                                          <a href="#" class="active"
-                                            ><span>15 Days</span></a
-                                          >
-                                        </li>
-                                        <li>
-                                          <a href="#"><span>30 Days</span></a>
-                                        </li>
-                                        <li>
-                                          <a href="#"><span>3 Months</span></a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </div>
+                               
                               </div>
                               <div class="data">
                                 <div class="data-group">
@@ -165,7 +139,7 @@
                                 <span class="d-none d-sm-inline">Status</span>
                               </div>
                             </div>
-                            <% recentOrders.forEach((value) => { %>
+                            <% if(recentOrders.length>0){ recentOrders.forEach((value) => { %>
                             <div class="nk-tb-item">
                               <div class="nk-tb-col">
                                 <span class="tb-lead"
@@ -201,9 +175,13 @@
                                   >Online</span>
                                   <%}else if(value.paymentMethod=="Wallet"){%>
                                     <span
-                                  class="badge badge-dot badge-dot-xs bg-danger"
+                                  class="badge badge-dot badge-dot-xs bg-primary"
                                   >Wallet</span>
-                                    <%}else{%>
+                                    <%} else if(value.paymentMethod=="pending"){%>
+                                      <span
+                                    class="badge badge-dot badge-dot-xs bg-danger"
+                                    >pending</span>
+                                      <%}else{%>
                                       <span
                                       class="badge badge-dot badge-dot-xs bg-danger"
                                       >Cash on Devilery</span>
@@ -211,9 +189,15 @@
                                     <%}%>
                               </div>
                             </div>
-                            <% }) %>
+                            <% })}else{ %>
+                            
+                          
+                          <div class="d-flex p-5 justify-content-center">
+                            <h4>Orders not Available</h4>
+
                           </div>
-                        
+                          <%}%>
+                        </div>
                         </div>
                       
                       </div>
@@ -302,7 +286,7 @@
                                     <div class="title">
                                       <span
                                         class="dot dot-lg sq"
-                                        data-bg="#b8acff"
+                                        data-bg="#FFCD4B"
                                       ></span
                                       ><span>Wallet</span>
                                     </div>

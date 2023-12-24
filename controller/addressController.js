@@ -14,7 +14,7 @@ const address =async (req,res)=>{
         res.render('address', { user: userData, address: address?.address || [] });
       } catch (error) {
         console.error(error.message);
-        res.status(500).send('Internal Server Error');
+        res.render('500');
       }
 
 };  const addnewaddress = async (req, res) => {

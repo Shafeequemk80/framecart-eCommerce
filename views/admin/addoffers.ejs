@@ -1,5 +1,6 @@
-<%- include("../layouts/adminHeader.ejs")%> <%-
-include("../layouts/adminSideBar.ejs")%>
+<%- include("../layouts/adminHeader.ejs")%>
+<%- include("../layouts/adminSideBar.ejs")%>
+
 <div class="nk-content">
   <div class="container-fluid">
     <div class="nk-content-inner">
@@ -20,58 +21,62 @@ include("../layouts/adminSideBar.ejs")%>
             <div class="mx-auto">
               <div class="card">
                 <div class="card-body">
-                  <form action="" method="post" >
+                  <form id="addoffer-form">
                     <div class="row mt-2">
                       <!-- Offer Name -->
                       <div class="col-12">
                         <div class="form-group col-12">
-                          <label for="category-name" class="form-label">Offer Name</label>
+                          <label for="offername" class="form-label">Offer Name</label>
                           <input
                             type="text"
                             name="offername"
-                            id="category-name"
+                            id="offername"
                             class="form-control"
-                            required
                           />
+                          <p class="text-danger" id="offername-error"></p>
                         </div>
                       </div>
 
                       <!-- Datepickers -->
                       <div class="col-12 d-flex justify-content-between mt-3">
                         <div class="w-50 me-2">
-                        <div class="form-group ">
-                          <label class="form-label">Start Date</label>
-                          <div class="form-control-wrap">
-                            <input type="text" name="createdAt" class="form-control date-picker" />
-                          </div>
-                          <div class="form-note">
-                            Date format <code>mm/dd/yyyy</code>
+                          <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <div class="form-control-wrap">
+                              <input type="text" name="createdAt" id="createdAt" class="form-control date-picker" />
+                              <p class="text-danger" id="createdAt-error"></p>
+                            </div>
+                            <div class="form-note">
+                              Date format <code>mm/dd/yyyy</code>
+                            </div>
                           </div>
                         </div>
-                      </div>
                       
-                      <div class="w-50">
-                        <div class="form-group ">
-                          <label class="form-label">Expiry Date Date</label>
-                          <div class="form-control-wrap">
-                            <input type="text" name="updatedAt" class="form-control date-picker" />
-                          </div>
-                          <div class="form-note">
-                            Date format <code>mm/dd/yyyy</code>
+                        <div class="w-50">
+                          <div class="form-group">
+                            <label class="form-label">Expiry Date</label>
+                            <div class="form-control-wrap">
+                              <input type="text" name="updatedAt" id="updatedAt" class="form-control date-picker" />
+                              <p class="text-danger" id="updatedAt-error"></p>
+                            </div>
+                            <div class="form-note">
+                              Date format <code>mm/dd/yyyy</code>
+                            </div>
                           </div>
                         </div>
                       </div>
                       </div>
+
                       <div class="col-12">
                         <div class="form-group col-12">
-                          <label for="category-name" class="form-label">percentage</label>
+                          <label for="percentage" class="form-label">Percentage</label>
                           <input
                             type="text"
                             name="percentage"
-                            id="category-name"
+                            id="percentage"
                             class="form-control"
-                            required
                           />
+                          <p class="text-danger" id="percentage-error"></p>
                         </div>
                       </div>
 
@@ -79,7 +84,7 @@ include("../layouts/adminSideBar.ejs")%>
 
                       <!-- Submit Button -->
                       <div class="col-12 mt-5">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="button" id="addoffer-button" class="btn btn-primary">
                           <em class="icon ni ni-plus"></em>
                           <span>Add New</span>
                         </button>
@@ -93,53 +98,80 @@ include("../layouts/adminSideBar.ejs")%>
         </div>
 
         <!-- Display Error Message -->
-        <% if (typeof message !== "undefined") { %>
-          <div class="example-alert">
-            <div class="alert alert-danger alert-icon">
-              <em class="icon ni ni-cross-circle"></em>
-              <%= message %>
-            </div>
-          </div>
-        <% } %>
       </div>
     </div>
   </div>
-  <!-- Your script remains the same -->
-  <!-- ... -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="/static/js/adminValidation.js"></script>
+
+
 <script>
-  $(document).ready(function () {
-    $(".imageInput").change(function () {
-      var input = this;
-      var imagePreview = $(input)
-        .siblings(".rounded-image-preview")
-        .children("img")[0];
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("addoffer-form");
+    const signupButton = document.getElementById("addoffer-button");
 
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
+    signupButton.addEventListener("click", function () {
+      if (addOffer()) {
+        const formData = serialize(registrationForm);
+        console.log("Complete Form Data:", formData);
 
-        reader.onload = function (e) {
-          imagePreview.src = e.target.result;
-          $(imagePreview).show();
-        };
-
-        reader.readAsDataURL(input.files[0]);
+        fetch("/admin/addoffers", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+             
+              Swal.fire({
+                title: "Added Successfully",
+                text: "Your new offer has been added successfully.",
+                icon: "success"
+            })
+            .then (() =>  window.location.href = "/admin/offers")
+            }
+          })
+          .catch((error) => {
+            // Handle any unexpected errors
+            console.error("Error:", error);
+            // Show a generic error message to the user
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+            });
+          });
       }
     });
   });
+
+  function serialize(form) {
+    const formData = new FormData(form);
+    const serialized = Array.from(formData)
+      .map((entry) => {
+        return (
+          encodeURIComponent(entry[0]) + "=" + encodeURIComponent(entry[1])
+        );
+      })
+      .join("&");
+
+    return serialized;
+  }
+
+  function handleResponse(data) {}
 </script>
 
-<script>
-  // Set a timeout to remove the message after a specified delay (e.g., 5 seconds)
-  const timeoutId = setTimeout(function () {
-    const alertElement = document.querySelector(".example-alert");
-    if (alertElement) {
-      alertElement.remove();
-    }
-  }, 3000);
-</script>
+
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>
-<!-- Mirrored from dashlite.net/demo2/ecommerce/products.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2023 14:33:03 GMT -->

@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema({
   refferalId:{
     type: String,
 
+  },google:{
+    type:Number,
   }
 });
 

@@ -5,7 +5,6 @@ const Wallet = require("../model/walletModel");
 const Order = require("../model/orderModel");
 const User = require("../model/userModel");
 const { Timestamp } = require("mongodb");
-
 const Razorpay = require("razorpay");
 const Crypto = require("crypto");
 
@@ -15,9 +14,10 @@ function hmac_sha256(data, secret) {
   return hmac.digest("hex");
 }
 const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+
 var instance = new Razorpay({
-  key_id: "rzp_test_X95zcCjqK3bbAQ",
-  key_secret: "WHrgT4zUIFZEkYq97HfNQTO6",
+  key_id: RAZORPAY_ID_KEY,
+  key_secret: RAZORPAY_SECRET_KEY,
 });
 
 function generateOrderId() {
@@ -31,7 +31,7 @@ function generateOrderId() {
 const loadcheckout = async (req, res) => {
   try {
     const user_id = req.session.user_id;
-
+    
     // Use populate to retrieve product details along with cart data
     const cartData = await Cart.findOne({ user: user_id }).populate(
       "products.product"
@@ -194,7 +194,7 @@ deliveryDate.setDate(orderDate.getDate() + 7);
               state: selectedAddress.state,
             },
           
-          paymentMethod: "Cash on Delivery",
+          paymentMethod: "pending",
           orderDate: orderDate,
           orderTime: new Timestamp(),
           deliveryDate:deliveryDate,
@@ -206,6 +206,9 @@ deliveryDate.setDate(orderDate.getDate() + 7);
 
         if (paymentType === "COD") {
           const orderData= await Order.findOne({orderId:newOrderId})
+          orderData.paymentMethod= "Cash on Delivery";
+          orderData.save();
+
           for (const product of orderData.products) {
             const updateStock = await Product.updateMany(
               { _id: product.product },
@@ -231,7 +234,7 @@ deliveryDate.setDate(orderDate.getDate() + 7);
 
                 order_id: order.id,
                 amount: amount,
-                key_id: "rzp_test_X95zcCjqK3bbAQ",
+                key_id: RAZORPAY_ID_KEY,
                 receipt: options.receipt,
                 contact: userData.mobile,
                 name: userData.firstname,
@@ -244,8 +247,15 @@ deliveryDate.setDate(orderDate.getDate() + 7);
             }
           });
         }else if (paymentType === "Wallet") {
+
+          const checkwallet = await Wallet.findOne({user:user_id})
           const orderData = await Order.findOne({ orderId: newOrderId });
         
+          if (checkwallet.totalAmount < orderData.amount) {
+            res.json({ infuentbalance: true });
+            
+          } else {
+          
           if (!orderData) {
             // Handle the case where the order data is not found
             return res.status(404).json({ error: "Order not found" });
@@ -297,7 +307,7 @@ deliveryDate.setDate(orderDate.getDate() + 7);
           }
         }
         
-
+      }
         // Delete the user's cart after processing the order
       }
     }
@@ -315,7 +325,7 @@ const verifyonlinepayment = async (req, res) => {
     const razorpay_signature = req.body.response.razorpay_signature;
     const order_id = req.body.response.razorpay_order_id;
     const razorpay_payment_id = req.body.response.razorpay_payment_id;
-    const secret = "WHrgT4zUIFZEkYq97HfNQTO6";
+    const secret = RAZORPAY_SECRET_KEY;
     const newOrderId = req.body.data.receipt;
 
     console.log(req.body);
@@ -355,7 +365,7 @@ const verifyonlinepayment = async (req, res) => {
       console.log("Payment verification failed");
     }
   } catch (error) {
-    console.log(error.message, "dfadsfds");
+    console.log(error.message);
   }
 };
 

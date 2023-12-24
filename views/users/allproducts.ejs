@@ -19,7 +19,7 @@
       <div class="container">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/home">Home</a></li>
-          <li class="breadcrumb-item"><a href="#">Shop</a></li>
+          <li class="breadcrumb-item"><a href="/allproducts">Shop</a></li>
         </ol>
       </div>
       <!-- End .container -->
@@ -123,7 +123,7 @@
                       <span>add to cart</span>
                   </a>
                     <a
-                      href="popup/quickView.html"
+                      href="/product?id=<%=value._id%>"
                       class="btn-product btn-quickview"
                       title="Quick view"
                       ><span>quick view</span></a
@@ -135,20 +135,20 @@
 
                 <div class="product-body">
                   <div class="product-cat">
-                    <a href="#">Women</a>
+                    <a href="/product?id=<%=value._id%>">Women</a>
                   </div>
                   <!-- End .product-cat -->
                   <h3 class="product-title">
-                    <a href="product.html"><%= value.productname %></a>
+                    <a href="/product?id=<%=value._id%>"><%= value.productname %></a>
                   </h3>
                   <!-- End .product-title -->
                   <p><%= value.frameshape %></p>
 
                   <%if(value.discountprice==null){%>
-                  <div class="product-price">$<%= value.price %></div>
+                  <div class="product-price">₹<%= value.price %></div>
                   <%}else{%>
                     
-                    <div class="product-price"><del>$<%= value.price %></del> <hr>  $<%= value.discountprice %></div>
+                    <div class="product-price"><del>₹<%= value.price %></del>  &#160 <span class="text-danger">₹<%= value.discountprice %></span> </div>
                     
                     <%}%>
                   <!-- End .product-price -->
@@ -211,10 +211,6 @@
         </nav>
 
 
-          <div class="load-more-container text-center">
-            <a href="#" class="btn btn-outline-darker btn-load-more"
-              >More Products <i class="icon-refresh"></i
-            ></a>
           </div>
           <!-- End .load-more-container -->
         </div>
@@ -356,15 +352,24 @@
             }
             return response.json();
           })
-          .then((data) => {
-            console.log(data);
+          .then(data => {
+                  if(data.message==true){
 
-            Swal.fire({
-              title: "Item Added in Cart!",
-              text: "You clicked the button!",
-              icon: "success",
-            });
-          })
+          Swal.fire({
+                  title: "Item Added in Cart!",
+                  text: "You clicked the button!",
+                  icon: "success"
+                  });
+
+              }else{
+                  Swal.fire({
+                  title: "no stock availible!",
+                  text: "You clicked the button!",
+                  icon: "error"
+                  });
+
+              }
+                    })
           .catch((error) => {
             console.error(
               "There was a problem with the fetch operation:",
@@ -538,7 +543,7 @@
     }
 
     // Set the checked status of price checkboxes
-    // ...
+
   }
 
   // Call the setCheckedStatus function when the page loads
@@ -548,5 +553,6 @@
 </script>
 
 
-<%- include("../layouts/userFooter.ejs")%> <%-
-include("../layouts/userFooter2.ejs")%> <%- include("../layouts/footer.ejs")%>
+<%- include("../layouts/userFooter.ejs")%>
+ <%- include("../layouts/userFooter2.ejs")%>
+ <%- include("../layouts/footer.ejs")%>

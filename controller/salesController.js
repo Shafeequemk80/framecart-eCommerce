@@ -220,20 +220,35 @@ const loadsales =async (req, res) => {
 
 console.log(endDate,moment(endDate).format('YYYY-MM-DD'));
 
-  
-
-    var page = 1;
+ var page = 1;
     if (req.query.page) {
       page = req.query.page;
     }
     let limit = 5;
 
-    const orders = await Order.find({
+let query ={}
+  const action=req.query.action||"all"
+  if (action === 'all') {
+    query ={
       orderDate: {
         $gte:Datestart ,
         $lte:endDate ,
       }
-    })
+    }
+  } else {
+   
+    query ={ orderDate: {
+        $gte:Datestart ,
+        $lte:endDate ,
+      },
+      "products.orderStatus":action
+    } 
+  }
+
+
+   
+
+    const orders = await Order.find(query)
      .limit(limit * 1)
      .skip((page - 1) * limit)
      .populate("user")
@@ -246,6 +261,8 @@ console.log(endDate,moment(endDate).format('YYYY-MM-DD'));
           $lte:endDate ,
         }
       }).countDocuments();
+
+      
    
     const ProductData = await Products.find();
     const CategoryData = await Category.find()
@@ -399,13 +416,28 @@ const loadchart =async (req, res) => {
       const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
       const lastDayOfMonth = new Date(currentYear, currentMonth, 0);
   
+      
+let query ={}
+const action=req.query.action||"all"
+if (action === 'all') {
+  query ={
+    orderDate: {
+      $gte:firstDayOfMonth ,
+      $lte:lastDayOfMonth ,
+    }
+  }
+} else {
+ 
+  query ={ orderDate: {
+      $gte:firstDayOfMonth ,
+      $lte:lastDayOfMonth ,
+    },
+    'products.statusLevel':action
+  } 
+}
+
       // Fetch orders for the current month
-      const monthlyOrders = await Order.find({
-        orderDate: {
-          $gte: firstDayOfMonth,
-          $lte: lastDayOfMonth,
-        },
-      });
+      const monthlyOrders = await Order.find(query);
   
       // Create an array to store daily sales
       const dailySales = Array.from({ length: lastDayOfMonth.getDate() }, () => 0);
@@ -458,6 +490,27 @@ const exportexcel = async (req, res) => {
     const workbook = new excelJs.Workbook();
     const worksheet = workbook.addWorksheet('Sales report');
 
+    
+let query ={}
+const action=req.query.action||"all"
+if (action === 'all') {
+  query ={
+    orderDate: {
+      $gte:Datestart ,
+      $lte:endDate ,
+    }
+  }
+} else {
+ 
+  query ={ orderDate: {
+      $gte:Datestart ,
+      $lte:endDate ,
+    },
+    paymentMethod:action
+  } 
+}
+
+
     worksheet.columns = [
       { header: 'S No', key: 's_no' },
       { header: 'Order Id', key: 'orderId' },
@@ -467,7 +520,7 @@ const exportexcel = async (req, res) => {
       { header: 'Product Name', key: 'products.product.name', width:20}, // Assuming there's a 'name' property in your product model
       { header: 'Product Count', key: 'products.count' },
       { header: 'Product Total Price', key: 'products.totalprice' },
-      { header: 'Payment Status', key: 'products.paymentStatus' },
+      
       { header: 'Order Status', key: 'products.orderStatus' },
       { header: 'City', key: 'address.city' },
       { header: 'State', key: 'address.state' },
@@ -479,12 +532,7 @@ const exportexcel = async (req, res) => {
     ];
 
     let count = 1;
-    const orderData = await Order.find({
-      orderDate: {
-        $gte:Datestart ,
-        $lte:endDate ,
-      }
-    }).populate('user').populate('products.product');
+    const orderData = await Order.find(query).populate('user').populate('products.product');
 
     orderData.forEach((order) => {
       const formattedOrder = {
@@ -541,13 +589,26 @@ const exportpdf = async (req, res) => {
     const endDate = new Date(req.query.endDate || Date.now());
     endDate.setHours(23, 59, 59, 999);
 
+    let query ={}
+const action=req.query.action||"all"
+if (action === 'all') {
+  query ={
+    orderDate: {
+      $gte:Datestart ,
+      $lte:endDate ,
+    }
+  }
+} else {
+ 
+  query ={ orderDate: {
+      $gte:Datestart ,
+      $lte:endDate ,
+    },
+    paymentMethod:action
+  } 
+}
 
-    const orderData = await Order.find({
-      orderDate: {
-        $gte:Datestart ,
-        $lte:endDate ,
-      }
-    }).populate('user').populate('products.product');
+    const orderData = await Order.find(query).populate('user').populate('products.product');
 
     let totalamount = 0;
 

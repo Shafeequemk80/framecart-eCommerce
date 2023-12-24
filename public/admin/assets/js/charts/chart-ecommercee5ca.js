@@ -783,7 +783,7 @@ console.log(parsedData);
         datasets: [
           {
             borderColor: "#fff",
-            background: ["#b695ff", "#ffa9ce", "#b8acff"],
+            background: ["#b695ff", "#ffa9ce", "#FFCD4B"],
             data: [parsedData.paymentCounts.online, parsedData.paymentCounts.cashOnDelivery, parsedData.paymentCounts.wallet],
           },
         ],

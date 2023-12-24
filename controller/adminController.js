@@ -11,6 +11,7 @@ const Mail = require("nodemailer/lib/mailer");
 const user_route = require("../routes/userRoute");
 const { token } = require("morgan");
 const Offer = require("../model/offerModel");
+const moment = require('moment');
 const securePassword = async (password) => {
   try {
     const passwordHash = bctypt.hash(password, 10);
@@ -169,7 +170,7 @@ const customerload = async (req, res) => {
       page = req.query.page;
     }
 
-    var limit = 2;
+    var limit = 5;
 
     const userData = await User.find({
       $or: [
@@ -215,6 +216,7 @@ const logout = async (req, res) => {
 };
 
 const loadproducts = async (req, res) => {
+  try {
   var search = "";
 
   if (req.query.search) {
@@ -260,7 +262,7 @@ const loadproducts = async (req, res) => {
     search: search,
   });
 
-  try {
+  
   } catch (error) {
     console.log(error.message);
   }
@@ -281,11 +283,16 @@ const loadorders = async (req, res) => {
     }
     let limit = 5;
 
-    const order = await Order.find({
-      $or: [
-        { paymentMethod: { $regex: ".*" + search + ".*", $options: "i" } },
-        { orderId: { $regex: ".*" + search + ".*", $options: "i" } },
-        { "user.firstname": { $regex: new RegExp(search, "i") } },
+    const  order = await Order.find({
+      $and: [
+        { "products.paymentStatus": { $ne: "pending" } },
+        {
+          $or: [
+            { paymentMethod: { $regex: new RegExp(search, "i") } },
+            { orderId: { $regex: new RegExp(search, "i") } },
+            { "user.firstname": { $regex: new RegExp(search, "i") } },
+          ],
+        },
       ],
     })
       .limit(limit * 1)
@@ -338,7 +345,7 @@ const allorderitems = async (req, res) => {
 
     console.log(products.map(product => product.productDetails)); // Log product details
 
-    res.render("allorderitems", { orders: products });
+    res.render("allorderitems", { orders: products ,moment});
   } catch (error) {
     console.log(error);
     // Handle the error appropriately (e.g., send an error response)
@@ -346,13 +353,15 @@ const allorderitems = async (req, res) => {
   }
 };
 
+
 const updateOrderStatus = async (req, res) => {
   try {
     const orderStatus = req.body.newStatus;
     const orderId = req.body.orderId;
     const id = req.body.id;
+
     let statusLevel = 0;
-console.log(req.body);
+
     switch (orderStatus) {
       case "Shipped":
         statusLevel = 2;
@@ -363,38 +372,61 @@ console.log(req.body);
       case "Delivered":
         statusLevel = 4;
         break;
+      case "Cancelled":
+        statusLevel = 5;
+        break;
+      default:
+        return res.status(400).json({ success: false, error: "Invalid orderStatus" });
     }
-    console.log(statusLevel);
+
     const order = await Order.findOne({
       orderId: orderId,
       "products.product": id,
     });
-    
 
-    const updateOrderStatus = await Order.updateOne(
+    if (!order) {
+      return res.status(404).json({ success: false, error: "Order not found" });
+    }
+
+    const productIndex = order.products.findIndex((product) => product.product.equals(id));
+
+    if (productIndex === -1) {
+      return res.status(404).json({ success: false, error: "Product not found in the order" });
+    }
+
+
+    let updateFields = {
+      "products.$.orderStatus": orderStatus,
+      "products.$.statusLevel": statusLevel,
+    };
+
+    if (orderStatus === "Delivered") {
+      updateFields = {
+        "products.$.orderStatus": orderStatus,
+        "products.$.statusLevel": statusLevel,
+        "products.$.paymentStatus":"success"
+      };
+    
+    }
+
+    const updatedOrderStatus = await Order.updateOne(
       {
         orderId: orderId,
         "products.product": id,
       },
       {
-        $set: {
-          "products.$.orderStatus": orderStatus,
-          "products.$.statusLevel": statusLevel,
-          "products.paymentStatus":"success"
-        },
+        $set: updateFields,
       }
     );
-    console.log(updateOrderStatus);
-    if (updateOrderStatus.modifiedCount==1) {
-      return res.status(200).json({ success: true,message:orderStatus });
+
+    if (updatedOrderStatus.modifiedCount === 1) {
+      return res.status(200).json({ success: true, message: orderStatus });
     } else {
-      return res.status(400).json({ success: false });
+      return res.status(400).json({ success: false, error: "Failed to update order status" });
     }
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ success: false, error: "Internal Server Error" });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 

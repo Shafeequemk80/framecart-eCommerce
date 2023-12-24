@@ -1,5 +1,6 @@
-<%- include("../layouts/adminHeader.ejs")%>
- <%-include("../layouts/adminSideBar.ejs")%>
+<%- include("../layouts/adminHeader.ejs")%> <%-
+include("../layouts/adminSideBar.ejs")%>
+
 
           <div class="nk-content">
             <div class="container-fluid">
@@ -182,38 +183,18 @@
                                   >
                                 </h6>
                               </div>
-                              <div class="nk-block-head-content">
-                                <div class="toggle-wrap nk-block-tools-toggle">
-                                  <a
-                                    href="#"
-                                    class="btn btn-icon btn-trigger toggle-expand me-n1"
-                                    data-target="pageMenu"
-                                    ><em class="icon ni ni-more-v"></em
-                                  ></a>
-                                  <div class="toggle-expand-content" data-content="pageMenu">
-                                    <ul class="nk-block-tools g-3">
-                                      <div class="form-group">
-                                       
-                                        <div class="form-control-wrap">
-                                          <div class="input-daterange date-picker-range input-group">
-                                            <input type="text" id="startDate" class="form-control" placeholder="Start date" />
-                                            <div class="input-group-addon">TO</div>
-                                            <input type="text" id="endDate" class="form-control" placeholder="End date" />
-                                            <a href="#" class="btn btn-outline-light ms-2" onclick="sendDatesToServer()">Filter</a>
-                                            <a href="#" class="btn btn-outline-light ms-2" onclick="clearDates()">Clear</a>
-                                          </div>
-                                        </div>
-                                        
-                                      </div>
-                                     
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
+                            
                              
                               
                               <div class="card-tools">
-                                
+                                <button
+                                type="button"
+                                class="btn btn-primary me-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalDefault"
+                              >
+                                Filter
+                              </button>
                                 <div class="dropdown">
                                   <a
                                     href="#"
@@ -277,7 +258,7 @@
                                 <div class="nk-tb-col"><span>&nbsp;</span></div>
                               </div>
 
-                              <%order.forEach((value)=>{%>
+                              <%if(order.length>0){ order.forEach((value)=>{%>
                               <div class="nk-tb-item">
                                 <div class="nk-tb-col">
                                   <span class="tb-lead"
@@ -323,6 +304,8 @@
                                     <span class="badge badge-dot badge-dot-xs bg-success">Online</span>
                                   <% } else if (value.paymentMethod === "Wallet") { %>
                                     <span class="badge badge-dot badge-dot-xs bg-primary">Wallet</span>
+                                  <% }else if (value.paymentMethod === "pending"){%>
+                                    <span class="badge badge-dot badge-dot-xs bg-danger">pending</span>
                                   <% } else { %>
                                     <span class="badge badge-dot badge-dot-xs bg-warning">Cash on Delivery</span>
                                   <% } %>
@@ -333,8 +316,15 @@
                                 
                                 </div>
                               </div>
-                              <%})%>
-                            </div>
+                            
+                              <%})}else{%>
+                              
+                                <div class="d-flex p-5 justify-content-center">
+                                  <h4>Orders not Available</h4>
+      
+                                </div>
+                                <%}%>
+                              </div>
                           </div>
                           <div
                             class="card-inner-sm border-top text-center d-sm-none"
@@ -415,6 +405,10 @@
                         </div>
                       </div>
                     </div>
+                    
+                
+
+
                       <div class="col-md-6 col-xxl-4">
                         <div class="card card-full">
                           <div class="card-inner border-bottom">
@@ -500,74 +494,164 @@
         </div>
       </div>
     </div>
-   
-<script>
-  // Function to get query parameters from the URL
-  function getQueryParam(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
-  }
-
-  // Function to set the input values based on query parameters or stored values
-  function setDatesFromQueryParams() {
-    const startDateParam = getQueryParam('startDate');
-    const endDateParam = getQueryParam('endDate');
-    const storedStartDate = localStorage.getItem('startDate');
-    const storedEndDate = localStorage.getItem('endDate');
-
-    // Use the stored values if available, otherwise use query parameters
-    const startDate = storedStartDate || startDateParam;
-    const endDate = storedEndDate || endDateParam;
-
-    if (startDate && endDate) {
-      document.getElementById('startDate').value = startDate;
-      document.getElementById('endDate').value = endDate;
-    }
-  }
-
-  // Call setDatesFromQueryParams on page load
-  window.onload = setDatesFromQueryParams;
-
-  // Function to send dates to the server and redirect
-  function sendDatesToServer() {
-    // Get the selected dates
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-
-    // Save the selected dates to localStorage
-    localStorage.setItem('startDate', startDate);
-    localStorage.setItem('endDate', endDate);
+   <!-- jQuery -->
 
 
+<!-- Bootstrap CSS and JavaScript -->
 
-    // Create a query string with the selected dates
-    const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+                    <!-- Modal Content Code -->
+                    <div class="modal fade" tabindex="-1" id="modalDefault">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Filter Orders</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body text-center">
+                            <div class="form-group">
+                              <div class="form-control-wrap">
+                                <div class="input-daterange date-picker-range input-group">
+                                  <input type="text" id="startDate" class="form-control" placeholder="Start date" />
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">TO</span>
+                                  </div>
+                                  <input type="text" id="endDate" class="form-control" placeholder="End date" />
+                                </div>
+                              </div>
+                            </div>
+                            <ul>
+                            <div class="dropdown mb-2 ">
+                              <select name="action" id="action" class="form-control" >
+                                <option value="" disabled selected>action</option>
+                        
+                                  <option value="all">All</option>
+                                  <option value="Cash on Delivery">Cash on Delivery</option>
+                                  <option value="online">online</option>
+                                  <option value="Wallet">Wallet</option>
+                                  <option value="pending">pending</option>
+                                <!-- Add more options as needed -->
+                              </select>
+                            </div>
+                            <div class="btn-group">
+                              <a href="#" class="btn btn-outline-light mx-1" onclick="todayReport()">Today Report</a>
+                              <a href="#" class="btn btn-outline-light mx-1" onclick="yesterdayReport()">Yesterday Report</a>
+                            </div>
 
-    // Append the query string to the current URL
-    window.location.href = window.location.pathname + queryString;
-  }
-
-  // Add an event listener for the "Filter" button
-  document.querySelector('.btn.btn-outline-light.ms-2').addEventListener('click', sendDatesToServer);
-  function clearDates() {
-    document.getElementById('startDate').value = '';
-    document.getElementById('endDate').value = '';
-  }
-
-  // Add an event listener for the "Clear" button
-  document.querySelector('.btn.btn-outline-light.ms-2.clear').addEventListener('click', clearDates);
-</script>
-
+                            <div class="btn-group mt-2">
+                              <a href="#" class="btn btn-outline-light mx-1" onclick="sendDatesToServer()">Filter</a>
+                              <a href="#" class="btn btn-outline-light mx-1" onclick="clearDates()">Clear</a>
+                            </div>
+                          </div>
+                          <div class="modal-footer bg-light">
+                            <span class="sub-text">You can filter and  export to Excel and PDF</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <script>
+                      // Function to get query parameters from the URL
+                      function getQueryParam(name) {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get(name);
+                      }
+                    
+                      // Function to set the value of an element
+                      function setElementValue(elementId, value) {
+                        document.getElementById(elementId).value = value;
+                      }
+                    
+                      // Function to handle yesterday report
+                      function yesterdayReport() {
+                        const yesterdayDate = new Date();
+                        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+                    
+                        // Get the selected dates
+                        const startDate = yesterdayDate.toISOString().split('T')[0];
+                        const endDate = yesterdayDate.toISOString().split('T')[0];
+                        const action = document.getElementById('action').value;
+                    
+                        const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&action=${encodeURIComponent(action)}`;
+                    
+                        // Append the query string to the current URL
+                        window.location.href = window.location.pathname + queryString;
+                      }
+                    
+                      // Function to handle today report
+                      function todayReport() {
+                        const currentDate = new Date();
+                    
+                        // Get the selected dates
+                        const startDate = currentDate.toISOString().split('T')[0];
+                        const endDate = currentDate.toISOString().split('T')[0];
+                        const action = document.getElementById('action').value;
+                    
+                        const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&action=${encodeURIComponent(action)}`;
+                    
+                        // Append the query string to the current URL
+                        window.location.href = window.location.pathname + queryString;
+                      }
+                    
+                      // Function to send dates to the server and redirect
+                      function sendDatesToServer() {
+                        // Get the selected dates
+                        const startDate = document.getElementById('startDate').value;
+                        const endDate = document.getElementById('endDate').value;
+                        const action = document.getElementById('action').value;
+                    
+                        // Save the selected dates to localStorage (if needed)
+                    
+                        // Create a query string with the selected dates
+                        const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&action=${encodeURIComponent(action)}`;
+                    
+                        // Append the query string to the current URL
+                        window.location.href = window.location.pathname + queryString;
+                      }
+                    
+                      // Function to clear dates
+                      function clearDates() {
+                        document.getElementById('startDate').value = '';
+                        document.getElementById('endDate').value = '';
+                        document.getElementById('action').value = '';
+                      }
+                    
+                      // Add event listeners for buttons
+                    
+                    
+                      // Retrieve and set values from query parameters
+                      const startDateParam = getQueryParam('startDate');
+                      const endDateParam = getQueryParam('endDate');
+                      const actionParam = getQueryParam('action');
+                    
+                      if (startDateParam) {
+                        setElementValue('startDate', decodeURIComponent(startDateParam));
+                      }
+                    
+                      if (endDateParam) {
+                        setElementValue('endDate', decodeURIComponent(endDateParam));
+                      }
+                    
+                      if (actionParam) {
+                        setElementValue('action', decodeURIComponent(actionParam));
+                      }
+                    </script>
+                    
     
     <script>
 
 function exportToExcel() {
-    // Get the selected dates
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
 
+  const urlParams = new URLSearchParams(window.location.search);
+
+
+    // Get the selected dates
+    const startDate = urlParams.get('startDate');
+    const endDate = urlParams.get('endDate');
+    const action=urlParams.get('action');
     // Create a query string with the selected dates
-    const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+    const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&action=${encodeURIComponent(action)}`;
 
     // Construct the export URL with the query string
     const exportUrl = '/admin/salesexportexcel' + queryString;
@@ -581,11 +665,15 @@ function exportToExcel() {
     <script>
       function exportTopdf() {
     // Get the selected dates
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+    const urlParams = new URLSearchParams(window.location.search);
+  const date = urlParams.get('startDate');
+ 
+    const startDate =  urlParams.get('startDate');
+    const endDate =  urlParams.get('endDate');
+    const action=urlParams.get('action');
 
     // Create a query string with the selected dates
-    const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+    const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&action=${encodeURIComponent(action)}`;
 
     // Construct the export URL with the query string
     const exportUrl = '/admin/salesexportpdf' + queryString;

@@ -20,7 +20,7 @@ include("../layouts/adminSideBar.ejs")%>
             <div class="mx-auto">
               <div class="card">
                 <div class="card-body">
-                  <form action="" method="post" id="updateOfferForm" >
+                  <form id="updateOfferForm" >
                     <div class="row mt-2">
                       <!-- Offer Name -->
                       <div class="col-12">
@@ -31,10 +31,12 @@ include("../layouts/adminSideBar.ejs")%>
                             type="text"
                             value="<%=offerData.offername%>"
                             name="offername"
-                            id="category-name"
+                            id="offername"
                             class="form-control"
-                            required
+                            
                           />
+                          <p class="text-danger" id="offername-error"></p>
+
                         </div>
                       </div>
 
@@ -44,8 +46,9 @@ include("../layouts/adminSideBar.ejs")%>
                         <div class="form-group ">
                           <label class="form-label">Start Date</label>
                           <div class="form-control-wrap">
-                            <input type="text" name="createdAt" value="<%= new Date(offerData.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %>
+                            <input type="text" name="createdAt" id="createdAt" value="<%= new Date(offerData.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %>
                             " class="form-control date-picker" />
+                            <p class="text-danger" id="createdAt-error"></p>
                           </div>
                           <div class="form-note">
                             Date format <code>mm/dd/yyyy</code>
@@ -58,7 +61,8 @@ include("../layouts/adminSideBar.ejs")%>
                           <label class="form-label">Expiry Date Date</label>
                           <div class="form-control-wrap">
                             <input type="text"  value="<%= new Date(offerData.expiryDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %>
-                            " name="updatedAt" class="form-control date-picker" />
+                            " name="updatedAt" id="updatedAt" class="form-control date-picker" />
+                            <p class="text-danger" id="updatedAt-error"></p>
                           </div>
                           <div class="form-note">
                             Date format <code>mm/dd/yyyy</code>
@@ -73,10 +77,11 @@ include("../layouts/adminSideBar.ejs")%>
                             type="text"
                             value="<%=offerData.percentage%>"
                             name="percentage"
-                            id="category-name"
+                            id="percentage"
                             class="form-control"
-                            required
+                            
                           />
+                          <p class="text-danger" id="percentage-error"></p>
                         </div>
                       </div>
 
@@ -113,49 +118,56 @@ include("../layouts/adminSideBar.ejs")%>
   <!-- ... -->
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="/static/js/adminValidation.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     // Get the form element
     const updateOfferForm = document.getElementById('updateOfferForm');
-  
+
     // Add a submit event listener to the form
-    updateOfferForm.addEventListener('submit', function(event) {
+    updateOfferForm.addEventListener('submit', function (event) {
       // Prevent the default form submission
       event.preventDefault();
-  
-      // Serialize the form data
+
+      // Serialize the form data to an object
       const formData = new FormData(updateOfferForm);
       const formObject = {};
       formData.forEach((value, key) => {
         formObject[key] = value;
       });
-  
+
       // Convert the form data to JSON
       const jsonData = JSON.stringify(formObject);
-  
-      // Make a Fetch request to submit the form data
-      fetch('/admin/actioneditoffer', {
-        method: 'POST', // or 'PUT' if it's an update
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData,
-      })
-      .then(response => response.json())
-      .then(data => {
-        Swal.fire({
-        icon: 'success',
-        title: 'Offer Updated',
-        text: 'Your offer has been updated successfully!',
-      })
-      // .then(() =>window.location.reload()); 
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+
+      // Check if editoffer() returns true before submitting the form
+      if (editoffer()) {
+        // Make a Fetch request to submit the form data
+        fetch('/admin/actioneditoffer', {
+          method: 'POST', // or 'PUT' if it's an update
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonData,
+        })
+          .then(response => response.json())
+          .then(data => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Offer Updated',
+              text: 'Your offer has been updated successfully!',
+            })
+        
+             .then(() => window.location.href = '/admin/offers'); 
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          })
+      }
     });
   });
-  </script>
+</script>
 
 
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>

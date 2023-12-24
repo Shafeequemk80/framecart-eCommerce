@@ -183,6 +183,8 @@ const loadverifyotp = async (req, res) => {
     console.log(error.message);
   }
 };
+User
+
 const checkotp = async (req, res) => {
   try {
     const verifyotp = req.body.otp;
@@ -204,8 +206,11 @@ const checkotp = async (req, res) => {
           refferalId: refferalId,
         });
         const savedUser = await newUser.save();
-        const refferal = req.session.refferal;
         const userData = await User.findOne({ email: req.session.email });
+
+        if(req.session.refferal){
+        const refferal = req.session.refferal;
+        
         const reffrerData = await User.findOne({ refferalId: refferal });
         const walletData = await Wallet.findOne({ user: reffrerData._id });
 
@@ -213,16 +218,22 @@ const checkotp = async (req, res) => {
           transactionId: refferalId,
           transactionDate: new Date(),
           transactionDetails: "Credit",
-          transactionType: "Refferal COde",
+          transactionType: "Refferal Code",
           transactionAmount: 100,
         };
+
+        const irffered={
+          clientname:req.session.username,
+          createdAt:new Date(),
+        }
 
         if (walletData) {
           walletData.totalAmount += 100;
           walletData.walletHistory.push(transactionDetails);
+          walletData.ireffered.push(irffered);
           await walletData.save();
         }
-
+      }
         const newWalletEntry = new Wallet({
           user: userData._id,
           totalAmount: 0,
@@ -507,7 +518,7 @@ const getoneproduct = async (req, res) => {
 
     const userData = await User.findById(user_id);
 
-    const productData = await Product.findById(id);
+    const productData = await Product.findById(id).populate('offer')
 
     const categoryData = await Product.find({
       frameshape: productData.frameshape,
