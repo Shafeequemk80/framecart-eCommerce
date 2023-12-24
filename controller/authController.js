@@ -2,7 +2,7 @@ const passport = require("passport");
 require("dotenv").config();
 const User = require("../model/userModel");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
-const bcrypt = require("bcrypt"); // Import bcrypt library
+const bcrypt = require("bcryptjs"); // Import bcrypt library
 const Wallet = require("../model/walletModel");
 const securePassword = async (password) => {
   try {

@@ -1,6 +1,6 @@
 const Order = require('../model/orderModel');
 const moment = require('moment');
-const bctypt = require("bcrypt");
+const bctypt = require("bcryptjs");
 const User = require("../model/userModel");
 const Category = require("../model/categoryModel");
 const Products = require("../model/productsModel");
