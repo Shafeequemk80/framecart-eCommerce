@@ -41,7 +41,7 @@ const sendResetVerifyMail = async (fullname, email, token) => {
       html:
         "<p>Hai " +
         fullname +
-        ', Please Click here to <a href="http://localhost:3000/resetpassword?token=' +
+        ', Please Click here to <a href="https://farado.store/resetpassword?token=' +
         token +
         '"> reset </a> Your password</p>',
     };
