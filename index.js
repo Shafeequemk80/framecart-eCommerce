@@ -4,9 +4,7 @@ const morgan = require("morgan");
 
 const mongoose = require("mongoose");
 // mongoose.connect("mongodb://127.0.0.1:27017/frmecart");
-mongoose.connect(
-  "mongodb+srv://shafeequemk80:1L3SlbG4OC7wYevT@farado-db.t8xnvt4.mongodb.net/?retryWrites=true&w=majority"
-);
+mongoose.connect(process.env.MONGODB);
 const app = express();
 const path = require("path");
 const moment = require("moment");

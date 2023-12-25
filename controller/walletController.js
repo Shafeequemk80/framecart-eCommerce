@@ -1,4 +1,5 @@
 const Wallet = require("../model/walletModel");
+require("dotenv").config();
 const User = require("../model/userModel");
 const Razorpay = require("razorpay");
 const Crypto = require("crypto");
