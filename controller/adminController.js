@@ -1,4 +1,4 @@
-const bctypt = require("bcryptjs");
+const bctypt = require("bcrypt");
 const User = require("../model/userModel");
 const Order = require("../model/orderModel");
 const Category = require("../model/categoryModel");
