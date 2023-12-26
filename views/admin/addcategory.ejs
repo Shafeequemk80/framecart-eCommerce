@@ -17,8 +17,7 @@ include("../layouts/adminSideBar.ejs")%>
                     <div class="card">
                       <div class="card-body">
                         <form
-                          action=""
-                          method="post"
+                          id="addcategory-form"
                           enctype="multipart/form-data"
                         >
 
@@ -45,6 +44,7 @@ include("../layouts/adminSideBar.ejs")%>
                             </label>
                           </div>
                           
+                          
                           <!-- Category Name -->
                           <div class="col-8">
                             <div class="form-group col-12">
@@ -52,10 +52,11 @@ include("../layouts/adminSideBar.ejs")%>
                               <input
                                 type="text"
                                 name="categoryname"
-                                id="category-name"
+                                id="categoryname"
                                 class="form-control"
-                                required
+                                
                               />
+                              <p class="text-danger" id="categoryname-error"></p>
                             </div>
                           </div>
                         </div>
@@ -63,13 +64,14 @@ include("../layouts/adminSideBar.ejs")%>
 
                             <!-- Submit Button -->
                             <div class="col-12">
-                              <button type="submit" class="btn btn-primary">
+                              <button type="button" id="addcategory-button" class="btn btn-primary">
                                 <em class="icon ni ni-plus"></em>
                                 <span>Add New</span>
                               </button>
                             </div>
                           </div>
                         </form>
+                       
                       </div>
                     </div>
                   </div>
@@ -87,38 +89,86 @@ include("../layouts/adminSideBar.ejs")%>
   <!-- ... -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <script>
-  $(document).ready(function () {
-    $(".imageInput").change(function () {
+  $(document).ready(function() {
+    $(".imageInput").change(function() {
       var input = this;
-      var imagePreview = $(input)
-        .siblings(".rounded-image-preview")
-        .children("img")[0];
+      var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
 
       if (input.files && input.files[0]) {
         var reader = new FileReader();
 
-        reader.onload = function (e) {
+        reader.onload = function(e) {
           imagePreview.src = e.target.result;
           $(imagePreview).show();
         };
 
         reader.readAsDataURL(input.files[0]);
+}});});
+  </script>
+
+<script src="/static/js/adminValidation.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("addcategory-form");
+    const signupButton = document.getElementById("addcategory-button");
+   
+    signupButton.addEventListener("click", function () {
+      
+      if (addcategory()) {
+        
+        const formData = new FormData(registrationForm);
+
+  
+
+       
+
+        fetch("/admin/addcategory", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              Swal.fire({
+                title: "Added Successfully",
+                text: "Your new category has been added successfully.",
+                icon: "success",
+              }).then(() => (window.location.href = "/admin/category"));
+            }else if (data.fail) {
+              Swal.fire({
+                title: "this category name is already added",
+                text: "your can add this category name try to add another",
+                icon: "warning",
+              }).then(() => (window.location.href = "/admin/addcategory"));
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+            });
+          });
       }
     });
   });
+
   
 </script>
 
-<script>
-  // Set a timeout to remove the message after a specified delay (e.g., 5 seconds)
-  const timeoutId = setTimeout(function () {
-      const alertElement = document.querySelector(".example-alert");
-      if (alertElement) {
-          alertElement.remove();
-      }
-  },3000)
-</script>
 <script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
 <script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>

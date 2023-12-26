@@ -484,7 +484,7 @@
     signupButton.addEventListener("click", function () {
       if (validationAddress()) {
         const formData = serialize(registrationForm);
-        console.log("Complete Form Data:", formData);
+
 
         fetch("/newaddress", {
           method: "POST",
@@ -575,7 +575,7 @@
         } else if (response.Wallet) {
           window.location.href = `/success-payment?id=${response.newOrderId}`;
         } else if (response.online) {
-            console.log(response);
+          
           var options = {
             key: response.key_id,
             amount: response.amount,

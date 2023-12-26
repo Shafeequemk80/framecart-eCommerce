@@ -578,7 +578,7 @@ copyText.querySelector("button").addEventListener("click", function () {
     signupButton.addEventListener("click", function () {
       if (validationprofile()) {
         const formData = serialize(registrationForm);
-        console.log("Complete Form Data:", formData);
+       
 
         fetch("/editprofile", {
           method: "POST",

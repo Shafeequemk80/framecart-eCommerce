@@ -69,7 +69,6 @@
 
       const data = await response.json().catch(() => ({ message: "Invalid response from server" }));
 
-      console.log(data);
 
       if (response.ok) {
         if (data.message === "Your account is suspended") {

@@ -269,3 +269,23 @@ function editoffer() {
     return isValid;
   }
   
+
+  function addcategory(){
+    
+    const productname = document.getElementById("categoryname").value;
+    document.getElementById("categoryname-error").textContent = "";
+
+
+    let isValid = true;
+    const textRegex = /^[a-zA-Z][a-zA-Z0-9\s\,\''\-]*$/;
+    if (!productname) {
+      document.getElementById("categoryname-error").textContent =
+        "Category Name is required";
+      isValid = false;
+    }else if (!textRegex.test(productname)) {
+      document.getElementById("categoryname-error").textContent =
+        "Category Name should contain only alphabets";
+      isValid = false;
+    }
+    return isValid;
+  }

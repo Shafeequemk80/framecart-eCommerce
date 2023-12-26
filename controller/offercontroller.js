@@ -9,7 +9,6 @@ const getoffers = async (req, res) => {
       search = req.query.search;
     }
 
-    console.log(search, "search value ");
     var page = 1;
     if (req.query.page) {
       page = req.query.page;
@@ -37,23 +36,20 @@ const getoffers = async (req, res) => {
       search: search,
     });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).send("Internal Server Error");
+    res.render("500");
   }
 };
-
 
 const addoffers = async (req, res) => {
   try {
     res.render("addoffers");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
 const saveoffers = async (req, res) => {
   try {
-    console.log(req.body);
     const offername = req.body.offername;
     const createdAt = req.body.createdAt;
     const updatedAt = req.body.updatedAt;
@@ -70,8 +66,7 @@ const saveoffers = async (req, res) => {
     const updated = await updateData.save();
     res.json({ success: true });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
+    res.render("500");
   }
 };
 
@@ -79,7 +74,6 @@ const unlistoffers = async (req, res) => {
   try {
     const action = req.body.action;
     const offerId = req.body.offerId;
-    console.log(req.body);
 
     const offerData = await Offer.findOne({ _id: offerId });
 
@@ -89,14 +83,12 @@ const unlistoffers = async (req, res) => {
 
     const unlisted = await offerData.save();
     if (unlisted) {
-      console.log("successfully added");
       res.json({ success: true });
     } else {
       res.json({ success: flase });
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.render("500");
   }
 };
 
@@ -104,17 +96,16 @@ const edittoffers = async (req, res) => {
   try {
     const offerId = req.query.id;
 
-    console.log(offerId);
     const offerData = await Offer.findOne({ _id: offerId });
     res.render("editoffers", { offerData: offerData });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const updateOffers = async (req, res) => {
   try {
     const offerData = await Offer.findOne({ _id: req.body.id });
-    console.log(offerData, "update");
+
     if (offerData) {
       // Assuming req.body.createdAt and req.body.updatedAt are in the "mm/dd/yyyy" format
       const createdAtDate = new Date(req.body.createdAt);
@@ -130,8 +121,7 @@ const updateOffers = async (req, res) => {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.render("500");
   }
 };
 
@@ -140,23 +130,20 @@ const applyoffercategory = async (req, res) => {
     const offerId = req.body.offerId;
     const category_id = req.body.category_id;
 
-    
-    
     const offerData = await Offer.findOne({ _id: offerId });
 
     const categoryData = await Category.findOne({ _id: category_id });
-    console.log(categoryData);
+
     if (offerData && categoryData) {
       categoryData.offer = offerData._id;
 
       const productData = await Products.find({
         frameshape: categoryData.categoryname,
       });
-      console.log(productData);
 
       // Update discount prices for products in the category
       for (const product of productData) {
-        if (product.offer==null) {
+        if (product.offer == null) {
           product.discountprice =
             product.price - (offerData.percentage * product.price) / 100;
           await product.save(); // Save the first product that matches the condition
@@ -181,28 +168,27 @@ const applyoffercategory = async (req, res) => {
         .json({ success: false, message: "Offer or category not found" });
     }
   } catch (error) {
-    console.error(error);
-    // Respond with an error status and message
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.render("500");
   }
 };
 const removeOfferCategories = async (req, res) => {
   try {
     const categoryId = req.body.category_id;
 
-    const categoryData = await Category.findById(categoryId).populate('offer');
-    const productData = await Products.find({ frameshape: categoryData.categoryname }).populate('offer');
+    const categoryData = await Category.findById(categoryId).populate("offer");
+    const productData = await Products.find({
+      frameshape: categoryData.categoryname,
+    }).populate("offer");
 
     for (const product of productData) {
-      
-        if (product.offer === null) {
-          product.discountprice = null;
-        } else if (product.offer && product.offer.percentage) {
-          product.discountprice = product.price - (product.offer.percentage * product.price) / 100;
-        } 
+      if (product.offer === null) {
+        product.discountprice = null;
+      } else if (product.offer && product.offer.percentage) {
+        product.discountprice =
+          product.price - (product.offer.percentage * product.price) / 100;
+      }
 
-        await product.save();
-      
+      await product.save();
     }
 
     if (categoryData) {
@@ -214,18 +200,14 @@ const removeOfferCategories = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.render("500");
   }
 };
-
-
 
 const applyOfferProduct = async (req, res) => {
   try {
     const offerId = req.body.offerId;
     const product_id = req.body.product_id;
-    console.log(req.body);
 
     const offerData = await Offer.findOne({ _id: offerId });
 
@@ -238,7 +220,6 @@ const applyOfferProduct = async (req, res) => {
     }).populate("offer");
 
     if (categoryData.offer == null) {
-      
       productData.offer = offerId;
       productData.discountprice =
         productData.price - (offerData.percentage * productData.price) / 100;
@@ -262,12 +243,13 @@ const applyOfferProduct = async (req, res) => {
       res.status(200).json({ success: true });
     } else {
       // Respond with an error status if the save operation fails
-      res.status(500).json({ success: false, message: "Failed to update product" });
+      res
+        .status(500)
+        .json({ success: false, message: "Failed to update product" });
     }
   } catch (error) {
     // Handle errors and respond with an appropriate message
-    console.error(error.message);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.render("500");
   }
 };
 const removeOfferProduct = async (req, res) => {
@@ -276,30 +258,33 @@ const removeOfferProduct = async (req, res) => {
     const productData = await Products.findById(productId);
 
     if (!productData) {
-      return res.status(404).json({ success: false, message: 'Product not found' }).populate('offer');
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" })
+        .populate("offer");
     }
-console.log(productData);
-    const categoryData = await Category.findOne({ categoryname: productData.frameshape }).populate('offer');
+
+    const categoryData = await Category.findOne({
+      categoryname: productData.frameshape,
+    }).populate("offer");
 
     if (categoryData.offer === null) {
       productData.offer = null;
       productData.discountprice = null;
     } else {
       productData.offer = null;
-      productData.discountprice = productData.price - (categoryData.offer.percentage * productData.price) / 100;
+      productData.discountprice =
+        productData.price -
+        (categoryData.offer.percentage * productData.price) / 100;
     }
 
     const updatedProduct = await productData.save();
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error.message);
-    return res.status(500).json({ success: false, message: 'Internal server error' });
+    res.render("500");
   }
 };
-
-
-
 
 module.exports = {
   getoffers,

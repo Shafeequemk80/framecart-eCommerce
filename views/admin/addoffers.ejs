@@ -115,7 +115,7 @@
     signupButton.addEventListener("click", function () {
       if (addOffer()) {
         const formData = serialize(registrationForm);
-        console.log("Complete Form Data:", formData);
+   
 
         fetch("/admin/addoffers", {
           method: "POST",

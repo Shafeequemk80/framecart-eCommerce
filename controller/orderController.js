@@ -7,7 +7,6 @@ const moment = require("moment");
 
 const Wallet = require("../model/walletModel");
 
-
 const allorders = async (req, res) => {
   try {
     const user_id = req.session.user_id;
@@ -16,15 +15,13 @@ const allorders = async (req, res) => {
       .populate("products.product")
       .sort({ _id: -1 });
 
-    console.log(userOrders);
-
     res.render("allorders", {
       user: user_id,
       products: userOrders,
       moment: moment,
     });
   } catch (error) {
-    console.log(error);
+    res.render("500");
   }
 };
 
@@ -33,12 +30,9 @@ const vieworder = async (req, res) => {
     const user_id = req.session.user_id;
     const orderId = req.query.id;
 
-
     const userOrders = await Order.findOne({ _id: orderId })
       .populate("products.product")
       .exec();
-
-    console.log(userOrders);
 
     res.render("vieworder", {
       orders: userOrders,
@@ -46,9 +40,7 @@ const vieworder = async (req, res) => {
       moment: moment,
     });
   } catch (error) {
-    console.log(error);
-    // Handle the error appropriately (e.g., send an error response)
-    res.status(500).send("Internal Server Error");
+    res.render("500");
   }
 };
 const cancelorder = async (req, res) => {
@@ -69,25 +61,22 @@ const cancelorder = async (req, res) => {
 
     // Calculate totalprice by summing up the prices of the canceled products
 
-
     let totalprice = 0;
-    let status = '';
-    
+    let status = "";
+
     orderUpdate.products.forEach((product) => {
       if (product.product == id) {
         totalprice = product.totalprice;
         status = product.paymentStatus;
       }
     });
-    
-    console.log(orderUpdate,totalprice,status);
 
     const updateStock = await Products.findByIdAndUpdate(id, {
       $inc: { stock: count },
     });
 
     // Assuming you have the correct reference to Wallet model
-    if (status== "success") {
+    if (status == "success") {
       const walletUpdate = await Wallet.updateOne(
         { user: user_id },
         {
@@ -111,11 +100,9 @@ const cancelorder = async (req, res) => {
       return res.status(404).json({ success: false });
     }
   } catch (error) {
-    console.error("Error cancelling order:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.render("500");
   }
 };
-
 
 const returnorder = async (req, res) => {
   try {
@@ -139,10 +126,9 @@ const returnorder = async (req, res) => {
       $inc: { stock: count },
     });
 
-
     let totalprice = 0;
-    let status = '';
-    
+    let status = "";
+
     orderUpdate.products.forEach((product) => {
       if (product.product == id) {
         totalprice = product.totalprice;
@@ -150,7 +136,7 @@ const returnorder = async (req, res) => {
       }
     });
 
-    if (status== "success") {
+    if (status == "success") {
       const walletUpdate = await Wallet.updateOne(
         { user: user_id },
         {
@@ -174,8 +160,7 @@ const returnorder = async (req, res) => {
       return res.status(404).json({ success: false });
     }
   } catch (error) {
-    console.error("Error cancelling order:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.render("500");
   }
 };
 
@@ -187,11 +172,9 @@ const invoiceprint = async (req, res) => {
       $and: [{ orderId: id }, { user: user_id }],
     }).populate("products.product");
 
-    console.log(orderData);
-
     res.render("invoice-print", { orderData: orderData, moment: moment });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 

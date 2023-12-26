@@ -272,7 +272,6 @@
 
       const data = await response.json();
 
-      console.log(data);
       if (data&& data.message ==='Cart updated successfully') {
         
         // Update the input value after receiving the response
@@ -284,7 +283,7 @@ totalPriceElements[index].textContent = ` ${totalPrice.toFixed(2)}`;
 
         // Update the subtotal and other UI elements
         updateSubtotal();
-        console.log(updateSubtotal());
+        
         
       } else {
         // console.error("Invalid response data:", data);

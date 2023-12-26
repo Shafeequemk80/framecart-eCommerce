@@ -16,7 +16,7 @@ const securePassword = async (password) => {
     const passwordHash = await bcrypt.hash(password, 10);
     return passwordHash;
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 
@@ -79,8 +79,7 @@ const success = async (req, res) => {
         }
       }
     } catch (error) {
-      console.error(error.message);
-      res.status(500).send('Internal Server Error');
+      res.render('500');
     }
   };
   

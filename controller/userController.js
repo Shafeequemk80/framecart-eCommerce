@@ -45,7 +45,7 @@ const securePassword = async (password) => {
     const passwordHash = await bcrypt.hash(password, 10);
     return passwordHash;
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -83,7 +83,7 @@ const sendVerifyMail = async (email, name, otp) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -120,7 +120,7 @@ const sendResetVerifyMail = async (fullname, email, token) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -128,29 +128,25 @@ const loadregister = async (req, res) => {
   try {
     res.render("signup");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
 const insestUser = async (req, res) => {
   try {
-    console.log(req.body, "dfdf");
     const existingUser = await User.findOne({ email: req.body.email });
     const referral = req.body.refferal;
     if (referral) {
       const existingReferrals = await User.findOne({ refferalId: referral });
 
-      console.log(existingReferrals,"email");
-    
       if (!existingReferrals) {
         // If there's no existing referral, render the signup page with an appropriate message.
         return res.json({ notMatcthrefferal: true });
       }
       // Optionally, you can add additional logic here if needed.
     }
- 
+
     if (existingUser) {
- 
       return res.json({ notMatchemail: true });
     } else {
       req.session.username = req.body.username;
@@ -165,14 +161,14 @@ const insestUser = async (req, res) => {
         const generatedOTP = generateAndStoreOTP(req);
 
         sendVerifyMail(req.session.email, req.session.firstname, generatedOTP);
-        console.log(generatedOTP);
+
         return res.status(200).json({ success: true });
       } else {
         return res.status(400).json({ samepassword: true });
       }
     }
   } catch (error) {
-    console.log(error);
+    res.render("500");
   }
 };
 
@@ -180,16 +176,16 @@ const loadverifyotp = async (req, res) => {
   try {
     res.render("verify");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
-User
+User;
 
 const checkotp = async (req, res) => {
   try {
     const verifyotp = req.body.otp;
     const currTime = Math.floor(Date.now() / 1000);
-    console.log(verifyotp);
+
     if (currTime <= req.session.otp.expiry) {
       if (req.session.otp.code === verifyotp) {
         const hashedPassword = await securePassword(req.session.password);
@@ -208,39 +204,38 @@ const checkotp = async (req, res) => {
         const savedUser = await newUser.save();
         const userData = await User.findOne({ email: req.session.email });
 
-        if(req.session.refferal){
-        const refferal = req.session.refferal;
-        
-        const reffrerData = await User.findOne({ refferalId: refferal });
-        const walletData = await Wallet.findOne({ user: reffrerData._id });
+        if (req.session.refferal) {
+          const refferal = req.session.refferal;
 
-        const transactionDetails = {
-          transactionId: refferalId,
-          transactionDate: new Date(),
-          transactionDetails: "Credit",
-          transactionType: "Refferal Code",
-          transactionAmount: 100,
-        };
+          const reffrerData = await User.findOne({ refferalId: refferal });
+          const walletData = await Wallet.findOne({ user: reffrerData._id });
 
-        const irffered={
-          clientname:req.session.username,
-          createdAt:new Date(),
+          const transactionDetails = {
+            transactionId: refferalId,
+            transactionDate: new Date(),
+            transactionDetails: "Credit",
+            transactionType: "Refferal Code",
+            transactionAmount: 100,
+          };
+
+          const irffered = {
+            clientname: req.session.username,
+            createdAt: new Date(),
+          };
+
+          if (walletData) {
+            walletData.totalAmount += 100;
+            walletData.walletHistory.push(transactionDetails);
+            walletData.ireffered.push(irffered);
+            await walletData.save();
+          }
         }
-
-        if (walletData) {
-          walletData.totalAmount += 100;
-          walletData.walletHistory.push(transactionDetails);
-          walletData.ireffered.push(irffered);
-          await walletData.save();
-        }
-      }
         const newWalletEntry = new Wallet({
           user: userData._id,
           totalAmount: 0,
         });
 
         await newWalletEntry.save();
-        console.log(newWalletEntry);
 
         if (savedUser) {
           req.session.user_id = savedUser._id;
@@ -251,32 +246,27 @@ const checkotp = async (req, res) => {
             .json({ success: false, message: "Error creating user" });
         }
       } else {
-        console.log("Invalid OTP");
         res.json({ invalid: true, message: "Invalid OTP" });
       }
     } else {
       res.json({ expired: true, message: "OTP has expired" });
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.render("500");
   }
 };
 const resend = async (req, res) => {
   try {
     const generatedOTP = generateAndStoreOTP(req);
     const email = req.session.email;
-    console.log(email, "email");
+
     const name = req.session.firstname || "";
     // Assuming sendVerifyMail is correctly implemented
     sendVerifyMail(email, name, generatedOTP);
 
-    console.log(`Resent OTP to ${email} for user ${name}`);
-
     res.json({ resendsuccess: true });
   } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.render("500");
   }
 };
 
@@ -284,14 +274,14 @@ const confimverify = async (req, res) => {
   try {
     res.redirect("/login");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const loadlogin = async (req, res) => {
   try {
     res.render("login");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const verifylogin = async (req, res) => {
@@ -319,18 +309,16 @@ const verifylogin = async (req, res) => {
       res.status(400).json({ message: "Your email or password is incorrect" });
     }
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.render("500");
   }
 };
 
 const loadHome = async (req, res) => {
   try {
     const id = req.session.user_id;
-    console.log(id);
 
     const userData = await User.findById(id);
-    console.log(userData);
+
     const categorydata = await Category.find({ active: 0 })
       .sort({
         createdAt: -1,
@@ -349,7 +337,7 @@ const loadHome = async (req, res) => {
       user: userData,
     });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -357,7 +345,7 @@ const loadforget = async (req, res) => {
   try {
     res.render("forgetpassword");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -378,7 +366,7 @@ const verifyforget = async (req, res) => {
       res.render("forgetpassword", { message: "user mail is incorect" });
     }
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const loadreset = async (req, res) => {
@@ -391,11 +379,10 @@ const loadreset = async (req, res) => {
       res.render(404);
     }
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const resetpassword = async (req, res) => {
-  console.log(req.body.user_id);
   const password = req.body.password;
   const user_id = req.body.user_id;
 
@@ -413,7 +400,7 @@ const logout = async (req, res) => {
     req.session.user_id = null;
     res.redirect("/");
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -429,7 +416,6 @@ const getallproducts = async (req, res) => {
       sortObject.price = 1;
     } else if (sort == "hl") {
       sortObject.price = -1;
-      console.log(sort);
     } else if (sort == "latest") {
       sortObject.createdAt = -1;
     }
@@ -460,7 +446,7 @@ const getallproducts = async (req, res) => {
       const categoriesFilter = { frameshape: { $in: trimmedCategories } };
       Object.assign(query, categoriesFilter);
     }
-    console.log(req.query.categories);
+
     // Apply price filter
     if (req.query.prices) {
       const value = req.query.prices.split(",");
@@ -477,8 +463,6 @@ const getallproducts = async (req, res) => {
         };
         Object.assign(query, priceFilter);
       } else {
-        // Handle invalid price values (e.g., log an error or provide default values)
-        console.error("Invalid price values:", req.query.prices);
       }
     }
 
@@ -489,7 +473,7 @@ const getallproducts = async (req, res) => {
       .skip((page - 1) * limit)
       .populate("offer")
       .exec();
-    console.log(productData);
+
     // Count total products for pagination
     const count = await Product.countDocuments(query);
 
@@ -506,8 +490,7 @@ const getallproducts = async (req, res) => {
       totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
+    res.render("500");
   }
 };
 
@@ -518,12 +501,11 @@ const getoneproduct = async (req, res) => {
 
     const userData = await User.findById(user_id);
 
-    const productData = await Product.findById(id).populate('offer')
+    const productData = await Product.findById(id).populate("offer");
 
     const categoryData = await Product.find({
       frameshape: productData.frameshape,
     });
-    console.log(categoryData);
 
     res.render("product", {
       product: productData,
@@ -531,18 +513,22 @@ const getoneproduct = async (req, res) => {
       categoryData: categoryData,
     });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
-};const loadcart = async (req, res) => {
+};
+const loadcart = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
 
-    const cartData = await Cart.findOne({ user: id }).populate("products.product");
+    const cartData = await Cart.findOne({ user: id }).populate(
+      "products.product"
+    );
     let totalAmount = 0;
     if (cartData) {
       for (const cartItem of cartData.products) {
-        if (cartItem.product) { // Check if cartItem.product is not null
+        if (cartItem.product) {
+          // Check if cartItem.product is not null
           const productPrice =
             cartItem.product.discountprice == null
               ? cartItem.product.price
@@ -552,14 +538,14 @@ const getoneproduct = async (req, res) => {
         }
       }
     }
-console.log(cartData);
+
     res.render("cart", {
       user: userData,
       cartData: cartData,
       totalAmount: totalAmount,
     });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -570,13 +556,12 @@ const profile = async (req, res) => {
 
     res.render("profile", { user: userData });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
 const editprofile = async (req, res) => {
   try {
-    console.log("hello");
     const user_id = req.session.user_id;
 
     const updateData = await User.findByIdAndUpdate(
@@ -591,9 +576,9 @@ const editprofile = async (req, res) => {
         },
       }
     );
-    res.json({success:true});
+    res.json({ success: true });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const changeemail = async (req, res) => {
@@ -609,7 +594,7 @@ const changeemail = async (req, res) => {
       res.json({ exists: true });
     } else {
       const generatedOTP = generateAndStoreOTP(req);
-      console.log(generatedOTP);
+
       req.session.email = email;
 
       sendVerifyMail(email, user_id.firstname, generatedOTP);
@@ -617,8 +602,7 @@ const changeemail = async (req, res) => {
       return res.json({ mailsent: true });
     }
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.render("500");
   }
 };
 const verify_email_change = async (req, res) => {
@@ -627,7 +611,7 @@ const verify_email_change = async (req, res) => {
 
     res.render("verifyemailchange", { email: email });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -635,13 +619,11 @@ const check_verifyemail_change = async (req, res) => {
   try {
     const verifyotp = req.body.otp;
     const currTime = Math.floor(Date.now() / 1000);
-    console.log(verifyotp);
+
     if (currTime <= req.session.otp.expiry) {
       if (req.session.otp.code === verifyotp) {
         const email = req.session.email;
         const user_id = req.session.user_id;
-
-        console.log(email, "df");
 
         const updateEmail = await User.updateOne(
           { _id: user_id },
@@ -656,22 +638,18 @@ const check_verifyemail_change = async (req, res) => {
             .json({ success: false, message: "Error creating user" });
         }
       } else {
-        console.log("Invalid OTP");
         res.json({ invalid: true, message: "Invalid OTP" });
       }
     } else {
       res.json({ expired: true, message: "OTP has expired" });
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.render("500");
   }
 };
 
 const changepassword = async (req, res) => {
   try {
-    console.log(req.body);
-
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
     const user_id = req.session.user_id;
 
@@ -696,12 +674,10 @@ const changepassword = async (req, res) => {
           message: "Password updated successfully.",
         });
       } else {
-        return res
-          .status(400)
-          .json({
-            notMatch: true,
-            error: "New password and confirm password do not match.",
-          });
+        return res.status(400).json({
+          notMatch: true,
+          error: "New password and confirm password do not match.",
+        });
       }
     } else {
       return res
@@ -709,8 +685,7 @@ const changepassword = async (req, res) => {
         .json({ oldNotMatch: true, error: "Current password does not match." });
     }
   } catch (error) {
-    console.error(error.message);
-    return res.status(500).json({ error: "Internal Server Error" });
+    res.render("500");
   }
 };
 

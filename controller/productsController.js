@@ -3,8 +3,6 @@ const Products = require("../model/productsModel");
 const Category = require("../model/categoryModel");
 const saveproduct = async (req, res) => {
   try {
-    console.log(req.files); // Log the files received by Multer
-
     const imagesArray = [];
 
     for (let i = 1; i <= 4; i++) {
@@ -34,11 +32,9 @@ const saveproduct = async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
+    res.render("500");
   }
 };
-
 
 const addproduct = async (req, res) => {
   try {
@@ -46,30 +42,29 @@ const addproduct = async (req, res) => {
 
     res.render("addproducts", { category: categoryData });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
 const editproducts = async (req, res) => {
   try {
     const id = req.query.id;
-    
+
     const categoryData = await Category.find();
     const productData = await Products.findOne({ _id: id });
-    console.log(productData);
+
     res.render("editproducts", {
       products: productData,
       category: categoryData,
       updatedAt: Date.now(),
     });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
 const saveditproducts = async (req, res) => {
   try {
-    console.log(req.body)
     const id = req.body.user_id;
     const existingProduct = await Products.findById(id);
 
@@ -82,10 +77,18 @@ const saveditproducts = async (req, res) => {
 
     // Update images object based on uploaded files or keep existing images
     existingProduct.images = {
-      image1: req.files.image1 ? req.files.image1[0].filename : existingProduct.images.image1,
-      image2: req.files.image2 ? req.files.image2[0].filename : existingProduct.images.image2,
-      image3: req.files.image3 ? req.files.image3[0].filename : existingProduct.images.image3,
-      image4: req.files.image4 ? req.files.image4[0].filename : existingProduct.images.image4,
+      image1: req.files.image1
+        ? req.files.image1[0].filename
+        : existingProduct.images.image1,
+      image2: req.files.image2
+        ? req.files.image2[0].filename
+        : existingProduct.images.image2,
+      image3: req.files.image3
+        ? req.files.image3[0].filename
+        : existingProduct.images.image3,
+      image4: req.files.image4
+        ? req.files.image4[0].filename
+        : existingProduct.images.image4,
     };
 
     existingProduct.updatedAt = Date.now();
@@ -94,13 +97,11 @@ const saveditproducts = async (req, res) => {
     await existingProduct.save();
 
     // Redirect or send a response indicating success
-    res.json({success: true}) // Change this based on your application flow
+    res.json({ success: true }); // Change this based on your application flow
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render("500");
   }
 };
-
 
 const activeproduct = async (req, res) => {
   try {
@@ -113,24 +114,21 @@ const activeproduct = async (req, res) => {
 
     res.redirect("/admin/products");
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.render("500");
   }
 };
 const suspendproduct = async (req, res) => {
   try {
     const id = req.query.id;
-    console.log(id);
+
     const suspend = await Products.updateOne(
       { _id: id },
       { $set: { active: 1 } }
     );
 
-    console.log(suspend);
     res.redirect("/admin/products");
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.render("500");
   }
 };
 

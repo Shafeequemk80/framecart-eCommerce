@@ -11,13 +11,13 @@ const Mail = require("nodemailer/lib/mailer");
 const user_route = require("../routes/userRoute");
 const { token } = require("morgan");
 const Offer = require("../model/offerModel");
-const moment = require('moment');
+const moment = require("moment");
 const securePassword = async (password) => {
   try {
     const passwordHash = bctypt.hash(password, 10);
     return passwordHash;
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -54,14 +54,14 @@ const sendResetVerifyMail = async (fullname, email, token) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 const loadLogin = async (req, res) => {
   try {
     res.render("login");
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 const verifylogin = async (req, res) => {
@@ -87,17 +87,15 @@ const verifylogin = async (req, res) => {
       res.render("login", { message: "your E-mail or password is incorrect" });
     }
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
-
-
 
 const loadforget = async (req, res) => {
   try {
     res.render("forgetpassword");
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 const verifyforget = async (req, res) => {
@@ -105,7 +103,7 @@ const verifyforget = async (req, res) => {
     const email = req.body.email;
 
     const userData = await User.findOne({ email: email });
-    console.log(userData);
+    
     if (userData) {
       const randomString = randomstring.generate();
 
@@ -119,7 +117,9 @@ const verifyforget = async (req, res) => {
     } else {
       res.render("forgetpassword", { message: "not found account" });
     }
-  } catch (error) {}
+  } catch (error) {
+    res.render('500');
+  }
 };
 
 const loadreset = async (req, res) => {
@@ -132,7 +132,7 @@ const loadreset = async (req, res) => {
       res.render("404");
     }
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 
@@ -152,7 +152,7 @@ const verifyreset = async (req, res) => {
       res.render("resetpassword", { message: "passwrod reset not success" });
     }
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 
@@ -164,7 +164,7 @@ const customerload = async (req, res) => {
       search = req.query.search;
     }
 
-    console.log(search, "search value ");
+   
     var page = 1;
     if (req.query.page) {
       page = req.query.page;
@@ -202,7 +202,7 @@ const customerload = async (req, res) => {
       search: search,
     });
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 
@@ -211,60 +211,58 @@ const logout = async (req, res) => {
     req.session.admin_id = null;
     res.redirect("/admin");
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 
 const loadproducts = async (req, res) => {
   try {
-  var search = "";
+    var search = "";
 
-  if (req.query.search) {
-    search = req.query.search;
-  }
+    if (req.query.search) {
+      search = req.query.search;
+    }
 
-  console.log(search, "search value ");
-  var page = 1;
-  if (req.query.page) {
-    page = req.query.page;
-  }
+    
+    var page = 1;
+    if (req.query.page) {
+      page = req.query.page;
+    }
 
-  var limit = 5;
+    var limit = 5;
 
-  const productData = await Products.find({
-    $or: [
-      { productname: { $regex: ".*" + search + ".*", $options: "i" } },
-      { frameshape: { $regex: ".*" + search + ".*", $options: "i" } },
-    ],
-  })
+    const productData = await Products.find({
+      $or: [
+        { productname: { $regex: ".*" + search + ".*", $options: "i" } },
+        { frameshape: { $regex: ".*" + search + ".*", $options: "i" } },
+      ],
+    })
 
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .populate("offer")
-    .exec();
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .populate("offer")
+      .exec();
 
-  const count = await Products.find({
-    $or: [
-      { productname: { $regex: ".*" + search + ".*", $options: "i" } },
-      {frameshape: { $regex: ".*" + search + ".*", $options: "i" } },
-    ],
-  }).countDocuments();
+    const count = await Products.find({
+      $or: [
+        { productname: { $regex: ".*" + search + ".*", $options: "i" } },
+        { frameshape: { $regex: ".*" + search + ".*", $options: "i" } },
+      ],
+    }).countDocuments();
 
-  const offerData = await Offer.find({ action: 1 });
-  res.render("products", {
-    products: productData,
-    offerData:offerData,
-    totalPages: Math.ceil(count / limit),
-    currentPage: page,
-    previospage: page - 1,
-    nextpage: parseInt(page) + 1,
-    count: count,
-    search: search,
-  });
-
-  
+    const offerData = await Offer.find({ action: 1 });
+    res.render("products", {
+      products: productData,
+      offerData: offerData,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      previospage: page - 1,
+      nextpage: parseInt(page) + 1,
+      count: count,
+      search: search,
+    });
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 
@@ -276,14 +274,14 @@ const loadorders = async (req, res) => {
       search = req.query.search;
     }
 
-    console.log(search, "search value ");
+    
     var page = 1;
     if (req.query.page) {
       page = req.query.page;
     }
     let limit = 5;
 
-    const  order = await Order.find({
+    const order = await Order.find({
       $and: [
         { "products.paymentStatus": { $ne: "pending" } },
         {
@@ -302,9 +300,11 @@ const loadorders = async (req, res) => {
       .exec();
 
     const count = await Order.find({
-      $or: [{ paymentMethod: { $regex: ".*" + search + ".*", $options: "i" } },
-      { orderId: { $regex: ".*" + search + ".*", $options: "i" } },
-      { "user.firstname": { $regex: new RegExp(search, "i") } },],
+      $or: [
+        { paymentMethod: { $regex: ".*" + search + ".*", $options: "i" } },
+        { orderId: { $regex: ".*" + search + ".*", $options: "i" } },
+        { "user.firstname": { $regex: new RegExp(search, "i") } },
+      ],
     }).countDocuments();
 
     const currentPage = page * 1;
@@ -319,7 +319,7 @@ const loadorders = async (req, res) => {
       search: search,
     });
   } catch (error) {
-    console.log(error.message);
+    res.render('500');
   }
 };
 const allorderitems = async (req, res) => {
@@ -343,16 +343,14 @@ const allorderitems = async (req, res) => {
       return [...allProducts, ...orderProducts];
     }, []);
 
-    console.log(products.map(product => product.productDetails)); // Log product details
+    
 
-    res.render("allorderitems", { orders: products ,moment});
+    res.render("allorderitems", { orders: products, moment });
   } catch (error) {
-    console.log(error);
-    // Handle the error appropriately (e.g., send an error response)
-    res.status(500).send("Internal Server Error");
+    res.render('500');
+   
   }
 };
-
 
 const updateOrderStatus = async (req, res) => {
   try {
@@ -376,7 +374,9 @@ const updateOrderStatus = async (req, res) => {
         statusLevel = 5;
         break;
       default:
-        return res.status(400).json({ success: false, error: "Invalid orderStatus" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Invalid orderStatus" });
     }
 
     const order = await Order.findOne({
@@ -388,12 +388,15 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ success: false, error: "Order not found" });
     }
 
-    const productIndex = order.products.findIndex((product) => product.product.equals(id));
+    const productIndex = order.products.findIndex((product) =>
+      product.product.equals(id)
+    );
 
     if (productIndex === -1) {
-      return res.status(404).json({ success: false, error: "Product not found in the order" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Product not found in the order" });
     }
-
 
     let updateFields = {
       "products.$.orderStatus": orderStatus,
@@ -404,9 +407,8 @@ const updateOrderStatus = async (req, res) => {
       updateFields = {
         "products.$.orderStatus": orderStatus,
         "products.$.statusLevel": statusLevel,
-        "products.$.paymentStatus":"success"
+        "products.$.paymentStatus": "success",
       };
-    
     }
 
     const updatedOrderStatus = await Order.updateOne(
@@ -422,11 +424,12 @@ const updateOrderStatus = async (req, res) => {
     if (updatedOrderStatus.modifiedCount === 1) {
       return res.status(200).json({ success: true, message: orderStatus });
     } else {
-      return res.status(400).json({ success: false, error: "Failed to update order status" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Failed to update order status" });
     }
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, error: error.message });
+    res.render('500');
   }
 };
 

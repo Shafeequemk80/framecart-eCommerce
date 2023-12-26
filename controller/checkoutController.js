@@ -31,7 +31,7 @@ function generateOrderId() {
 const loadcheckout = async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    
+
     // Use populate to retrieve product details along with cart data
     const cartData = await Cart.findOne({ user: user_id }).populate(
       "products.product"
@@ -59,13 +59,10 @@ const loadcheckout = async (req, res) => {
       return res.json({ cartEmpty: true });
     }
   } catch (error) {
-    console.error(error);
-    // Render an error page with a message if an error occurs during checkout
-    return res.render("error", {
-      message: "An error occurred during checkout.",
-    });
+    res.render("500");
   }
-};const getcheckout = async (req, res) => {
+};
+const getcheckout = async (req, res) => {
   try {
     const user_id = req.session.user_id;
     const address =
@@ -78,12 +75,13 @@ const loadcheckout = async (req, res) => {
     let totalAmount = 0;
 
     cartData.products.forEach((product) => {
-      const productPrice = product.product.discountprice==null? product.product.price:product.product.discountprice; // Assuming your product model has a 'price' field
+      const productPrice =
+        product.product.discountprice == null
+          ? product.product.price
+          : product.product.discountprice; // Assuming your product model has a 'price' field
       const productCount = product.count;
       totalAmount += productPrice * productCount;
     });
-
-    console.log(totalAmount);
 
     res.render("checkout", {
       user: user_id,
@@ -92,10 +90,9 @@ const loadcheckout = async (req, res) => {
       totalAmount: totalAmount,
     });
   } catch (error) {
-    console.log(error);
+    res.render("500");
   }
 };
-
 
 const verifycheckout = async (req, res) => {
   try {
@@ -112,7 +109,6 @@ const verifycheckout = async (req, res) => {
       });
 
       if (outOfStockProducts.length !== 0) {
-        console.log(1000);
         return res.json({
           outOfStock: true,
           outOfStockProducts: outOfStockProducts,
@@ -122,7 +118,7 @@ const verifycheckout = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    res.render("500");
   }
 };
 
@@ -148,7 +144,6 @@ const verifypayment = async (req, res) => {
       });
 
       if (outOfStockProducts.length !== 0) {
-        console.log(1000);
         return res.json({ outOfStock: true });
       } else {
         const userAddresses = await Address.findOne({ user: user_id });
@@ -160,20 +155,25 @@ const verifypayment = async (req, res) => {
 
         // Calculate the total amount based on the prices of products in the cart
         for (const price of cartData.products) {
-          totalamount += price.product.discountprice==null? price.product.price * price.count:price.product.discountprice * price.count;
-          console.log(totalamount,price.count,"totalamount");
+          totalamount +=
+            price.product.discountprice == null
+              ? price.product.price * price.count
+              : price.product.discountprice * price.count;
         }
-        console.log(totalamount,"totalamount");
+
         const orderDate = new Date();
         const newOrderId = generateOrderId();
         var deliveryDate = new Date(orderDate);
-deliveryDate.setDate(orderDate.getDate() + 7);
+        deliveryDate.setDate(orderDate.getDate() + 7);
 
         // Create an array of product data for the order
         const productsData = cartData.products.map((productItem) => ({
           product: productItem.product,
           count: productItem.count,
-          totalprice:productItem.product.discountprice==null? productItem.product.price* productItem.count: productItem.product.discountprice * productItem.count,
+          totalprice:
+            productItem.product.discountprice == null
+              ? productItem.product.price * productItem.count
+              : productItem.product.discountprice * productItem.count,
           paymentStatus: "Pending",
           orderStatus: "Pending",
         }));
@@ -183,21 +183,20 @@ deliveryDate.setDate(orderDate.getDate() + 7);
           orderId: newOrderId,
           user: user_id,
           products: productsData,
-          address: 
-            {
-              fullname: selectedAddress.fullname,
-              mobile: selectedAddress.mobile,
-              address: selectedAddress.address,
-              locality: selectedAddress.locality,
-              zipcode: selectedAddress.zipcode,
-              city: selectedAddress.city,
-              state: selectedAddress.state,
-            },
-          
+          address: {
+            fullname: selectedAddress.fullname,
+            mobile: selectedAddress.mobile,
+            address: selectedAddress.address,
+            locality: selectedAddress.locality,
+            zipcode: selectedAddress.zipcode,
+            city: selectedAddress.city,
+            state: selectedAddress.state,
+          },
+
           paymentMethod: "pending",
           orderDate: orderDate,
           orderTime: new Timestamp(),
-          deliveryDate:deliveryDate,
+          deliveryDate: deliveryDate,
           amount: totalamount,
         });
 
@@ -205,8 +204,8 @@ deliveryDate.setDate(orderDate.getDate() + 7);
         await addorder.save();
 
         if (paymentType === "COD") {
-          const orderData= await Order.findOne({orderId:newOrderId})
-          orderData.paymentMethod= "Cash on Delivery";
+          const orderData = await Order.findOne({ orderId: newOrderId });
+          orderData.paymentMethod = "Cash on Delivery";
           orderData.save();
 
           for (const product of orderData.products) {
@@ -215,7 +214,7 @@ deliveryDate.setDate(orderDate.getDate() + 7);
               { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
             );
           }
-          
+
           await Cart.updateOne({ user: user_id }, { $set: { products: [] } });
 
           return res.json({ cod: true, newOrderId: newOrderId });
@@ -246,77 +245,75 @@ deliveryDate.setDate(orderDate.getDate() + 7);
                 .send({ success: false, msg: "Something went wrong!" });
             }
           });
-        }else if (paymentType === "Wallet") {
-
-          const checkwallet = await Wallet.findOne({user:user_id})
+        } else if (paymentType === "Wallet") {
+          const checkwallet = await Wallet.findOne({ user: user_id });
           const orderData = await Order.findOne({ orderId: newOrderId });
-        
+
           if (checkwallet.totalAmount < orderData.amount) {
             res.json({ infuentbalance: true });
-            
           } else {
-          
-          if (!orderData) {
-            // Handle the case where the order data is not found
-            return res.status(404).json({ error: "Order not found" });
-          }
-        
-          const updateData = await Order.updateOne(
-            { orderId: newOrderId },
-            {
-              $set: {
-                paymentMethod: "Wallet",
-                "products.$[].paymentStatus": "success",
-              },
+            if (!orderData) {
+              // Handle the case where the order data is not found
+              return res.status(404).json({ error: "Order not found" });
             }
-          );
-        
-          
-          
-          const walletUpdate = await Wallet.updateOne(
-            { user: user_id },
-            {
-              $inc: { totalAmount: -orderData.amount },
-              $push: {
-                walletHistory: {
-                  transactionId: newOrderId,
-                  transactionDate: new Date(),
-                  transactionDetails: "Debit",
-                  transactionType: "Purchase",
-                  transactionAmount: orderData.amount,
-                },
-              },
-            }
-          );
-          
 
-          for (const product of orderData.products) {
-            const updateStock = await Product.updateMany(
-              { _id: product.product },
-              { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
+            const updateData = await Order.updateOne(
+              { orderId: newOrderId },
+              {
+                $set: {
+                  paymentMethod: "Wallet",
+                  "products.$[].paymentStatus": "success",
+                },
+              }
             );
-          }
-        
-          const updateCart = await Cart.updateOne({ user: user_id }, { $set: { products: [] } });
-        
-          if (updateCart && updateData.modifiedCount > 0 && walletUpdate.modifiedCount > 0) {
-            return res.json({ Wallet: true, newOrderId: newOrderId });
-          } else {
-            // Handle the case where one of the updates failed
-            return res.status(500).json({ error: "Failed to update one or more records" });
+
+            const walletUpdate = await Wallet.updateOne(
+              { user: user_id },
+              {
+                $inc: { totalAmount: -orderData.amount },
+                $push: {
+                  walletHistory: {
+                    transactionId: newOrderId,
+                    transactionDate: new Date(),
+                    transactionDetails: "Debit",
+                    transactionType: "Purchase",
+                    transactionAmount: orderData.amount,
+                  },
+                },
+              }
+            );
+
+            for (const product of orderData.products) {
+              const updateStock = await Product.updateMany(
+                { _id: product.product },
+                { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
+              );
+            }
+
+            const updateCart = await Cart.updateOne(
+              { user: user_id },
+              { $set: { products: [] } }
+            );
+
+            if (
+              updateCart &&
+              updateData.modifiedCount > 0 &&
+              walletUpdate.modifiedCount > 0
+            ) {
+              return res.json({ Wallet: true, newOrderId: newOrderId });
+            } else {
+              // Handle the case where one of the updates failed
+              return res
+                .status(500)
+                .json({ error: "Failed to update one or more records" });
+            }
           }
         }
-        
-      }
         // Delete the user's cart after processing the order
       }
     }
   } catch (error) {
-    console.error(error.message);
-    // Handle the error (e.g., display an error page or send an error response)
-    res.status(500).render("error", {
-      message: "An error occurred during payment verification.",
-    });
+    res.render("500");
   }
 };
 
@@ -328,13 +325,12 @@ const verifyonlinepayment = async (req, res) => {
     const secret = RAZORPAY_SECRET_KEY;
     const newOrderId = req.body.data.receipt;
 
-    console.log(req.body);
     const user_id = req.session.user_id;
     generated_signature = hmac_sha256(
       order_id + "|" + razorpay_payment_id,
       secret
     );
-    console.log(generated_signature);
+
     if (generated_signature == razorpay_signature) {
       await Cart.updateOne({ user: user_id }, { $set: { products: [] } });
 
@@ -354,18 +350,15 @@ const verifyonlinepayment = async (req, res) => {
           { $inc: { stock: -product.count } } // Assuming you want to decrement the stock
         );
       }
-      
-      console.log(orderData);
+
       if (orderData) {
       }
 
-      console.log("payment is successful");
       return res.json({ online: true, newOrderId: newOrderId });
     } else {
-      console.log("Payment verification failed");
     }
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 
@@ -381,7 +374,7 @@ const paymentsuccess = async (req, res) => {
       res.render("verifypeyment", { user: user_id });
     }
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 

@@ -8,16 +8,14 @@ const addtowishlist = async (req, res) => {
     const productId = req.body.id;
 
     const existinguser = await Wishlist.findOne({ user: user_id });
-      
+
     if (existinguser) {
       const existingproduct = existinguser.products.find(
         (product) => product.product.toString() === productId
       );
-     
+
       if (existingproduct) {
-      
-       res.status(200).json({ existingproduct: true });
-       
+        res.status(200).json({ existingproduct: true });
       } else {
         const pushnewproduct = existinguser.products.push({
           product: productId,
@@ -42,8 +40,7 @@ const addtowishlist = async (req, res) => {
       res.status(200).json({ success: true });
     }
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.render("500");
   }
 };
 
@@ -51,19 +48,19 @@ const getwishlist = async (req, res) => {
   try {
     const user_id = req.session.user_id;
     const userData = await User.findById(user_id);
-    const wishlistData = await Wishlist.findOne({ user: user_id }).populate("products.product")
+    const wishlistData = await Wishlist.findOne({ user: user_id }).populate(
+      "products.product"
+    );
 
-   
-    res.render("wishlist", { user: userData,wishlistData:wishlistData });
+    res.render("wishlist", { user: userData, wishlistData: wishlistData });
   } catch (error) {
-    console.log(error.message);
+    res.render("500");
   }
 };
 const deletefromwishlist = async (req, res) => {
   try {
     const user_id = req.session.user_id;
     const productId = req.query.id;
-    console.log(productId);
 
     const wishlistData = await Wishlist.findOne({ user: user_id });
 
@@ -73,22 +70,20 @@ const deletefromwishlist = async (req, res) => {
       );
 
       if (existingProductIndex !== -1) {
-       
         wishlistData.products.splice(existingProductIndex, 1);
 
-       
         await wishlistData.save();
-        res.status(200).json({ success: true});
-        
+        res.status(200).json({ success: true });
       } else {
-        res.status(404).json({ success: false, message: 'Product not found in wishlist' });
+        res
+          .status(404)
+          .json({ success: false, message: "Product not found in wishlist" });
       }
     } else {
-      res.status(404).json({ success: false, message: 'Wishlist not found' });
+      res.status(404).json({ success: false, message: "Wishlist not found" });
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
+    res.render("500");
   }
 };
 

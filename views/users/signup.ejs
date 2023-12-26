@@ -154,7 +154,7 @@
     signupButton.addEventListener("click", function () {
       if (validationSignup()) {
         const formData = serialize(registrationForm);
-        console.log("Complete Form Data:", formData);
+     
 
         fetch("/signup", {
           method: "POST",

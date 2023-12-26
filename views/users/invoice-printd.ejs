@@ -285,7 +285,7 @@
       signupButton.addEventListener("click", function () {
         if (validationAddress()) {
           const formData = serialize(registrationForm);
-          console.log("Complete Form Data:", formData);
+          
   
           fetch("/newaddress", {
             method: "POST",
@@ -350,7 +350,7 @@
       editsaveButton.addEventListener("click", function () {
         if (validationeditAddress()) {
           const editedformData = serialize(editaddressform);
-          console.log("Complete Form Data:", editedformData);
+       
   
           fetch("/editaddress", {
             method: "POST",
