@@ -778,13 +778,15 @@ blockquote.text-white cite span {
 .cart-dropdown .dropdown-menu,
 .compare-dropdown .dropdown-menu {
   display: block;
-  width: 300px;
+  width: 200px;
   z-index: 100;
   font-size: 1.3rem;
   z-index: 1001;
   border: none;
   margin: 1px 0 0;
-  padding: 2.2rem 3rem 2.5rem;
+ padding-left: 2rem;
+ padding-top: 1.5rem;
+ 
   border-radius: 0;
   border: none;
   box-shadow: 5px 10px 16px rgba(51, 51, 51, 0.05),
@@ -16903,4 +16905,19 @@ padding-right: 5px;
     color: #fff;
   }
 
- 
+  .checkout-btn {
+    color: black;
+}
+
+.checkout-btn:hover {
+    color: white;
+}
+.fa-map-location-dot{
+  font-size: 8rem;
+}.cart-nav{
+  font-size: 15px;
+  font-weight: 400;
+}.divider{
+
+ padding-top: 8px;
+}

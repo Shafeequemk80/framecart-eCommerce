@@ -57,41 +57,39 @@
             data-display="static"
           >
           <% if(user){%>
-            <span class="btn text-primary" ><i class="icon-user "></i>My Account</span>
-           
-          </a>
+            <span class="btn text-primary"><i class="icon-user"></i>My Account</span></a>
 
           
-          <div class="dropdown-menu dropdown-menu-right">
-            <div class="user-card-wrap">
-              <div class="user-card">
-                <ul class="user-actions ">
-                  <li>
-                    <a href="/profile" >
-                      <i class="icon-user larger-icon"></i> My Profile
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li>
-                    
-                    <a href="/allorders">
-                      <i class="icon-shopping-cart larger-icon"></i> Orders
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li>
-                    <a  onclick="confirmSignOut()">
-                       <i class="fa-regular fa-arrow-right-from-bracket"></i> Logout
-                    </a>
-                  </li>
-                </ul>
+            <div class="dropdown-menu dropdown-menu-right">
+              <div class="user-card-wrap">
+                  <div class="user-card">
+                      <ul class="user-actions">
+                          <li>
+                              <a href="/profile">
+                                <i class="fa-regular fa-user"></i></i> My Profile
+                              </a>
+                          </li>
+                          <li class="divider"></li>
+                          <li>
+                              <a href="/allorders">
+                                  <i class="fa-light fa-bag-shopping"></i> Orders
+                              </a>
+                          </li>
+                          <li class="divider"></li>
+                          <li>
+                              <a onclick="confirmSignOut()">
+                                  <i class="fa-regular fa-arrow-right-from-bracket"></i> Logout
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
               </div>
-            </div>
           
-            <div class="dropdown-cart-action">
-              <!-- Your shopping cart content goes here -->
-            </div>
+              <div class="dropdown-cart-action">
+                  <!-- Your shopping cart content goes here -->
+              </div>
           </div>
+          
           
           <!-- End .dropdown-menu -->
 
@@ -124,8 +122,8 @@
         
           <a
             href="/cart">
-            <i class="icon-shopping-cart ml-lg-3"></i>
-            <span class="cart-count"></span>
+            <span class="cart-nav"><i class="icon-shopping-cart ml-lg-3"></i><span class="d-none d-md-inline"> Cart</span></span>
+           
           </a>
 
       </div>

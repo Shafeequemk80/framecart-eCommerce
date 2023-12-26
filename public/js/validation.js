@@ -410,3 +410,76 @@ function validationeditAddress(id) {
 
   return isValid;
 }
+
+
+function checkoutForm() {
+  // Validate radio button selection for payment type
+  
+
+  // Validate radio button selection for address
+  const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+  if (!selectedAddress) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Please select an address',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    return false; // Stop form submission
+  }
+  const paymentTypeRadios = document.querySelectorAll('input[name="paymentType"]');
+  const selectedPaymentType = Array.from(paymentTypeRadios).find(radio => radio.checked);
+
+  if (!selectedPaymentType) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Please select a payment type',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    return false; // Stop form submission
+  }
+
+  // Continue with other form submission logic if needed
+  return true;
+}
+function addresscheckout() {
+  // Validate radio button selection for payment type
+  
+
+  // Validate radio button selection for address
+  const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+  if (!selectedAddress) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Please select an address',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    document.getElementById("address-radio-btn").disabled = true;
+
+    return false; // Stop form submission
+  }
+  document.getElementById("address-radio-btn").disabled = false;
+  return true;
+}
+
+function paymentcheckout() {
+ 
+  const paymentTypeRadios = document.querySelectorAll('input[name="paymentType"]');
+  const selectedPaymentType = Array.from(paymentTypeRadios).find(radio => radio.checked);
+
+  if (!selectedPaymentType) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Please select a payment type',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    document.getElementById("payment-radio-btn").disabled = true;
+    return false; // Stop form submission
+  }
+  document.getElementById("payment-radio-btn").disabled = false;
+  // Continue with other form submission logic if needed
+  return true;
+}

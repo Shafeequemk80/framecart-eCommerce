@@ -43,7 +43,7 @@
                           aria-expanded="true"
                           aria-controls="collapse-2"
                         >
-                          <h4>Select a delivery address</h4>
+                          <h4 >Select a delivery address</h4>
                         </a>
                       </h2>
                     </div>
@@ -63,10 +63,11 @@
                           <label class="address-radio-label">
                             <div class="address-col-checkout">
                               <input
+                              id="selectedAddress"
                                 type="radio"
                                 name="selectedAddress"
                                 value="<%= address[i]._id %>"
-                                required
+                                
                               />
                               <div class="address-details">
                                 <h6 class="show_address pl-5">
@@ -82,29 +83,42 @@
                             </div>
                           </label>
                         </div>
-                        <% }} %>
+                        <% }} else{%>
+
+                          <div class="col-12 text-center my-5">
+                            <i class="fa-duotone fa-map-location-dot mb-2"></i>
+                            <h6>Add New Address</h6>
+                          </div>
+                          <%}%>
 
                         <div class="d-flex justify-content-sm-end col-10">
-                          <a
+                          <button onclick="addresscheckout()"
+                              class="btn btn-outline-primary-2 btn-order mr-sm-5 mr-2"
+                            >
+                              Select this Address
+                            </button>
+                          <a   id="address-radio-btn"
                             class="collapsed x"
                             role="button"
                             data-toggle="collapse"
                             href="#collapse-3"
                             aria-expanded="false"
                             aria-controls="collapse-3"
+                            
                           >
-                            <button
-                              class="btn btn-outline-primary-2 btn-order mr-sm-5 mr-2"
+                            <button onclick="addresscheckout()"
+                          
+                              class="btn btn-outline-primary-2  btn-order mr-sm-5 mr-2"
                             >
                               Select this Address
                             </button>
                           </a>
-                          <a
+                         <a
                             onclick="addressModal()"
-                            class="btn btn-outline-primary-2 btn-order"
+                            class="btn btn-outline-primary-2 btn-order checkout-btn" 
+
                           >
-                            Add new Address</a
-                          >
+                            Add new Address</a>
                         </div>
                       </div>
                       <!-- End .card-body -->
@@ -131,6 +145,7 @@
                     <!-- End .card-header -->
 
                     <div
+                  
                       id="collapse-3"
                       class="collapse"
                       aria-labelledby="heading-3"
@@ -174,7 +189,7 @@
                           </div>
                         </div>
                         <div class="d-flex justify-content-end mr-4">
-                          <a
+                          <a   id="payment-radio-btn"
                             class="collapsed x"
                             role="button"
                             data-toggle="collapse"
@@ -182,7 +197,7 @@
                             aria-expanded="false"
                             aria-controls="collapse-4"
                           >
-                            <button
+                            <button onclick="paymentcheckout()"
                               class="btn btn-outline-primary-2 btn-order mr-5"
                             >
                               Select this Method
@@ -380,32 +395,32 @@
       <form id="addaddress-form">
         <div class="mb-3">
           <label for="fullname" class="form-label">Full Name*</label>
-          <input type="text" class="form-control" id="fullname" name="fullname" required>
+          <input type="text" class="form-control" id="fullname" name="fullname" >
        <p class="error-message" id="fullname-error"></p>
         </div>
         
         <div class="">
           <label for="mobile" class="form-label">Mobile*</label>
-          <input type="text" class="form-control" id="mobile" name="mobile" required>
+          <input type="text" class="form-control" id="mobile" name="mobile" >
           <p class="error-message" id="mobile-error"></p>
         </div>
         
         <div class="">
           <label for="address" class="form-label">Address*</label>
-          <input type="text" class="form-control" id="address" name="address" required>
+          <input type="text" class="form-control" id="address" name="address" >
           <p class="error-message" id="address-error"></p>
         </div>
         
         <div class="d-flex justify-content-center">
           <div class=" col-8">
             <label for="locality" class="form-label">Locality*</label>
-            <input type="text" class="form-control" id="locality" name="locality" required>
+            <input type="text" class="form-control" id="locality" name="locality" >
             <p class="error-message" id="locality-error"></p>
           </div>
           
           <div class=" col-4">
             <label for="zipcode" class="form-label">Zip Code*</label>
-            <input type="number" class="form-control" id="zipcode" name="zipcode" required>
+            <input type="number" class="form-control" id="zipcode" name="zipcode" >
             <p class="error-message" id="zipcode-error"></p>
           </div>
         </div>
@@ -413,13 +428,13 @@
         <div class="d-flex justify-content-center">
           <div class=" col-6">
             <label for="city" class="form-label">City*</label>
-            <input type="text" class="form-control" id="city" name="city" required>
+            <input type="text" class="form-control" id="city" name="city" >
             <p class="error-message" id="city-error"></p>
           </div>
           
           <div class=" col-6">
             <label for="state" class="form-label">State*</label>
-            <select class="form-control" id="state" name="state" required>
+            <select class="form-control" id="state" name="state" >
               <option value="Andhra Pradesh">Andhra Pradesh</option>
               <option value="Arunachal Pradesh">Arunachal Pradesh</option>
               <option value="Assam">Assam</option>
@@ -448,7 +463,7 @@
               <option value="Uttar Pradesh">Uttar Pradesh</option>
               <option value="Uttarakhand">Uttarakhand</option>
               <option value="West Bengal">West Bengal</option>
-            <select class="form-control" id="state" name="state" required>
+            <select class="form-control" id="state" name="state" >
               <!-- Options for states -->
             </select>
             <p class="error-message" id="state-error"></p>
@@ -470,9 +485,9 @@
 <!-- Modal with centered and scrollable layout -->
 
 <!-- Modal with centered and scrollable layout -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 <script src="path/to/inputSpinnerPlugin.js"></script>
 
 
@@ -550,13 +565,17 @@
   // document.getElementById("addressModal").addEventListener('click', ()=>{
   // })
 </script>
+
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+<script src="/static/js/Validation.js"></script>
 
 <script>
   document.getElementById("checkoutForm").addEventListener("submit", (e) => {
     e.preventDefault();
+if (checkoutForm()){
+  
 
     $.ajax({
       url: "/verify-payment",
@@ -645,9 +664,18 @@
         console.error("AJAX Request Error:", error);
       },
     });
+  
+  }
+  
+
   });
 </script>
+<!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
 
 
 <%- include("../layouts/userFooter.ejs")%> <%-
 include("../layouts/userFooter2.ejs")%> <%- include("../layouts/footer.ejs")%>
+ 

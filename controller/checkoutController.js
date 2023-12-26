@@ -235,7 +235,7 @@ const verifypayment = async (req, res) => {
                 amount: amount,
                 key_id: RAZORPAY_ID_KEY,
                 receipt: options.receipt,
-                contact: userData.mobile,
+                contact: selectedAddress.mobile,
                 name: userData.firstname,
                 email: userData.email,
               });
