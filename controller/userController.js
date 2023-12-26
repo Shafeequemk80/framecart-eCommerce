@@ -57,8 +57,8 @@ const sendVerifyMail = async (email, name, otp) => {
       secure: false,
       requireTLS: true,
       auth: {
-        user: config.emailUser,
-        pass: config.passwordUser,
+        user: process.env.emailUser,
+        pass: process.env.passwordUser,
       },
     });
 
@@ -95,8 +95,8 @@ const sendResetVerifyMail = async (fullname, email, token) => {
       secure: false,
       requireTLS: true,
       auth: {
-        user: config.emailUser,
-        pass: config.passwordUser,
+        user: process.env.emailUser,
+        pass: process.env.passwordUser,
       },
     });
 

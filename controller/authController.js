@@ -4,6 +4,13 @@ const User = require("../model/userModel");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const bcrypt = require("bcrypt"); // Import bcrypt library
 const Wallet = require("../model/walletModel");
+
+function generateRefferalId() {
+  // Generate a random identifier (6 characters)
+  const randomId = Math.random().toString(36).substring(2, 12).toUpperCase();
+
+  return randomId;
+}
 const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -44,7 +51,7 @@ const success = async (req, res) => {
         return res.redirect('/home');
       } else {
         const sPassword = await securePassword(req.user.id); // Await the password hashing
-  
+        const refferalId = generateRefferalId();
         const { givenName, familyName } = req.user.name; // Access the correct properties
         const newUser = new User({
           username: req.user.displayName, // Use displayName instead of name
@@ -55,6 +62,7 @@ const success = async (req, res) => {
           password: sPassword,
           fullname: `${givenName} ${familyName}`,
           google: 1,
+          refferalId:refferalId,
         });
         
         const savedUser = await newUser.save();
