@@ -16531,7 +16531,6 @@ margin-right: 20px;
   justify-content: center;
   height: 150px; 
   border-radius: 10px ;
-  
 
 }
 .address-col-checkout-main{ 
@@ -16544,15 +16543,16 @@ border-color: #000 solid;
   border-radius: 10px;
 
 
-}.address-col-checkout-main :focus{ 
+}.address-col-checkout-main  :focus{ 
   display: flex;
+  background-color: #da2828;
 border: 1rem ;
 border-color: #000 solid;
   align-items: center;
   justify-content: center;
   height: 100px; 
   border-radius: 10px;
-  background-color:#F1EFEF;
+
 
 }
 .address-col-checkout { 
@@ -16921,3 +16921,4 @@ padding-right: 5px;
 
  padding-top: 8px;
 }
+

@@ -145,12 +145,16 @@ include("../layouts/adminSideBar.ejs")%>
                 title: "Added Successfully",
                 text: "Your new category has been added successfully.",
                 icon: "success",
+                showConfirmButton: false,
+                timer: 1500
               }).then(() => (window.location.href = "/admin/category"));
             }else if (data.fail) {
               Swal.fire({
                 title: "this category name is already added",
                 text: "your can add this category name try to add another",
                 icon: "warning",
+                showConfirmButton: false,
+                timer: 1500
               }).then(() => (window.location.href = "/admin/addcategory"));
             }
           })
@@ -160,6 +164,8 @@ include("../layouts/adminSideBar.ejs")%>
               title: "Error!",
               text: "An unexpected error occurred. Please try again later.",
               icon: "error",
+              showConfirmButton: false,
+                timer: 1500
             });
           });
       }

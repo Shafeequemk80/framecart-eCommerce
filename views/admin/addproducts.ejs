@@ -230,6 +230,8 @@ include("../layouts/adminSideBar.ejs")%>
                 title: "Added Successfully",
                 text: "Your new address has been added successfully.",
                 icon: "success",
+                showConfirmButton: false,
+                timer: 1500
               }).then(() => (window.location.href = "/admin/addproducts"));
             }
           })
@@ -239,6 +241,8 @@ include("../layouts/adminSideBar.ejs")%>
               title: "Error!",
               text: "An unexpected error occurred. Please try again later.",
               icon: "error",
+              showConfirmButton: false,
+                timer: 1500
             });
           });
       }

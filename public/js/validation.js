@@ -477,9 +477,11 @@ function paymentcheckout() {
       timer: 1500
     });
     document.getElementById("payment-radio-btn").disabled = true;
+    
     return false; // Stop form submission
   }
   document.getElementById("payment-radio-btn").disabled = false;
+
   // Continue with other form submission logic if needed
   return true;
 }

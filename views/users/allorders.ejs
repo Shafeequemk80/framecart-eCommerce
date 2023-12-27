@@ -127,6 +127,8 @@
             icon: "success",
             title: "Order Canceled!",
             text: "Your order has been successfully canceled.",
+            showConfirmButton: false,
+                timer: 1500
           });
           setTimeout(() => window.location.reload(), 1000);
 
@@ -137,6 +139,8 @@
             icon: "error",
             title: "Cancellation Failed",
             text: "There was an issue canceling your order. Please try again later.",
+            showConfirmButton: false,
+                timer: 1500
           });
         }
       } catch (error) {

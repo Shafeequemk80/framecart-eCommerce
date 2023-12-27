@@ -337,11 +337,13 @@ include("../layouts/adminSideBar.ejs")%>
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          // alert("Success"); // You can remove the regular alert
+    
           Swal.fire({
             title: "Offer Added",
             text: "The offer has been added to the product.",
             icon: "success",
+            showConfirmButton: false,
+                timer: 1500
           }).then(() => window.location.reload());
         } else {
           Swal.fire({
@@ -349,6 +351,8 @@ include("../layouts/adminSideBar.ejs")%>
 
             text: "Already have a big offer.",
             icon: "error",
+            showConfirmButton: false,
+                timer: 1500
           }).then(() => window.location.reload());
         }
       })
@@ -390,6 +394,8 @@ include("../layouts/adminSideBar.ejs")%>
             title: "Success!",
             text: "Offer successfully Removed",
             icon: "success",
+            showConfirmButton: false,
+                timer: 1500
           }).then(() => window.location.reload());
         } else {
           // Handle unsuccessful response if needed

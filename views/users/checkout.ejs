@@ -58,10 +58,10 @@
                         <% if (address && address.length !== 0) { for (let i =
                         0; i < address.length; i++) { %>
                         <div
-                          class="address-col-checkout-main col-11 mt-5 mt-lg-5 ml-4 ml-sm-0 mt-lg-0 mr-lg-5 my-lg-5 d-flex justify-content-start"
+                          class=" address-col-checkout-main col-11 mt-5 mt-lg-5 ml-4 ml-sm-0 mt-lg-0 mr-lg-5 my-lg-5 d-flex justify-content-start"
                         >
                           <label class="address-radio-label">
-                            <div class="address-col-checkout">
+                            <div class="address-col-checkout ">
                               <input
                               id="selectedAddress"
                                 type="radio"
@@ -92,11 +92,7 @@
                           <%}%>
 
                         <div class="d-flex justify-content-sm-end col-10">
-                          <button onclick="addresscheckout()"
-                              class="btn btn-outline-primary-2 btn-order mr-sm-5 mr-2"
-                            >
-                              Select this Address
-                            </button>
+                        
                           <a   id="address-radio-btn"
                             class="collapsed x"
                             role="button"
@@ -130,7 +126,8 @@
                   <div class="card">
                     <div class="card-header" id="heading-3">
                       <h2 class="card-title">
-                        <a
+                        <a 
+                       
                           class="collapsed"
                           role="button"
                           data-toggle="collapse"
@@ -154,7 +151,7 @@
                       <div class="card-body">
                         <div class="text-dark row d-flex col-12 mx-5">
                           <div class="col-md-5 payment-col">
-                            <label>
+                            <label >
                               <input
                                 type="radio"
                                 name="paymentType"
@@ -313,7 +310,7 @@
               </div>
               <!-- End .col-lg-9 -->
               
-              <aside class="col-lg-3">
+              <aside class="col-lg-3 d-none d-md-inline">
                 <div class="summary">
                   <h3 class="summary-title">Your Order</h3>
                   <!-- End .summary-title -->
@@ -520,7 +517,9 @@
               Swal.fire({
                 title: "Added Successfully",
                 text: "Your new address has been added successfully.",
-                icon: "success"
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
             })
             .then (() =>  window.location.href = "/checkout")
             }
@@ -533,6 +532,8 @@
               title: "Error!",
               text: "An unexpected error occurred. Please try again later.",
               icon: "error",
+              showConfirmButton: false,
+              timer: 1500
             });
           });
       }
@@ -587,6 +588,8 @@ if (checkoutForm()){
             icon: "error",
             title: "Some products are out of stock!",
             html: "The following products are out of stock:",
+            showConfirmButton: false,
+      timer: 1500
           });
         } else if (response.cod) {
           window.location.href = `/success-payment?id=${response.newOrderId}`;
@@ -645,8 +648,7 @@ if (checkoutForm()){
           var rzp1 = new Razorpay(options);
           
           rzp1.on("payment.failed", function (response) {
-            alert(response.error.code);
-            alert(response.error.description);
+          
           });
           rzp1.open();
          
@@ -655,6 +657,8 @@ if (checkoutForm()){
             title: "Insufficient balance",
             text: "Insufficient balance In Your wallet.",
             icon: "warning",
+            showConfirmButton: false,
+             timer: 1500
           });
         } else{
           alert(err.message);

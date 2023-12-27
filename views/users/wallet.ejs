@@ -186,6 +186,8 @@ if (!walletAmount || !walletAmountRegex.test(walletAmount)) {
     title: 'Invalid Amount',
     text: 'Enter a valid amount',
     icon: 'error',
+    showConfirmButton: false,
+                timer: 1500
   });
 }
 
@@ -257,8 +259,7 @@ if (!walletAmount || !walletAmountRegex.test(walletAmount)) {
         var rzp1 = new Razorpay(options);
         
         rzp1.on("payment.failed", function (response) {
-          alert(response.error.code);
-          alert(response.error.description);
+         
         });
         rzp1.open();
        
@@ -268,6 +269,8 @@ if (!walletAmount || !walletAmountRegex.test(walletAmount)) {
                   title: "Error",
                   text: `Cannot add ${response.amount}. Exceeds wallet limit.`,
                   icon: "error",
+                  showConfirmButton: false,
+                timer: 1500
                });
         } else {
           alert(err.message);

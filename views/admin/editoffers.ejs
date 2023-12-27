@@ -157,6 +157,8 @@ include("../layouts/adminSideBar.ejs")%>
               icon: 'success',
               title: 'Offer Updated',
               text: 'Your offer has been updated successfully!',
+              showConfirmButton: false,
+                timer: 1500
             })
         
              .then(() => window.location.href = '/admin/offers'); 

@@ -152,54 +152,45 @@
                 <%}%>
               </table>
 
-              <!-- End .table table-wishlist --
-              <!-- End .cart-bottom -->
+            
             </div>
             <!-- End .col-lg-9 -->
             <aside class="col-lg-3">
               <div class="summary summary-cart">
-                <h3 class="summary-title">Cart Total</h3>
-                <!-- End .summary-title -->
-
-                <table class="table table-summary">
-                  <tbody>
-                    <tr >
-                      <td>Subtotal:</td>
-                      <td id="subAmount"><%=totalAmount%></td>
-                    </tr>
-                    <!-- End .summary-subtotal -->
-                    <tr class="summary-shipping">
-                      <td>Shopping Charge:</td>
-                      <td>free</td>
-                    </tr>
-
-                    <!-- End .summary-shipping-estimate -->
-
-                    <tr class="summary-total">
-                      <td>Total:</td>
-                      <td id="totalAmount"><%=totalAmount %></td>
-
-
-                    </tr>
-                    <!-- End .summary-total -->
-                  </tbody>
-                </table>
-
-                <!-- End .table table-summary -->
-
-                <button
-                    class="btn btn-outline-primary-2 btn-order btn-block"
-                    onclick="proceedToCheckout()"
-                  >PROCEED TO CHECKOUT <button>
+                  <h3 class="summary-title">Cart Total</h3>
+                  <!-- End .summary-title -->
+          
+                  <table class="table table-summary">
+                      <tbody>
+                          <tr>
+                              <td>Subtotal:</td>
+                              <td id="subAmount"><%= totalAmount %></td>
+                          </tr>
+                          <!-- End .summary-subtotal -->
+                          <tr class="summary-shipping">
+                              <td>Shopping Charge:</td>
+                              <td>free</td>
+                          </tr>
+                          <!-- End .summary-shipping-estimate -->
+                          <tr class="summary-total">
+                              <td>Total:</td>
+                              <td id="totalAmount"><%= totalAmount %></td>
+                          </tr>
+                          <!-- End .summary-total -->
+                      </tbody>
+                  </table>
+                  <!-- End .table table-summary -->
+          
+                  <button class="btn btn-outline-primary-2 btn-order btn-block" onclick="proceedToCheckout()">
+                      PROCEED TO CHECKOUT
+                  </button>
               </div>
-              <!-- End .summary -->
-
-              <a
-                href="/allproducts"
-                class="btn btn-outline-dark-2 btn-block mb-3"
-                ><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i
-              ></a>
-            </aside>
+          
+              <a href="/allproducts" class="btn btn-outline-dark-2 btn-block mb-3">
+                  <span>CONTINUE SHOPPING</span><i class="icon-refresh"></i>
+              </a>
+          </aside>
+          
             <!-- End .col-lg-3 -->
           </div>
           <!-- End .row -->
@@ -293,6 +284,8 @@ totalPriceElements[index].textContent = ` ${totalPrice.toFixed(2)}`;
           icon: 'error',
           title: 'Error!',
           text: 'Failed to update cart quantity. Please try again.',
+          showConfirmButton: false,
+                timer: 1500
         });
       }
     } catch (error) {
@@ -302,6 +295,8 @@ totalPriceElements[index].textContent = ` ${totalPrice.toFixed(2)}`;
         icon: 'error',
         title: 'Error!',
         text: `An error occurred: ${error.message || error}`,
+        showConfirmButton: false,
+                timer: 1500
       });
     }
   }
@@ -333,7 +328,9 @@ totalPriceElements[index].textContent = ` ${totalPrice.toFixed(2)}`;
         Swal.fire({
           title: "Deleted!",
           text: "Your file has been deleted.",
-          icon: "success"
+          icon: "success",
+          showConfirmButton: false,
+                timer: 1500
         });
 
         // If the user confirms, you can redirect or perform other actions here
@@ -359,6 +356,8 @@ totalPriceElements[index].textContent = ` ${totalPrice.toFixed(2)}`;
           icon: 'error',
           title: 'Your cart is empty!',
           text: 'Please add items to your cart before proceeding to checkout.',
+          showConfirmButton: false,
+                timer: 1500
         });
       } else if (data.outOfStock) {
         // Show a message for out-of-stock products
@@ -368,6 +367,8 @@ totalPriceElements[index].textContent = ` ${totalPrice.toFixed(2)}`;
           icon: 'error',
           title: 'Some products are out of stock!',
           html: `The following products are out of stock: ${outOfStockProducts}.`,
+          showConfirmButton: false,
+                timer: 1500
         });
         document.getElementById("nostock").textContent= "not stock availible"
       } else if (data.cartItem) {

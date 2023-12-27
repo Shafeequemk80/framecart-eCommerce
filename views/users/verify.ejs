@@ -89,7 +89,8 @@ function validateOTP() {
             Swal.fire({
                 title: 'Registration Successful!',
                 icon: 'success',
-                confirmButtonText: 'Go to home',
+                showConfirmButton: false,
+                timer: 1500
             }).then(() => {
                 window.location.href = "/login";
             });   
@@ -136,12 +137,23 @@ function resendOTP() {
           // Move the reload inside this block
           
         } else {
-          alert("Resending failed"); // Inform the user that resending failed
+          Swal.fire({
+              title: "Error!",
+              text: "Resending failed",
+              icon: "error",
+              showConfirmButton: false,
+                timer: 1500
+            });
         }
       })
       .catch((error) => {
-        console.error("Error:", error.message);
-        alert("An error occurred during OTP resending"); // Inform the user about the error
+        Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+              showConfirmButton: false,
+                timer: 1500
+            });
       });
   }
 }

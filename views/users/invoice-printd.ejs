@@ -306,7 +306,8 @@
                 Swal.fire({
                   title: "Added Successfully",
                   text: "Your new address has been added successfully.",
-                  icon: "success"
+                  icon: "success",showConfirmButton: false,
+                timer: 1500
               })
               .then (() =>  window.location.href = "/address")
               }
@@ -319,6 +320,8 @@
                 title: "Error!",
                 text: "An unexpected error occurred. Please try again later.",
                 icon: "error",
+                showConfirmButton: false,
+                timer: 1500
               });
             });
         }
@@ -371,7 +374,9 @@
                 Swal.fire({
                   title: "Address changed Successfully",
                   text: "Your edit address has been added successfully.",
-                  icon: "success"
+                  icon: "success",
+                  showConfirmButton: false,
+                timer: 1500
               })
               .then (() =>  window.location.href = "/address")
               }
@@ -384,6 +389,8 @@
                 title: "Error!",
                 text: "An unexpected error occurred. Please try again later.",
                 icon: "error",
+                showConfirmButton: false,
+                timer: 1500
               });
             });
         }

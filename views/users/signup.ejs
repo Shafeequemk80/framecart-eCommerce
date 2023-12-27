@@ -171,22 +171,24 @@
           })
           .then((data) => {
             if (data.notMatchemail) {
-              alert(
-                "This email is already in use. Please use a different email address."
-              );
+             
               Swal.fire({
                 title: "Existing User!",
                 text: "This email is already in use. Please use a different email address.",
                 icon: "error",
+                showConfirmButton: false,
+                timer: 1500
               });
             } else if (data.notMatcthrefferal) {
               Swal.fire({
                 title: "Referral Code Not Available!",
                 text: "The referral code is not valid.",
                 icon: "error",
+                showConfirmButton: false,
+                timer: 1500
               });
             } else if (data.success) {
-              alert("0");
+              
               // Redirect to the verification page
               window.location.href = "/verify";
             }
@@ -199,6 +201,8 @@
               title: "Error!",
               text: "An unexpected error occurred. Please try again later.",
               icon: "error",
+              showConfirmButton: false,
+                timer: 1500
             });
           });
       }

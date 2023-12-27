@@ -140,6 +140,8 @@
             icon: 'success',
             title: 'Order Returned!',
             text: 'Your order has been successfully Returned.',
+            showConfirmButton: false,
+                timer: 1500
           });
           setTimeout(() =>window.location.reload(),1000)
              
@@ -150,6 +152,8 @@
             icon: 'error',
             title: 'Return Failed',
             text: 'There was an issue Returning your order. Please try again later.',
+            showConfirmButton: false,
+                timer: 1500
           });
         }
   
@@ -196,6 +200,8 @@ async function cancelOrder(id,orderId,count) {
           icon: 'success',
           title: 'Order Canceled!',
           text: 'Your order has been successfully canceled.',
+          showConfirmButton: false,
+                timer: 1500
         });
         setTimeout(() =>window.location.reload(),1000)
            
@@ -206,6 +212,8 @@ async function cancelOrder(id,orderId,count) {
           icon: 'error',
           title: 'Cancellation Failed',
           text: 'There was an issue canceling your order. Please try again later.',
+          showConfirmButton: false,
+                timer: 1500
         });
       }
 

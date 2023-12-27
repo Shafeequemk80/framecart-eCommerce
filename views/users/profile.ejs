@@ -440,6 +440,8 @@ function handlePasswordChangeResponse(data) {
       icon: "success",
       title: "Success!",
       text: "Password changed successfully.",
+      showConfirmButton: false,
+                timer: 1500
     }).then(() => {
 
 window.location.reload()
@@ -508,6 +510,8 @@ function showErrorAndRemove(errorId, errorMessage) {
                   icon: "success",
                   title: "Email Change Successful!",
                   text: "Your email has been successfully changed.",
+                  showConfirmButton: false,
+                timer: 1500
                 });
               } else {
                 // Handle other errors
@@ -516,6 +520,8 @@ function showErrorAndRemove(errorId, errorMessage) {
                   icon: "error",
                   title: "Error",
                   text: "An error occurred. Please try again later.",
+                  showConfirmButton: false,
+                timer: 1500
                 });
               }
             })
@@ -527,6 +533,8 @@ function showErrorAndRemove(errorId, errorMessage) {
                 icon: "error",
                 title: "Error",
                 text: "An error occurred. Please try again later.",
+                showConfirmButton: false,
+                timer: 1500
               });
             });
         }
@@ -599,7 +607,9 @@ copyText.querySelector("button").addEventListener("click", function () {
               Swal.fire({
               title: "Profile Updated",
               text: "Your profile has been successfully updated.",
-              icon: "success"
+              icon: "success",
+              showConfirmButton: false,
+                timer: 1500
             })
             .then (() =>  window.location.href = "/profile")
             } else if (data) {
@@ -607,10 +617,11 @@ copyText.querySelector("button").addEventListener("click", function () {
                 title: "Referral Code Not Available!",
                 text: "The referral code is not valid.",
                 icon: "error",
+                showConfirmButton: false,
+                timer: 1500
               });
             } else if (data.success) {
-              alert("0");
-              // Redirect to the verification page
+             
              
             }
           })
@@ -622,6 +633,8 @@ copyText.querySelector("button").addEventListener("click", function () {
               title: "Error!",
               text: "An unexpected error occurred. Please try again later.",
               icon: "error",
+              showConfirmButton: false,
+                timer: 1500
             });
           });
       }

@@ -117,6 +117,8 @@
       icon: 'success',
       title: 'Order Status Changed',
       text: 'The order status has been updated successfully!',
+      showConfirmButton: false,
+                timer: 1500
     }).then(()=>window.location.reload())
       
     
@@ -135,6 +137,8 @@
       icon: 'success',
       title: 'Order Status Changed',
       text: 'The order status has been updated successfully!',
+      showConfirmButton: false,
+                timer: 1500
     }).then(()=>window.location.reload())
   } else {
     Swal.fire({
@@ -145,6 +149,8 @@
         popup: 'my-custom-popup-class',
         title: 'my-custom-title-class',
         content: 'my-custom-content-class',
+        showConfirmButton: false,
+                timer: 1500
       },
     });
   }

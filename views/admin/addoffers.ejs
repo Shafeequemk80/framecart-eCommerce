@@ -136,7 +136,9 @@
               Swal.fire({
                 title: "Added Successfully",
                 text: "Your new offer has been added successfully.",
-                icon: "success"
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
             })
             .then (() =>  window.location.href = "/admin/offers")
             }
@@ -149,6 +151,8 @@
               title: "Error!",
               text: "An unexpected error occurred. Please try again later.",
               icon: "error",
+              showConfirmButton: false,
+                timer: 1500
             });
           });
       }
