@@ -670,13 +670,13 @@ function exportToExcel() {
   const date = urlParams.get('startDate');
  
     const startDate =  urlParams.get('startDate');
-    alert(urlParams)
+    
     const endDate =  urlParams.get('endDate');
     const action=urlParams.get('action');
 
     // Create a query string with the selected dates
     const queryString = `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&action=${encodeURIComponent(action)}`;
-alert(queryString);
+
     // Construct the export URL with the query string
     const exportUrl = '/admin/salesexportpdf' + queryString;
 

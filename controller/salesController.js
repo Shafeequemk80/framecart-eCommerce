@@ -255,7 +255,7 @@ const loadsales = async (req, res) => {
 
     let query = {};
     const action = req.query.action || "all";
-    console.log(action);
+   
     if (action === "all") {
       query = {
         orderDate: {
@@ -272,7 +272,7 @@ const loadsales = async (req, res) => {
         paymentMethod: action,
       };
     }
-    console.log(query);
+    
     const orders = await Order.find(query)
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -531,7 +531,6 @@ const exportexcel = async (req, res) => {
 
     let query = {};
     const action = req.query.action || "all";
-    console.log(action);
 
     if (action === "null" || action === "all") {
       query = {
@@ -655,7 +654,6 @@ const exportpdf = async (req, res) => {
 
     let query = {};
     const action = req.query.action || "all";
-    console.log(action);
 
     if (action === "null" || action === "all") {
       query = {
@@ -674,7 +672,6 @@ const exportpdf = async (req, res) => {
       };
     }
 
-    console.log(query);
 
     const orderData = await Order.find(query)
       .populate("user")
@@ -688,7 +685,7 @@ const exportpdf = async (req, res) => {
 
     res.render("exportpdf", { orderData, moment, totalamount });
   } catch (error) {
-    console.error(error.message);
+  
     res.render("500");
   }
 };
