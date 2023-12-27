@@ -1,34 +1,44 @@
-<%- include("../layouts/adminHeader.ejs")%>
-<body class="nk-body bg-white npc-default pg-error">
-  <div class="nk-app-root">
-    <div class="nk-main">
-      <div class="nk-wrap nk-wrap-nosidebar">
-        <div class="nk-content">
-          <div class="nk-block nk-block-middle wide-md mx-auto">
-            <div class="nk-block-content nk-error-ld text-center">
-              <img
-                class="nk-error-gfx"
-                src="/static/admin/images/gfx/error-404.svg"
-                alt=""
-              />
-              <div class="wide-xs mx-auto">
-                <h3 class="nk-error-title">Oops! Why you’re here?</h3>
-                <p class="nk-error-text">
-                  We are very sorry for inconvenience. It looks like you’re try
-                  to access a page that either has been deleted or never
-                  existed.
-                </p>
-                <a href="/admin/dashboard" class="btn btn-lg btn-primary mt-2"
-                  >Back To Home</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Mirrored from dashlite.net/demo2/pages/errors/404-s1.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2023 14:32:43 GMT -->
-</body>
-</html>
+
+
+<%- include("../layouts/header.ejs") %><script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <div class="page-wrapper">
+      
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a>Home</a></li>
+                        <li class="breadcrumb-item"><a >Pages</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">404</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+        	<div class="error-content text-center" ">
+            	<div class="container  justify-content-center">
+                   <div class="col-12 d-flex justify-content-center"> 
+
+                    <dotlottie-player src="/static/assets/alert/404.lottie" background="transparent" speed="1" style="width: 30rem; height: auto;" loop autoplay></dotlottie-player>
+            		
+                   </div>
+                    <h1 class="error-title">Error 404</h1><!-- End .error-title -->
+            		<p>We are sorry, the page you've requested is not available.</p>
+            		<a href="/admin/dashboard" class="btn btn-outline-primary-2 btn-minwidth-lg">
+            			<span>BACK TO HOMEPAGE</span>
+            			<i class="icon-long-arrow-right"></i>
+            		</a>
+            	</div><!-- End .container -->
+        	</div><!-- End .error-content text-center -->
+        </main><!-- End .main -->
+        <%- include("../layouts/userFooter.ejs")%>
+       
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <%- include("../layouts/userFooter2.ejs")%>
+    <%- include("../layouts/footer.ejs")%>
+  

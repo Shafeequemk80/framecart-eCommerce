@@ -255,6 +255,7 @@ const loadsales = async (req, res) => {
 
     let query = {};
     const action = req.query.action || "all";
+    console.log(action);
     if (action === "all") {
       query = {
         orderDate: {
@@ -268,10 +269,10 @@ const loadsales = async (req, res) => {
           $gte: Datestart,
           $lte: endDate,
         },
-        "products.orderStatus": action,
+        paymentMethod: action,
       };
     }
-
+    console.log(query);
     const orders = await Order.find(query)
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -422,6 +423,7 @@ const loadsales = async (req, res) => {
       previospage: page - 1,
       nextpage: parseInt(page) + 1,
       count: count,
+      page: page,
       moment: moment,
       newUsers,
       mostOrderedProducts: mostOrderedProducts,
@@ -507,22 +509,31 @@ const loadchart = async (req, res) => {
     res.render("500");
   }
 };
-
 const exportexcel = async (req, res) => {
   try {
-    const Datestart = new Date(
-      req.query.startDate || new Date().setDate(new Date().getDate() - 30)
-    );
-    Datestart.setHours(0, 0, 0, 0); // Set to the beginning of the day
-    const endDate = new Date(req.query.endDate || Date.now());
-    endDate.setHours(23, 59, 59, 999);
+    const startDateParam = req.query.startDate || "null";
+    const endDateParam = req.query.endDate || "null";
 
-    const workbook = new excelJs.Workbook();
-    const worksheet = workbook.addWorksheet("Sales report");
+    // Calculate default values if parameters are not provided
+    const defaultStartDate = new Date();
+    defaultStartDate.setDate(defaultStartDate.getDate() - 30);
+    const defaultEndDate = new Date();
+
+    let Datestart = startDateParam !== "null" ? new Date(startDateParam) : defaultStartDate;
+    let endDate = endDateParam !== "null" ? new Date(endDateParam) : defaultEndDate;
+
+    // Ensure that Datestart and endDate are set to default values if parameters are not provided
+    Datestart = !req.query.startDate ? defaultStartDate : Datestart;
+    endDate = !req.query.endDate ? defaultEndDate : endDate;
+
+    Datestart.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
 
     let query = {};
     const action = req.query.action || "all";
-    if (action === "all") {
+    console.log(action);
+
+    if (action === "null" || action === "all") {
       query = {
         orderDate: {
           $gte: Datestart,
@@ -538,6 +549,11 @@ const exportexcel = async (req, res) => {
         paymentMethod: action,
       };
     }
+
+    const workbook = new excelJs.Workbook();
+    const worksheet = workbook.addWorksheet("Sales report");
+
+    
 
     worksheet.columns = [
       { header: "S No", key: "s_no" },
@@ -617,19 +633,31 @@ const exportexcel = async (req, res) => {
     res.render("500");
   }
 };
-
 const exportpdf = async (req, res) => {
   try {
-    const Datestart = new Date(
-      req.query.startDate || new Date().setDate(new Date().getDate() - 30)
-    );
-    Datestart.setHours(0, 0, 0, 0); // Set to the beginning of the day
-    const endDate = new Date(req.query.endDate || Date.now());
+    const startDateParam = req.query.startDate || "null";
+    const endDateParam = req.query.endDate || "null";
+
+    // Calculate default values if parameters are not provided
+    const defaultStartDate = new Date();
+    defaultStartDate.setDate(defaultStartDate.getDate() - 30);
+    const defaultEndDate = new Date();
+
+    let Datestart = startDateParam !== "null" ? new Date(startDateParam) : defaultStartDate;
+    let endDate = endDateParam !== "null" ? new Date(endDateParam) : defaultEndDate;
+
+    // Ensure that Datestart and endDate are set to default values if parameters are not provided
+    Datestart = !req.query.startDate ? defaultStartDate : Datestart;
+    endDate = !req.query.endDate ? defaultEndDate : endDate;
+
+    Datestart.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
 
     let query = {};
     const action = req.query.action || "all";
-    if (action === "all") {
+    console.log(action);
+
+    if (action === "null" || action === "all") {
       query = {
         orderDate: {
           $gte: Datestart,
@@ -646,6 +674,8 @@ const exportpdf = async (req, res) => {
       };
     }
 
+    console.log(query);
+
     const orderData = await Order.find(query)
       .populate("user")
       .populate("products.product");
@@ -655,11 +685,14 @@ const exportpdf = async (req, res) => {
     orderData.forEach((product) => {
       totalamount += product.amount;
     });
+
     res.render("exportpdf", { orderData, moment, totalamount });
   } catch (error) {
+    console.error(error.message);
     res.render("500");
   }
 };
+
 
 module.exports = {
   loadsales,

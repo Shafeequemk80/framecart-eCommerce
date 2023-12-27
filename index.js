@@ -23,13 +23,10 @@ app.use(bodyparser.json());
 
 
 app.use("/static", express.static(path.join(__dirname, "public")));
-app.use("/", user_route);
 app.use("/admin", admin_route);
+app.use("/", user_route);
 
 
-app.use((req, res)=>{
-  res.status(404).render(__dirname + '/views/users/404.ejs')
-})
 
 app.use(morgan("dev"));
 

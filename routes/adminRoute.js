@@ -78,9 +78,13 @@ admin_route.post("/removeofferproduct", auth.islogin,offercontroller.removeOffer
 admin_route.get("/loadchart", auth.islogin,salesController.loadchart);
 
 admin_route.get("/salesreport", auth.islogin,salesController.loadsales);
-admin_route.get("/salesexportexcel",salesController.exportexcel);
-admin_route.get("/salesexportpdf",salesController.exportpdf);
+admin_route.get("/salesexportexcel", auth.islogin,salesController.exportexcel);
+admin_route.get("/salesexportpdf", auth.islogin,salesController.exportpdf);
 
+admin_route.get("/500", auth.islogin,adminController.page500);
 
+admin_route.use((req, res)=>{
+  res.status(404).render('404')
+})
 
 module.exports = admin_route;

@@ -88,7 +88,7 @@ user_route.post("/changeemail",auth.islogin,userController.changeemail)
 user_route.get("/wallet",auth.islogin,walletController.loadwallet)
 user_route.post("/addtowallet",auth.islogin,walletController.addtowallet)
 user_route.post("/verifywalletonlinepayment",auth.islogin,walletController.verifyonlinepayment)
-
+user_route.get("/500", auth.islogin,userController.page500);
 
 user_route.use(passport.initialize());
 user_route.use(passport.session());
@@ -112,7 +112,9 @@ user_route.get('/auth/google/failure', (req, res) => {
 });
 
 
-
+user_route.use((req, res)=>{
+  res.status(404).render('404')
+})
 
 
 

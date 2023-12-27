@@ -695,6 +695,13 @@ const validateNewPassword = (password) => {
   return passwordRegex.test(password);
 };
 
+const page500 =async (req,res) =>{
+  try {
+    res.render('500') 
+  } catch (error) {
+    res.render('500')
+  }
+}
 module.exports = {
   loadregister,
   insestUser,
@@ -720,4 +727,5 @@ module.exports = {
   verify_email_change,
   check_verifyemail_change,
   changepassword,
+  page500
 };

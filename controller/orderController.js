@@ -11,7 +11,7 @@ const allorders = async (req, res) => {
   try {
     const user_id = req.session.user_id;
 
-    const userOrders = await Order.find({ user: user_id })
+    const userOrders = await Order.find({ user: user_id, paymentMethod: { $ne: "pending" } })
       .populate("products.product")
       .sort({ _id: -1 });
 

@@ -283,7 +283,7 @@ const loadorders = async (req, res) => {
 
     const order = await Order.find({
       $and: [
-        { "products.paymentStatus": { $ne: "pending" } },
+        {  paymentMethod: { $ne: "pending" } },
         {
           $or: [
             { paymentMethod: { $regex: new RegExp(search, "i") } },
@@ -432,6 +432,13 @@ const updateOrderStatus = async (req, res) => {
     res.render('500');
   }
 };
+const page500 =async (req,res) =>{
+  try {
+    res.render('500') 
+  } catch (error) {
+    res.render('500')
+  }
+}
 
 module.exports = {
   loadLogin,
@@ -446,4 +453,5 @@ module.exports = {
   loadorders,
   allorderitems,
   updateOrderStatus,
+  page500,
 };
