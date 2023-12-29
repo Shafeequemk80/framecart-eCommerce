@@ -83,5 +83,8 @@ admin_route.get("/salesexportpdf", auth.islogin,salesController.exportpdf);
 
 admin_route.get("/500", auth.islogin,adminController.page500);
 
+admin_route.use((req, res, next) => {
+  res.status(404).render("404");
+})
 
 module.exports = admin_route;

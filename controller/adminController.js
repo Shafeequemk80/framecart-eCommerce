@@ -443,6 +443,7 @@ const page500 =async (req,res) =>{
   }
 }
 
+
 module.exports = {
   loadLogin,
   verifylogin,
@@ -457,4 +458,5 @@ module.exports = {
   allorderitems,
   updateOrderStatus,
   page500,
+  
 };
