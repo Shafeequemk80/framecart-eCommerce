@@ -112,9 +112,7 @@ user_route.get('/auth/google/failure', (req, res) => {
 });
 
 
-user_route.use((req, res)=>{
-  res.status(404).render('404')
-})
+
 
 
 

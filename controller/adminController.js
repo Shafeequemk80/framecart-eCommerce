@@ -190,7 +190,8 @@ const customerload = async (req, res) => {
       ],
     }).countDocuments();
 
-    const currentPage = page * 1;
+ 
+
 
     res.render("customers", {
       users: userData,
@@ -201,6 +202,8 @@ const customerload = async (req, res) => {
       count: count,
       search: search,
     });
+
+
   } catch (error) {
     res.render('500');
   }

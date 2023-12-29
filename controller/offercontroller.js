@@ -1,6 +1,7 @@
 const Offer = require("../model/offerModel");
 const Category = require("../model/categoryModel");
 const Products = require("../model/productsModel");
+
 const getoffers = async (req, res) => {
   try {
     var search = "";

@@ -6,7 +6,7 @@ const islogin = async (req, res, next) => {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.log(error.message);
+res.render("admin/500")
   }
 };
 
@@ -18,7 +18,7 @@ const isLogout = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    console.log(error.message);
+    res.render("admin/500")
   }
 };
 module.exports={

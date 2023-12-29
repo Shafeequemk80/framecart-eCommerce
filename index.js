@@ -15,19 +15,20 @@ const admin_route = require("./routes/adminRoute");
 
 const bodyparser = require("body-parser");
 const nocache = require("nocache");
-app.use(nocache());
+
+
+app.use("/static", express.static(path.join(__dirname, "public")));
 
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 
-
-
-app.use("/static", express.static(path.join(__dirname, "public")));
-app.use("/admin", admin_route);
 app.use("/", user_route);
+app.use("/admin", admin_route);
 
 
-
+app.use('*',(req, res)=>{
+  res.status(404).render(__dirname + '/views/users/404.ejs')
+})
 app.use(morgan("dev"));
 
 const PORT = process.env.PORT || 3000;

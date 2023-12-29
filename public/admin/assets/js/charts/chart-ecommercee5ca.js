@@ -1,36 +1,10 @@
 "use strict";
-var totalSalesData;
-  // Example URL to fetch data from (replace with your actual URL)
-const apiUrl = '/admin/dashboard';
 
-// Perform a GET request using the Fetch API
-async function api (){
- let data =  await fetch(apiUrl)
-  .then(response => {
-    // Check if the request was successful (status code 200 OK)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
 
-    // Parse the response body as JSON
-    return response.json();
-  })
-  .then(data => {
-    totalSalesData=data.totalSales
+
+ !(function(NioApp, $,toal) {
   
-})
-let json = await data.json()
 
-totalSalesData=json
-// /----------------------------------
-
-}
- 
-
-
-async function chart (NioApp, $,toal) {
-  api()
-  console.log(toal,'toal');
   
   let Sales = [];
   for (let index = 1; index <= 30; index++) {
@@ -44,7 +18,7 @@ async function chart (NioApp, $,toal) {
 const dataString = dataElement.value;
 const parsedData = JSON.parse(dataString);
 
-console.log(parsedData);
+
 
     var totalSales = {
         labels: parsedData.totalSales.labels,
@@ -861,5 +835,4 @@ console.log(parsedData);
       ecommerceDoughnutS1();
     });
   
-}
-chart(NioApp, jQuery,totalSalesData)
+})(NioApp, jQuery);
