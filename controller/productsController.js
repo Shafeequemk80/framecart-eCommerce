@@ -89,7 +89,7 @@ const saveditproducts = async (req, res) => {
       image4: req.files.image4
         ? req.files.image4[0].filename
         : existingProduct.images.image4,
-    };
+    }; 
 
     existingProduct.updatedAt = Date.now();
 
