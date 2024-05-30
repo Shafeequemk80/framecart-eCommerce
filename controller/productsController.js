@@ -40,7 +40,7 @@ const addproduct = async (req, res) => {
   try {
     const categoryData = await Category.find();
 
-    res.render("addproducts", { category: categoryData });
+    res.render("addproducts", { category: categoryData,  pageName:"Add Product" });
   } catch (error) {
     res.render("500");
   }
@@ -57,6 +57,7 @@ const editproducts = async (req, res) => {
       products: productData,
       category: categoryData,
       updatedAt: Date.now(),
+      pageName:"Admin Edit Product"
     });
   } catch (error) {
     res.render("500");

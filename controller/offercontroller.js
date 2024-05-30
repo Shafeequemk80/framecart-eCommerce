@@ -35,6 +35,7 @@ const getoffers = async (req, res) => {
       previouspage: page - 1, // Corrected property name
       nextpage: parseInt(page) + 1,
       search: search,
+      pageName:"Admin Offers"
     });
   } catch (error) {
     res.render("500");
@@ -43,7 +44,7 @@ const getoffers = async (req, res) => {
 
 const addoffers = async (req, res) => {
   try {
-    res.render("addoffers");
+    res.render("addoffers",{  pageName:"Add Offer"});
   } catch (error) {
     res.render("500");
   }
@@ -98,7 +99,7 @@ const edittoffers = async (req, res) => {
     const offerId = req.query.id;
 
     const offerData = await Offer.findOne({ _id: offerId });
-    res.render("editoffers", { offerData: offerData });
+    res.render("editoffers", { offerData: offerData,  pageName:"Edit offer" });
   } catch (error) {
     res.render("500");
   }

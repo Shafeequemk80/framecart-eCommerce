@@ -126,7 +126,7 @@ const sendResetVerifyMail = async (fullname, email, token) => {
 
 const loadregister = async (req, res) => {
   try {
-    res.render("signup");
+    res.render("signup",{pageName:"Sign Up"});
   } catch (error) {
     res.render("500");
   }
@@ -279,7 +279,7 @@ const confimverify = async (req, res) => {
 };
 const loadlogin = async (req, res) => {
   try {
-    res.render("login");
+    res.render("login",{pageName:"Login"});
   } catch (error) {
     res.render("500");
   }
@@ -335,6 +335,7 @@ const loadHome = async (req, res) => {
       product: prodactdata,
       category: categorydata,
       user: userData,
+      pageName:"Home Page"
     });
   } catch (error) {
     res.render("500");
@@ -343,7 +344,7 @@ const loadHome = async (req, res) => {
 
 const loadforget = async (req, res) => {
   try {
-    res.render("forgetpassword");
+    res.render("forgetpassword",{pageName:"Forget"});
   } catch (error) {
     res.render("500");
   }
@@ -374,7 +375,7 @@ const loadreset = async (req, res) => {
     const token = req.query.token;
     const tokenData = await User.findOne({ token: token });
     if (tokenData) {
-      res.render("resetpassword", { user_id: tokenData._id });
+      res.render("resetpassword", { user_id: tokenData._id ,pageName:"reset"});
     } else {
       res.render(404);
     }
@@ -488,6 +489,7 @@ const getallproducts = async (req, res) => {
       nextpage: parseInt(page) + 1,
       count: count,
       totalPages: Math.ceil(count / limit),
+      pageName:"All Products"
     });
   } catch (error) {
     res.render("500");
@@ -511,6 +513,7 @@ const getoneproduct = async (req, res) => {
       product: productData,
       user: userData,
       categoryData: categoryData,
+      pageName:productData.productname
     });
   } catch (error) {
     res.render("500");
@@ -543,6 +546,7 @@ const loadcart = async (req, res) => {
       user: userData,
       cartData: cartData,
       totalAmount: totalAmount,
+      pageName:"Cart"
     });
   } catch (error) {
     res.render("500");
@@ -554,7 +558,7 @@ const profile = async (req, res) => {
     const id = req.session.user_id;
     const userData = await User.findById(id);
 
-    res.render("profile", { user: userData });
+    res.render("profile", { user: userData ,pageName:"Profile"});
   } catch (error) {
     res.render("500");
   }

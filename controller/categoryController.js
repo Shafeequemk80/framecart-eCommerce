@@ -3,7 +3,7 @@ const Category = require("../model/categoryModel");
 const Offer = require("../model/offerModel");
 const loadcatergory = async (req, res) => {
   try {
-    res.render("addcategory");
+    res.render("addcategory",{  pageName:"Add Category"});
   } catch (error) {
     res.render("500");
   }
@@ -73,6 +73,7 @@ const loadcategorypage = async (req, res) => {
       count: count,
       offerData: offerData,
       search: search,
+      pageName:"Category"
     });
   } catch (error) {
     res.render("500");

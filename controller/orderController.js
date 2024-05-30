@@ -19,6 +19,7 @@ const allorders = async (req, res) => {
       user: user_id,
       products: userOrders,
       moment: moment,
+      pageName:"Orders"
     });
   } catch (error) {
     res.render("500");
@@ -38,6 +39,7 @@ const vieworder = async (req, res) => {
       orders: userOrders,
       user: user_id,
       moment: moment,
+      pageName:'View Order'
     });
   } catch (error) {
     res.render("500");

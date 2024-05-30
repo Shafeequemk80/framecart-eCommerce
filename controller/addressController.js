@@ -10,7 +10,7 @@ const address = async (req, res) => {
     const userData = await User.findById(id);
     const address = await Address.findOne({ user: id }).sort({ _id: -1 });
 
-    res.render("address", { user: userData, address: address?.address || [] });
+    res.render("address", { user: userData, address: address?.address || [] ,pageName:"Address"});
   } catch (error) {
     res.render("500");
   }

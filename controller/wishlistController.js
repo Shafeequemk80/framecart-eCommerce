@@ -52,7 +52,7 @@ const getwishlist = async (req, res) => {
       "products.product"
     );
 
-    res.render("wishlist", { user: userData, wishlistData: wishlistData });
+    res.render("wishlist", { user: userData, wishlistData: wishlistData,pageName:"Whishlist" });
   } catch (error) {
     res.render("500");
   }

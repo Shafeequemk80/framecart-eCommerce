@@ -88,6 +88,7 @@ const getcheckout = async (req, res) => {
       address: address.address,
       cart: cartData,
       totalAmount: totalAmount,
+      pageName:"Checkout"
     });
   } catch (error) {
     res.render("500");

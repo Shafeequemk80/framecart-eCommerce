@@ -62,7 +62,7 @@ const loaddashboard = async (req, res) => {
       dailyOrderCounts: dailyOrderCounts,
     };
 
-    res.render("dashboard", { data, recentOrders, moment, totalData });
+    res.render("dashboard", { data, recentOrders, moment, totalData ,  pageName:"DashBoard"});
   } catch (error) {
     res.render("500");
   }
@@ -429,6 +429,7 @@ const loadsales = async (req, res) => {
       mostOrderedProducts: mostOrderedProducts,
       startDate: Datestart,
       endDate: endDate,
+      pageName:"Sales Report"
     });
   } catch (error) {
     res.render("500");
@@ -683,7 +684,7 @@ const exportpdf = async (req, res) => {
       totalamount += product.amount;
     });
 
-    res.render("exportpdf", { orderData, moment, totalamount });
+    res.render("exportpdf", { orderData, moment, totalamount,  pageName:"Export Pdf" });
   } catch (error) {
   
     res.render("500");

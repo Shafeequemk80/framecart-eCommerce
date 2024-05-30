@@ -59,7 +59,7 @@ const sendResetVerifyMail = async (fullname, email, token) => {
 };
 const loadLogin = async (req, res) => {
   try {
-    res.render("login");
+    res.render("login",{pageName:"Admin Login"});
   } catch (error) {
     res.render('500');
   }
@@ -93,7 +93,7 @@ const verifylogin = async (req, res) => {
 
 const loadforget = async (req, res) => {
   try {
-    res.render("forgetpassword");
+    res.render("forgetpassword",{pageName:"Forget Password"});
   } catch (error) {
     res.render('500');
   }
@@ -127,7 +127,7 @@ const loadreset = async (req, res) => {
     const token = req.query.token;
     const tokenData = await User.findOne({ token: token });
     if (tokenData) {
-      res.render("resetpassword", { user_id: tokenData._id });
+      res.render("resetpassword", { user_id: tokenData._id,pageName:"Reset Password" });
     } else {
       res.render("404");
     }
@@ -201,6 +201,7 @@ const customerload = async (req, res) => {
       nextpage: parseInt(page) + 1,
       count: count,
       search: search,
+      pageName:"Customers"
     });
 
 
@@ -263,6 +264,7 @@ const loadproducts = async (req, res) => {
       nextpage: parseInt(page) + 1,
       count: count,
       search: search,
+      pageName:"Products"
     });
   } catch (error) {
     res.render('500');
@@ -320,6 +322,7 @@ const loadorders = async (req, res) => {
       nextpage: parseInt(page) + 1,
       count: count,
       search: search,
+      pageName:"Orders"
     });
   } catch (error) {
     res.render('500');

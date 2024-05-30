@@ -32,7 +32,7 @@ const loadwallet = async (req, res) => {
 
     // You may want to check if userData and walletData are found before proceeding
 
-    res.render("wallet", { user: userData, walletData, moment });
+    res.render("wallet", { user: userData, walletData, moment,pageName:"Wallet" });
   } catch (error) {
     res.render("500");
   }
