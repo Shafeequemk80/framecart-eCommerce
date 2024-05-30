@@ -174,7 +174,7 @@ const insestUser = async (req, res) => {
 
 const loadverifyotp = async (req, res) => {
   try {
-    res.render("verify");
+    res.render("verify",{pageName:"verify OTP"});
   } catch (error) {
     res.render("500");
   }
