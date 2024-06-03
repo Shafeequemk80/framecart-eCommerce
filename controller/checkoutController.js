@@ -372,7 +372,7 @@ const paymentsuccess = async (req, res) => {
     const orderData = await Order.find({ orderId: id });
 
     if (orderData) {
-      res.render("verifypeyment", { user: user_id });
+      res.render("verifypeyment", { user: user_id,pageName:"404" });
     }
   } catch (error) {
     res.render("500");

@@ -27,7 +27,7 @@ app.use("/admin", admin_route);
 
 
 app.use('*',(req, res)=>{
-  res.status(404).render(__dirname + '/views/users/404.ejs')
+  res.status(404).render(__dirname + '/views/users/404.ejs',{pageName:"404"})
 })
 app.use(morgan("dev"));
 

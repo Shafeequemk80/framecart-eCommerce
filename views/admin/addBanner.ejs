@@ -1,0 +1,181 @@
+<%- include("../layouts/adminHeader.ejs")%> <%-
+include("../layouts/adminSideBar.ejs")%>
+<div class="nk-content">
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">
+                Categories <span class="text-grey">/ Add Category</span>
+              </h3>
+              <!-- Your form starts here -->
+              <div class="container-fluid mt-3">
+                <div class="row">
+                  <div class="col-md-12 mx-auto">
+                    <div class="card">
+                      <div class="card-body">
+                        <form
+                          id="addcategory-form"
+                          enctype="multipart/form-data"
+                        >
+
+                        
+                        <div class="row g-3 mt-2">
+                          <!-- Image Slot 1 -->
+                          <div class="col-4 col-md-3 mb-3 rounded-image-preview">
+                            <label class="image-label" for="imageInput1">add icon
+                              <div class="rounded-image-preview">
+                                <img class="image-container"
+                                  id="imagePreview1"
+                                  src="/static/admin/assets/images/dummy/dummyimage.jpg"
+                                  alt="Preview"
+                                  name="images"
+                                />
+                              </div>
+                              <input
+                                type="file"
+                                name="image"
+                                class="imageInput"
+                                id="imageInput1"
+                                accept="image/*"
+                              />
+                            </label>
+                          </div>
+                          
+                          
+                          <!-- Category Name -->
+                          <div class="col-8">
+                            <div class="form-group col-12">
+                              <label for="category-name" class="form-label">Category Name</label>
+                              <input
+                                type="text"
+                                name="categoryname"
+                                id="categoryname"
+                                class="form-control"
+                                
+                              />
+                              <p class="text-danger" id="categoryname-error"></p>
+                            </div>
+                          </div>
+                        </div>
+                           <!-- Checkbox Block -->
+
+                            <!-- Submit Button -->
+                            <div class="col-12">
+                              <button type="button" id="addcategory-button" class="btn btn-primary">
+                                <em class="icon ni ni-plus"></em>
+                                <span>Add New</span>
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                       
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+   
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Your script remains the same -->
+  <!-- ... -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $(".imageInput").change(function() {
+      var input = this;
+      var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
+
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          $(imagePreview).show();
+        };
+
+        reader.readAsDataURL(input.files[0]);
+}});});
+  </script>
+
+<script src="/static/js/adminValidation.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const registrationForm = document.getElementById("addcategory-form");
+    const signupButton = document.getElementById("addcategory-button");
+   
+    signupButton.addEventListener("click", function () {
+      
+      if (addcategory()) {
+        
+        const formData = new FormData(registrationForm);
+
+  
+
+       
+
+        fetch("/admin/addcategory", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              Swal.fire({
+                title: "Added Successfully",
+                text: "Your new category has been added successfully.",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => (window.location.href = "/admin/category"));
+            }else if (data.fail) {
+              Swal.fire({
+                title: "this category name is already added",
+                text: "your can add this category name try to add another",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => (window.location.href = "/admin/addcategory"));
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "An unexpected error occurred. Please try again later.",
+              icon: "error",
+              showConfirmButton: false,
+                timer: 1500
+            });
+          });
+      }
+    });
+  });
+
+  
+</script>
+
+<script src="/static/admin/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<script src="/static/admin/assets/js/scriptse5ca.js?ver=3.2.3"></script>
+<script src="/static/admin/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>
+<!-- Mirrored from dashlite.net/demo2/ecommerce/products.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2023 14:33:03 GMT -->

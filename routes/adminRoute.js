@@ -5,13 +5,15 @@ const customersCrontroller = require("../controller/customersController");
 const productsCrontroller = require("../controller/productsController");
 const categoryCrontroller = require("../controller/categoryController");
 const salesController = require("../controller/salesController.js");
+const offercontroller= require("../controller/offercontroller.js")
+const bannerController= require("../controller/bannerController.js")
+
 const session = require("express-session");
 const user = require("../model/userModel");
 const path = require("path");
 const auth = require("../middleware/adminAuth");
 const config = require("../config/config");
 const multer=require("../controller/multerController")
-const offercontroller= require("../controller/offercontroller.js")
 
 
 admin_route.use(
@@ -73,7 +75,7 @@ admin_route.get("/actioneditoffer", auth.islogin,offercontroller.edittoffers);
 admin_route.post("/actioneditoffer", auth.islogin,offercontroller.updateOffers);
 admin_route.post("/removeoffergategory", auth.islogin,offercontroller.removeOfferCategories)
 admin_route.post("/removeofferproduct", auth.islogin,offercontroller.removeOfferProduct)
-
+admin_route.get('/banners',auth.islogin,bannerController.loadBanner)
 
 admin_route.get("/loadchart", auth.islogin,salesController.loadchart);
 
@@ -84,7 +86,7 @@ admin_route.get("/salesexportpdf", auth.islogin,salesController.exportpdf);
 admin_route.get("/500", auth.islogin,adminController.page500);
 
 admin_route.use((req, res, next) => {
-  res.status(404).render("404");
+  res.status(404).render("404",{pageName:'404'});
 })
 
 module.exports = admin_route;
